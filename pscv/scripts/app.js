@@ -34,14 +34,26 @@ window.onload = (event) => {
     hideSetting();
   });
 
-  // 「台本を読み込む」ボタンにクリックハンドラを設定
-  document.getElementById("loadButton").addEventListener("click", (e) => {
-    loadScript();
+  // 「再読込」ボタンにクリックハンドラを設定
+  document.getElementById("reloadButton").addEventListener("click", (e) => {
+    reload();
   });
 }
 
 // グローバル変数の定義
 let scrollV = 0;
+
+// リソースを再読込する関数
+const reload = () => {
+  window.navigator.serviceWorker.getRegistrations()
+  .then(registrations => {
+    for(let registration of registrations) {
+      registration.unregister();
+    }
+  });
+  window.location.reload(true);
+  alert('再読込を反映するには、台本ビューアを再起動してください。');
+}
 
 // 台本をスクロールできなくする関数
 const disableScrolling = () => {
@@ -66,10 +78,12 @@ const showToc = () => {
   window.history.pushState({activity: 'toc'}, '');
 }
 
-// 目次を隠す関数
+// 目次を閉じる関数
 const hideToc = () => {
   document.getElementById("toc").style.visibility = "hidden";
   enableScrolling();
+  // バックボタン対応のため追加した履歴を削除
+  window.history.back();
 }
 
 // 設定を表示する関数
@@ -80,8 +94,10 @@ const showSetting = () => {
   window.history.pushState({activity: 'setting'}, '');
 }
 
-// 設定を隠す関数
+// 設定を閉じる関数
 const hideSetting = () => {
   document.getElementById("setting").style.visibility = "hidden";
   enableScrolling();
+  // バックボタン対応のため追加した履歴を削除
+  window.history.back();
 }
