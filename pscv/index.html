@@ -52,13 +52,11 @@
     <p class="setting-item">台本を読み込む</p>
     <div>
       <select id="scSelect">
-        <option>ダミー1</option>
-        <option>ダミー2</option>
-        <option>ダミー3</option>
       </select>
+      <button id="scLoadButton">読込</button>
     </div>
     <div>
-      <button id="scLoadButton">読込</button>
+      <button id="scReloadButton">再取得</button>
       <button id="scAddButton">新規</button>
       <button id="scDeleteButton">削除</button>
     </div>
@@ -76,10 +74,7 @@
 <script src="scripts/back.js"></script>
 <script type="application/javascript">
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
-    .then(function() {
-      console.log('Service Worker Registered');
-    });
+    navigator.serviceWorker.register('sw.js');
   }
 </script>
 

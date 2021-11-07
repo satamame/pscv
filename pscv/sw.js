@@ -40,15 +40,33 @@ self.addEventListener('activate', function(event) {
 
 // リソースをリクエストされた時に発火するイベント
 self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request)
-    .then(function(response) {
-      return response || fetch(event.request).then((response) => {
-        return caches.open(cacheName).then((cache) => {
-          cache.put(event.request, response.clone());
-          return response;
+  // リクエスト URL からオリジンを取り除いて、キャッシュすべきか判断する
+  const regex = /^https?:\/\/[^/]+/;
+  const url = event.request.url.replace(regex, '');
+
+  // TODO: 削除すること (デバッグ用)
+  // console.log(`*** url: ${url}`);
+  // caches.match(event.request).then(response => {
+  //   console.log(`*** cache: ${response}`);
+  // });
+
+  // キャッシュすべきファイルなら、キャッシュを優先する
+  if (filesToCache.includes(url)) {
+    event.respondWith(
+      caches.match(event.request)
+      .then(function(response) {
+        // キャッシュにレスポンスがあればそれを返し、なければリクエストする
+        return response || fetch(event.request).then((response) => {
+          // リクエストで得られたレスポンスをキャッシュする
+          return caches.open(cacheName).then((cache) => {
+            cache.put(event.request, response.clone());
+            return response;
+          });
         });
-      });
-    })
-  );
+      })
+    );
+  // キャッシュすべきでなければ、普通にリクエストする
+  } else {
+    event.respondWith(fetch(event.request));
+  }
 });
