@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>台本ビューア</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" type="text/css" href="styles/app.css">
+<link rel="stylesheet" type="text/css" href="styles/psc.css">
+<link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+<header class="app-header">
+  <img id="tocButton" class="header-button" src="img/list.png" />
+  <h1 class="header-title">台本ビューア 1</h1>
+  <img id="settingButton" class="header-button" src="img/gear.png" />
+</header>
+
+<main id="main" class="app-main">
+</main>
+
+<nav id="toc" class="modal">
+  <div class="overlay"></div>
+  <div class="app-toc panel">
+    <ul class="toc-list">
+      <li>アンダーコントロール</li>
+      <li>登場人物</li>
+      <li>シーン1</li>
+      <li>シーン2</li>
+      <li>シーン3</li>
+      <li>シーン4</li>
+      <li>シーン5</li>
+      <li>シーン6</li>
+      <li>シーン7</li>
+      <li>シーン8</li>
+      <li>シーン9</li>
+      <li>シーン10</li>
+      <li>シーン11</li>
+      <li>シーン12</li>
+      <li>シーン13</li>
+    </ul>
+  </div>
+</nav>
+
+<div id="setting" class="modal">
+  <div class="overlay"></div>
+  <div class="app-setting panel">
+    <div class="setting-header">
+      <h2>設定</h2>
+      <img id="settingCloseButton" class="setting-header-button" src="img/close.png" />
+    </div>
+    <p class="setting-item">台本を読み込む</p>
+    <div>
+      <select id="scSelect">
+        <option>ダミー1</option>
+        <option>ダミー2</option>
+        <option>ダミー3</option>
+      </select>
+    </div>
+    <div>
+      <button id="scLoadButton">読込</button>
+      <button id="scAddButton">新規</button>
+      <button id="scDeleteButton">削除</button>
+    </div>
+    <p class="setting-item">セリフの色</p>
+    <p class="setting-item">役のアイコン</p>
+    </ul>
+  </div>
+</div>
+
+<script src="scripts/app.js"></script>
+<script src="scripts/back.js"></script>
+<script type="application/javascript">
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+    .then(function() {
+      console.log('Service Worker Registered');
+    });
+  }
+</script>
+
+</body>
+</html>
