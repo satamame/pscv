@@ -6,7 +6,7 @@ let selectedDataUrl = '';
 window.onload = (event) => {
   // Android OS なら、Back ボタンの制御をする
   const ua = window.navigator.userAgent.toLowerCase();
-  if(ua.indexOf("android") !== -1) {
+  if (ua.indexOf("android") !== -1) {
     controlBackBtn();
   }
 
@@ -53,13 +53,27 @@ window.onload = (event) => {
   initDataList();
 };
 
+// リソースを再読込する関数
+function reload() {
+  window.navigator.serviceWorker.getRegistrations()
+  .then(registrations => {
+    for (let registration of registrations) {
+      registration.unregister();
+    }
+  });
+  window.location.reload(true);
+  alert('再読込を反映するには、台本ビューアを再起動してください。');
+}
+
 // dataList を初期化する関数
-const initDataList = () => {
-  // localStorage にあれば取得する
+function initDataList() {
+  // localStorage から dataList を取得する
   const dataJson = localStorage.dataList;
   if (dataJson) {
     dataList = JSON.parse(dataJson);
   }
+
+  // localStorage から選択中の台本の URL を取得する
   const url = localStorage.selectedDataUrl;
   if (url) {
     selectedDataUrl = url;
@@ -67,7 +81,7 @@ const initDataList = () => {
 
   // 台本選択メニューに要素をセットする
   const scSelect = document.getElementById('scSelect');
-  while(scSelect.lastChild){
+  while (scSelect.lastChild) {
     scSelect.removeChild(scSelect.lastChild);
   }
   for (let dataItem of dataList) {
@@ -81,67 +95,55 @@ const initDataList = () => {
   }
 }
 
-// リソースを再読込する関数
-const reload = () => {
-  window.navigator.serviceWorker.getRegistrations()
-  .then(registrations => {
-    for(let registration of registrations) {
-      registration.unregister();
-    }
-  });
-  window.location.reload(true);
-  alert('再読込を反映するには、台本ビューアを再起動してください。');
-};
-
 // 台本をスクロールできなくする関数
-const disableScrolling = () => {
+function disableScrolling() {
   scrollV = document.scrollingElement.scrollTop;
   const main = document.getElementById('main');
   main.classList.add('scroll-disabled');
   main.style.setProperty('top', `-${scrollV}px`);
-};
+}
 
 // 台本をスクロール可能にする関数
-const enableScrolling = () => {
+function enableScrolling() {
   const main = document.getElementById('main');
   main.classList.remove('scroll-disabled');
   document.scrollingElement.scrollTop = scrollV;
-};
+}
 
 // 目次を表示する関数
-const showToc = () => {
+function showToc() {
   disableScrolling();
   document.getElementById("toc").style.visibility = "visible";
   // バックボタン対応のため履歴を追加
-  window.history.pushState({activity: 'toc'}, '');
-};
+  window.history.pushState({ activity: 'toc' }, '');
+}
 
 // 目次を閉じる関数
-const hideToc = () => {
+function hideToc() {
   document.getElementById("toc").style.visibility = "hidden";
   enableScrolling();
   // バックボタン対応のため追加した履歴を削除
   window.history.back();
-};
+}
 
 // 設定を表示する関数
-const showSetting = () => {
+function showSetting() {
   disableScrolling();
   document.getElementById("setting").style.visibility = "visible";
   // バックボタン対応のため履歴を追加
-  window.history.pushState({activity: 'setting'}, '');
-};
+  window.history.pushState({ activity: 'setting' }, '');
+}
 
 // 設定を閉じる関数
-const hideSetting = () => {
+function hideSetting() {
   document.getElementById("setting").style.visibility = "hidden";
   enableScrolling();
   // バックボタン対応のため追加した履歴を削除
   window.history.back();
-};
+}
 
 // 台本データを追加する関数
-const scAdd = () => {
+function scAdd() {
   let url = prompt('台本データの URL');
   fetch(url).then(response => {
     if (response.ok) {
@@ -155,10 +157,10 @@ const scAdd = () => {
   .catch(error => {
     alert('台本データを取得できませんでした。');
   });
-};
+}
 
 // 台本データをリストに追加する関数
-const scAddToList = (data, url) => {
+function scAddToList(data, url) {
   // すでに同じ URL があれば、古い方を削除する
   const dupe = dataList.find(value => value.url == url);
   if (dupe) {
@@ -168,13 +170,17 @@ const scAddToList = (data, url) => {
     alert('同じ URL の古いエントリを削除しました。');
   }
 
-  // localStorage に反映する
+  // URL とタイトルを埋め込む
   data.url = url;
   data.title = data.psc.title;
+
+  // localStorage に保存する
   dataList.push(data);
   localStorage.dataList = JSON.stringify(dataList);
+
+  // この台本を選択中にする
   localStorage.selectedDataUrl = url;
 
   // 台本選択メニューに反映する
   initDataList();
-};
+}

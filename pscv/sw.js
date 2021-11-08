@@ -50,12 +50,12 @@ self.addEventListener('fetch', function(event) {
   //   console.log(`*** cache: ${response}`);
   // });
 
-  // キャッシュすべきファイルなら、キャッシュを優先する
+  // キャッシュされるファイルなら、キャッシュを優先する
   if (filesToCache.includes(url)) {
     event.respondWith(
       caches.match(event.request)
       .then(function(response) {
-        // キャッシュにレスポンスがあればそれを返し、なければリクエストする
+        // キャッシュがあればそれを返し、なければリクエストする
         return response || fetch(event.request).then((response) => {
           // リクエストで得られたレスポンスをキャッシュする
           return caches.open(cacheName).then((cache) => {
@@ -65,7 +65,7 @@ self.addEventListener('fetch', function(event) {
         });
       })
     );
-  // キャッシュすべきでなければ、普通にリクエストする
+  // キャッシュされないファイルなら、普通にリクエストする
   } else {
     event.respondWith(fetch(event.request));
   }
