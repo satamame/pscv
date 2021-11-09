@@ -39,6 +39,11 @@ window.onload = (event) => {
     hideSetting();
   });
 
+  // 「読込」ボタンにクリックハンドラを設定
+  document.getElementById("scLoadButton").addEventListener("click", (e) => {
+    scLoad();
+  });
+
   // 「新規」ボタンにクリックハンドラを設定
   document.getElementById("scAddButton").addEventListener("click", (e) => {
     scAdd();
@@ -49,11 +54,11 @@ window.onload = (event) => {
     reload();
   });
 
-  // dataList を初期化する
+  // dataList を初期化して台本を描画する
   initDataList();
 };
 
-// リソースを再読込する関数
+// リソースを再読込するために sw を登録解除する関数
 function reload() {
   window.navigator.serviceWorker.getRegistrations()
   .then(registrations => {
@@ -65,19 +70,17 @@ function reload() {
   alert('再読込を反映するには、台本ビューアを再起動してください。');
 }
 
-// dataList を初期化する関数
+// dataList を初期化して台本を描画する関数
 function initDataList() {
   // localStorage から dataList を取得する
   const dataJson = localStorage.dataList;
-  if (dataJson) {
+  if (dataJson)
     dataList = JSON.parse(dataJson);
-  }
 
   // localStorage から選択中の台本の URL を取得する
   const url = localStorage.selectedDataUrl;
-  if (url) {
+  if (url)
     selectedDataUrl = url;
-  }
 
   // 台本選択メニューに要素をセットする
   const scSelect = document.getElementById('scSelect');
@@ -93,6 +96,9 @@ function initDataList() {
       op.selected = true;
     }
   }
+
+  // 台本選択メニューの選択状態を HTML に反映させる
+  scLoadFromMenu();
 }
 
 // 台本をスクロールできなくする関数
@@ -142,9 +148,48 @@ function hideSetting() {
   window.history.back();
 }
 
+function scLoad() {
+  // 台本選択メニューの選択状態を HTML に反映させる
+  scLoadFromMenu();
+
+  // この台本を選択中にする
+  const scSelect = document.getElementById('scSelect');
+  const url = scSelect.value;
+  localStorage.selectedDataUrl = url;
+}
+
+// 台本選択メニューの選択状態を HTML に反映させる関数
+function scLoadFromMenu() {
+  let title = '台本ビューア';
+
+  // 台本選択メニューで選択中のデータを取得
+  const scSelect = document.getElementById('scSelect');
+  const url = scSelect.value;
+  if (url) {
+    const selected = dataList.filter(item => {
+      return (item.url == url);
+    });
+    if (selected.length >= 1) {
+      // PSc データを main 要素に反映させる
+      loadPSc(selected[0].psc);
+      selectedDataUrl = url;
+
+      // タイトルを設定する
+      title = selected[0].title;
+    }
+  }
+
+  // タイトルをヘッダに反映させる
+  const headerTitle = document.getElementById('headerTitle');
+  headerTitle.innerHTML = title;
+}
+
 // 台本データを追加する関数
 function scAdd() {
   let url = prompt('台本データの URL');
+  if (!url)
+    return;
+
   fetch(url).then(response => {
     if (response.ok) {
       response.json().then(data => {
@@ -170,17 +215,17 @@ function scAddToList(data, url) {
     alert('同じ URL の古いエントリを削除しました。');
   }
 
-  // URL とタイトルを埋め込む
+  // 台本データに URL とタイトルを埋め込む
   data.url = url;
   data.title = data.psc.title;
 
-  // localStorage に保存する
+  // 台本データを dataList に加え、localStorage に保存する
   dataList.push(data);
   localStorage.dataList = JSON.stringify(dataList);
 
   // この台本を選択中にする
   localStorage.selectedDataUrl = url;
 
-  // 台本選択メニューに反映する
+  // dataList を初期化して台本を描画する
   initDataList();
 }

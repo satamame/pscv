@@ -12,7 +12,7 @@
 
 <header class="app-header">
   <img id="tocButton" class="header-button" src="img/list.png" />
-  <h1 class="header-title">台本ビューア</h1>
+  <h1 id="headerTitle" class="header-title"></h1>
   <img id="settingButton" class="header-button" src="img/gear.png" />
 </header>
 
@@ -72,6 +72,7 @@
 
 <script src="scripts/app.js"></script>
 <script src="scripts/back.js"></script>
+<script src="scripts/psc.js"></script>
 <script type="application/javascript">
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js');
