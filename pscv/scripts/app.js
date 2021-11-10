@@ -41,7 +41,7 @@ window.onload = (event) => {
 
   // 「読込」ボタンにクリックハンドラを設定
   document.getElementById("scLoadButton").addEventListener("click", (e) => {
-    scLoad();
+    scLoadFromMenu();
   });
 
   // 「新規」ボタンにクリックハンドラを設定
@@ -90,8 +90,8 @@ function initDataList() {
   // dataList と selectedDataUrl から台本選択メニューを更新する
   updateScMenu();
 
-  // 台本選択メニューの選択状態を HTML に反映させる
-  scLoadFromMenu();
+  // dataList と selectedDataUrl の状態を HTML に反映させる
+  scLoad();
 }
 
 // dataList と selectedDataUrl から台本選択メニューを更新する関数
@@ -114,17 +114,16 @@ function updateScMenu() {
 
 // 台本をスクロールできなくする関数
 function disableScrolling() {
-  scrollV = document.scrollingElement.scrollTop;
   const main = document.getElementById('main');
+  scrollV = main.scrollTop;
   main.classList.add('scroll-disabled');
-  main.style.setProperty('top', `-${scrollV}px`);
 }
 
 // 台本をスクロール可能にする関数
 function enableScrolling() {
   const main = document.getElementById('main');
   main.classList.remove('scroll-disabled');
-  document.scrollingElement.scrollTop = scrollV;
+  main.scrollTop = scrollV;
 }
 
 // 目次を表示する関数
@@ -159,39 +158,22 @@ function hideSetting() {
   window.history.back();
 }
 
+// dataList と selectedDataUrl の状態を HTML に反映させる関数
 function scLoad() {
-  // 台本選択メニューの選択状態を HTML に反映させる
-  scLoadFromMenu();
-
-  // この台本を選択中にする
-  const scSelect = document.getElementById('scSelect');
-  const url = scSelect.value;
-  localStorage.selectedDataUrl = url;
-}
-
-// 台本選択メニューの選択状態を HTML に反映させる関数
-function scLoadFromMenu() {
+  // 台本が反映されたかの判定用にタイトルを初期化
   let title = '';
 
-  // 台本選択メニューで選択中のデータを取得
-  const scSelect = document.getElementById('scSelect');
-  const url = scSelect.value;
-  if (url) {
-    const selected = dataList.filter(item => {
-      return (item.url == url);
-    });
-    if (selected.length >= 1) {
-      // PSc データを main 要素に反映させる
-      loadPSc(selected[0].psc);
-      selectedDataUrl = url;
+  // dataList から選択中の台本データを抽出
+  const selected = dataList.filter(item => {
+    return (item.url == selectedDataUrl);
+  });
 
-      // タイトルを設定する
-      title = selected[0].title;
+  if (selected.length >= 1) {
+    // PSc データを main 要素に反映させる
+    loadPSc(selected[0].psc);
 
-      // スクロール位置をリセットする
-      // TODO: 効かない？
-      scrollV = 0;
-    }
+    // タイトルを設定する
+    title = selected[0].title;
   }
 
   // タイトルが設定されていなければヘッダと main を初期化
@@ -203,6 +185,25 @@ function scLoadFromMenu() {
   // タイトルをヘッダに反映させる
   const headerTitle = document.getElementById('headerTitle');
   headerTitle.innerHTML = title;
+
+  // スクロール位置をリセットする
+  scrollV = 0;
+}
+
+// 台本選択メニューで選択された台本を読み込む関数
+function scLoadFromMenu() {
+  // 選択中の URL を取得
+  const scSelect = document.getElementById('scSelect');
+  const url = scSelect.value;
+
+  if (url != selectedDataUrl) {
+    // この台本を選択中にする
+    selectedDataUrl = url;
+    localStorage.selectedDataUrl = selectedDataUrl;
+
+    // dataList と selectedDataUrl の状態を HTML に反映させる
+    scLoad();
+  }
 }
 
 // 台本データを追加する関数
@@ -245,10 +246,14 @@ function scAddToList(data, url) {
   localStorage.dataList = JSON.stringify(dataList);
 
   // この台本を選択中にする
-  localStorage.selectedDataUrl = url;
+  selectedDataUrl = url
+  localStorage.selectedDataUrl = selectedDataUrl;
 
-  // dataList を初期化して台本を描画する
-  initDataList();
+  // 台本選択メニューを更新する
+  updateScMenu();
+
+  // dataList と selectedDataUrl の状態を HTML に反映させる
+  scLoad();
 }
 
 // 台本データを削除する関数
@@ -264,13 +269,12 @@ function scDelete() {
     });
 
     // localStorage に反映させる
-    localStorage.dataList = dataList;
-    localStorage.selectedDataUrl = '';
+    localStorage.dataList = JSON.stringify(dataList);
 
     // dataList と selectedDataUrl から台本選択メニューを更新する
     updateScMenu();
 
-    // 台本選択メニューの選択状態を HTML に反映させる
+    // 台本選択メニューで選択された台本を読み込む
     scLoadFromMenu();
   }
 }
