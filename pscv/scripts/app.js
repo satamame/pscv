@@ -49,6 +49,11 @@ window.onload = (event) => {
     scAdd();
   });
 
+  // 「削除」ボタンにクリックハンドラを設定
+  document.getElementById("scDeleteButton").addEventListener("click", (e) => {
+    scDelete();
+  });
+
   // 「再読込」ボタンにクリックハンドラを設定
   document.getElementById("reloadButton").addEventListener("click", (e) => {
     reload();
@@ -82,6 +87,15 @@ function initDataList() {
   if (url)
     selectedDataUrl = url;
 
+  // dataList と selectedDataUrl から台本選択メニューを更新する
+  updateScMenu();
+
+  // 台本選択メニューの選択状態を HTML に反映させる
+  scLoadFromMenu();
+}
+
+// dataList と selectedDataUrl から台本選択メニューを更新する関数
+function updateScMenu() {
   // 台本選択メニューに要素をセットする
   const scSelect = document.getElementById('scSelect');
   while (scSelect.lastChild) {
@@ -96,9 +110,6 @@ function initDataList() {
       op.selected = true;
     }
   }
-
-  // 台本選択メニューの選択状態を HTML に反映させる
-  scLoadFromMenu();
 }
 
 // 台本をスクロールできなくする関数
@@ -160,7 +171,7 @@ function scLoad() {
 
 // 台本選択メニューの選択状態を HTML に反映させる関数
 function scLoadFromMenu() {
-  let title = '台本ビューア';
+  let title = '';
 
   // 台本選択メニューで選択中のデータを取得
   const scSelect = document.getElementById('scSelect');
@@ -176,7 +187,17 @@ function scLoadFromMenu() {
 
       // タイトルを設定する
       title = selected[0].title;
+
+      // スクロール位置をリセットする
+      // TODO: 効かない？
+      scrollV = 0;
     }
+  }
+
+  // タイトルが設定されていなければヘッダと main を初期化
+  if (!title) {
+    title = '台本ビューア';
+    clearPSc();
   }
 
   // タイトルをヘッダに反映させる
@@ -228,4 +249,28 @@ function scAddToList(data, url) {
 
   // dataList を初期化して台本を描画する
   initDataList();
+}
+
+// 台本データを削除する関数
+function scDelete() {
+  const scSelect = document.getElementById('scSelect');
+  const selected = scSelect.selectedOptions[0];
+  const doDelete = confirm(`「${selected.text}」を削除します。`);
+
+  if (doDelete) {
+    // 選択中の URL の台本を dataList から削除
+    dataList = dataList.filter(item => {
+      return (item.url != selected.value);
+    });
+
+    // localStorage に反映させる
+    localStorage.dataList = dataList;
+    localStorage.selectedDataUrl = '';
+
+    // dataList と selectedDataUrl から台本選択メニューを更新する
+    updateScMenu();
+
+    // 台本選択メニューの選択状態を HTML に反映させる
+    scLoadFromMenu();
+  }
 }

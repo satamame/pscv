@@ -13,13 +13,19 @@ const map2class = {
   EMPTY: 'empty'
 }
 
-// PSc データを main 要素に反映させる関数
-function loadPSc(pscData) {
+// main 要素内の台本をクリアする関数
+function clearPSc() {
   // main 要素の子孫を削除する
   const main = document.getElementById('main')
   while (main.lastChild) {
     main.removeChild(main.lastChild);
   }
+}
+
+// PSc データを main 要素に反映させる関数
+function loadPSc(pscData) {
+  //main 要素内の台本をクリアする
+  clearPSc();
 
   // HTML をエスケープする関数
   function e(str) {
@@ -53,6 +59,6 @@ function loadPSc(pscData) {
     }
 
     // 台本行要素を main の子供に追加する
-    main.appendChild(line_el);
+    document.getElementById('main').appendChild(line_el);
   }
 }
