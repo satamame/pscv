@@ -1,4 +1,4 @@
-var cacheName = 'pscv';
+var cacheName = 'pscv 0.0.1';
 
 // キャッシュすべきファイルのリスト
 var filesToCache = [

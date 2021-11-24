@@ -22,10 +22,22 @@ function clearPSc() {
   }
 }
 
+// tocList 内の項目をクリアする関数
+function clearTocList() {
+  // tocList の子孫を削除する
+  const tocList = document.getElementById('tocList')
+  while (tocList.lastChild) {
+    tocList.removeChild(tocList.lastChild);
+  }
+}
+
 // PSc データを main 要素に反映させる関数
 function loadPSc(pscData) {
-  //main 要素内の台本をクリアする
+  // main 要素内の台本をクリアする
   clearPSc();
+
+  // 目次をクリアする
+  clearTocList();
 
   // HTML をエスケープする関数
   function e(str) {
@@ -42,7 +54,9 @@ function loadPSc(pscData) {
     return escaped;
   }
 
-  for (let pscLine of pscData.lines) {
+  const tocList = document.getElementById('tocList')
+
+  for (const [index, pscLine] of pscData.lines.entries()) {
     // 台本行要素
     let line_el = document.createElement('div');
     line_el.classList.add(map2class[pscLine.type]);
@@ -58,7 +72,22 @@ function loadPSc(pscData) {
       line_el.innerHTML = `<p>${eSpc(e(pscLine.text))}</p>`;
     }
 
+    // 見出しなら目次に追加する
+    if (['TITLE', 'CHARSHEADLINE', 'H1', 'H2', 'H3'].includes(pscLine.type)) {
+      let tocItem = document.createElement('li');
+      tocItem.innerHTML = pscLine.text;
+      tocItem.setAttribute('onclick', `jumpToLine(${index});`);
+      tocList.appendChild(tocItem);
+    }
+
     // 台本行要素を main の子供に追加する
     document.getElementById('main').appendChild(line_el);
   }
+}
+
+// 行番号を指定してジャンプする関数
+function jumpToLine(lineNum) {
+  hideToc();
+  const line_el = document.getElementById('main').children[lineNum];
+  line_el.scrollIntoView();
 }

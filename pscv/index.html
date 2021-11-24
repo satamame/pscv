@@ -16,38 +16,25 @@
   <img id="settingButton" class="header-button" src="img/gear.png" />
 </header>
 
-<main id="main" class="app-main">
-</main>
+<main id="main" class="app-main"></main>
 
 <nav id="toc" class="modal">
   <div class="overlay"></div>
   <div class="app-toc panel">
-    <ul class="toc-list">
-      <li>アンダーコントロール</li>
-      <li>登場人物</li>
-      <li>シーン1</li>
-      <li>シーン2</li>
-      <li>シーン3</li>
-      <li>シーン4</li>
-      <li>シーン5</li>
-      <li>シーン6</li>
-      <li>シーン7</li>
-      <li>シーン8</li>
-      <li>シーン9</li>
-      <li>シーン10</li>
-      <li>シーン11</li>
-      <li>シーン12</li>
-      <li>シーン13</li>
-    </ul>
+    <div class="panel-header">
+      <h2>目次</h2>
+      <img id="tocCloseButton" class="panel-header-button" src="img/close.png" />
+    </div>
+    <ul id="tocList" class="toc-list"></ul>
   </div>
 </nav>
 
 <div id="setting" class="modal">
   <div class="overlay"></div>
   <div class="app-setting panel">
-    <div class="setting-header">
+    <div class="panel-header">
       <h2>設定</h2>
-      <img id="settingCloseButton" class="setting-header-button" src="img/close.png" />
+      <img id="settingCloseButton" class="panel-header-button" src="img/close.png" />
     </div>
     <p class="setting-item">台本を読み込む</p>
     <div>
@@ -62,11 +49,9 @@
     </div>
     <p class="setting-item">セリフの色</p>
     <p class="setting-item">役のアイコン</p>
-    <p class="setting-item">リソースの再読込</p>
-    <div>
-      <button id="reloadButton">再読込</button>
-    </div>
-    </ul>
+    <p class="setting-item">台本ビューア</p>
+    <p>Ver. <span id="appVersion"></span></p>
+    <button id="reloadButton">更新</button>
   </div>
 </div>
 

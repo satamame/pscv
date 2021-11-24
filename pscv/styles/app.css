@@ -89,6 +89,7 @@ html, body {
 
 .panel {
   font-size: 20px;
+  padding: 16px;
 }
 
 .panel div {
@@ -118,6 +119,7 @@ html, body {
   top: 48px;
   bottom: 0;
   left: 0;
+  min-width: 150px;
 }
 
 .toc-list {
@@ -131,7 +133,6 @@ html, body {
   white-space: nowrap;
   margin: 16px;
   cursor: pointer;
-  /* opacity: 100%; */
 }
 
 .app-setting {
@@ -142,24 +143,20 @@ html, body {
   right: 0;
   bottom: 0;
   left: 0;
-  padding: 16px;
 }
 
-.setting-header h2 {
+.panel-header h2 {
   font-size: 22px;
   margin: 0;
 }
 
-.setting-header-button {
-  width: 22px;
-  height: 22px;
-  cursor: pointer;
-}
-
-#settingCloseButton {
+.panel-header-button {
   position: absolute;
   top: 16px;
   right: 16px;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
 }
 
 .setting-item {

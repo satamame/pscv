@@ -1,5 +1,8 @@
 // グローバル変数の定義
+const appVersion = '0.0.1';
 let scrollV = 0;
+
+// localStorage に保存するデータ
 let dataList = [];
 let selectedDataUrl = '';
 
@@ -19,6 +22,11 @@ window.onload = (event) => {
   const toc = document.getElementById("toc");
   const tocOverlay = toc.getElementsByClassName("overlay")[0];
   tocOverlay.addEventListener("click", (e) => {
+    hideToc();
+  });
+
+  // 目次ダイアログの閉じるボタンにクリックハンドラを設定
+  document.getElementById("tocCloseButton").addEventListener("click", (e) => {
     hideToc();
   });
 
@@ -61,6 +69,9 @@ window.onload = (event) => {
 
   // dataList を初期化して台本を描画する
   initDataList();
+
+  // バージョンを表示する
+  document.getElementById('appVersion').innerHTML = appVersion;
 };
 
 // リソースを再読込するために sw を登録解除する関数
@@ -71,8 +82,7 @@ function reload() {
       registration.unregister();
     }
   });
-  window.location.reload(true);
-  alert('再読込を反映するには、台本ビューアを再起動してください。');
+  alert('更新を反映するには、台本ビューアを再起動してください。');
 }
 
 // dataList を初期化して台本を描画する関数
