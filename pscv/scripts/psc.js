@@ -29,6 +29,8 @@ function clearTocList() {
   while (tocList.lastChild) {
     tocList.removeChild(tocList.lastChild);
   }
+  // 目次項目リストを初期化する
+  tocItems = [];
 }
 
 // PSc データを main 要素に反映させる関数
@@ -58,36 +60,67 @@ function loadPSc(pscData) {
 
   for (const [index, pscLine] of pscData.lines.entries()) {
     // 台本行要素
-    let line_el = document.createElement('div');
-    line_el.classList.add(map2class[pscLine.type]);
+    const lineElm = document.createElement('div');
+    lineElm.classList.add(map2class[pscLine.type]);
 
     if (pscLine.type == 'CHARACTER') {
-      line_el.innerHTML = `<p>${e(pscLine.name)}</p>`;
+      lineElm.innerHTML = `<p>${e(pscLine.name)}</p>`;
       if (pscLine.text)
-        line_el.innerHTML += `<p>${eSpc(e(pscLine.text))}</p>`;
+        lineElm.innerHTML += `<p>${eSpc(e(pscLine.text))}</p>`;
     } else if (pscLine.type == 'DIALOGUE') {
-      line_el.innerHTML = `<p>${e(pscLine.name)}</p>`;
-      line_el.innerHTML += `<p>${eSpc(e(pscLine.text))}</p>`;
+      lineElm.innerHTML = `<p>${e(pscLine.name)}</p>`;
+      lineElm.innerHTML += `<p>${eSpc(e(pscLine.text))}</p>`;
     } else {
-      line_el.innerHTML = `<p>${eSpc(e(pscLine.text))}</p>`;
+      lineElm.innerHTML = `<p>${eSpc(e(pscLine.text))}</p>`;
     }
 
     // 見出しなら目次に追加する
     if (['TITLE', 'CHARSHEADLINE', 'H1', 'H2', 'H3'].includes(pscLine.type)) {
-      let tocItem = document.createElement('li');
+      const tocItem = document.createElement('li');
       tocItem.innerHTML = pscLine.text;
       tocItem.setAttribute('onclick', `jumpToLine(${index});`);
       tocList.appendChild(tocItem);
+
+      // 目次項目リストにも番号を追加する
+      tocItems.push(index);
     }
 
     // 台本行要素を main の子供に追加する
-    document.getElementById('main').appendChild(line_el);
+    document.getElementById('main').appendChild(lineElm);
   }
 }
 
 // 行番号を指定してジャンプする関数
 function jumpToLine(lineNum) {
   hideToc();
-  const line_el = document.getElementById('main').children[lineNum];
-  line_el.scrollIntoView();
+  const lineElm = document.getElementById('main').children[lineNum];
+  lineElm.scrollIntoView();
+}
+
+// 現在地の目次項目が何番目かを返す関数 // TODO: くわしく
+function detectTocItemIndex() {
+  const scrollTop = document.getElementById('main').scrollTop;
+  console.log(scrollTop);
+
+  let tocItemIndex;
+  for (let i = 0; i < tocItems.length; i++) {
+    const lineNum = tocItems[i];
+    const lineElm = document.getElementById('main').children[lineNum];
+    if (lineElm.offsetTop - scrollTop > 0) {
+      tocItemIndex = i;
+      break;
+    }
+  }
+
+  const lineNum = tocItems[tocItemIndex];
+  console.log(tocItemIndex, lineNum);
+
+  if (lineNum > 0) {
+    const prevElm = document.getElementById('main').children[lineNum - 1];
+    const prevElmTop = prevElm.offsetTop - scrollTop;
+    if (prevElmTop > 0)
+    tocItemIndex -= 1;
+  }
+
+  return tocItemIndex;
 }

@@ -135,6 +135,10 @@ html, body {
   cursor: pointer;
 }
 
+.toc-list li.current {
+  font-weight: bold;
+}
+
 .app-setting {
   background: white;
   position: fixed;

@@ -51,7 +51,7 @@
     <p class="setting-item">役のアイコン</p>
     <p class="setting-item">台本ビューア</p>
     <p>Ver. <span id="appVersion"></span></p>
-    <button id="reloadButton">更新</button>
+    <button id="updateButton">更新</button>
   </div>
 </div>
 
@@ -59,9 +59,18 @@
 <script src="scripts/back.js"></script>
 <script src="scripts/psc.js"></script>
 <script type="application/javascript">
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-  }
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js')
+  .then(registration => {
+    registration.addEventListener('updatefound', () => {
+      const installingWorker = registration.installing;
+      installingWorker.onstatechange = e => {
+        if (e.target.state == 'installed')
+          alert('更新がインストールされました。台本ビューアを再起動してください。');
+      };
+    });
+  });
+}
 </script>
 
 </body>

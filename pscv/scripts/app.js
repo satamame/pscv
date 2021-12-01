@@ -1,5 +1,7 @@
 // グローバル変数の定義
 const appVersion = '0.0.1';
+let tocItems = [];
+let tocItemIndex = 0;
 let scrollV = 0;
 
 // localStorage に保存するデータ
@@ -15,7 +17,7 @@ window.onload = (event) => {
 
   // 目次ボタンにクリックハンドラを設定
   document.getElementById("tocButton").addEventListener("click", (e) => {
-      showToc();
+    showToc();
   });
 
   // 目次ダイアログのオーバーレイにクリックハンドラを設定
@@ -62,8 +64,8 @@ window.onload = (event) => {
     scDelete();
   });
 
-  // 「再読込」ボタンにクリックハンドラを設定
-  document.getElementById("reloadButton").addEventListener("click", (e) => {
+  // 「更新」ボタンにクリックハンドラを設定
+  document.getElementById("updateButton").addEventListener("click", (e) => {
     reload();
   });
 
@@ -74,15 +76,28 @@ window.onload = (event) => {
   document.getElementById('appVersion').innerHTML = appVersion;
 };
 
-// リソースを再読込するために sw を登録解除する関数
+// サービスワーカーとリソースを再読込する関数
 function reload() {
-  window.navigator.serviceWorker.getRegistrations()
-  .then(registrations => {
-    for (let registration of registrations) {
-      registration.unregister();
-    }
+  if (!('serviceWorker' in navigator))
+    return;
+
+  navigator.serviceWorker.getRegistration()
+  .then(registration => {
+    registration.update()
+    .then(registration => {
+      const installingWorker = registration.installing;
+      if (installingWorker != null) {
+        installingWorker.onstatechange = e => {
+          if (e.target.state == 'installed')
+            alert('更新がインストールされました。台本ビューアを再起動してください。');
+        }
+      } else if (registration.waiting != null) {
+        alert('更新がインストールされています。台本ビューアを再起動してください。');
+      } else {
+        alert('更新はありませんでした。');
+      }
+    });
   });
-  alert('更新を反映するには、台本ビューアを再起動してください。');
 }
 
 // dataList を初期化して台本を描画する関数
@@ -111,8 +126,8 @@ function updateScMenu() {
   while (scSelect.lastChild) {
     scSelect.removeChild(scSelect.lastChild);
   }
-  for (let dataItem of dataList) {
-    let op = document.createElement("option");
+  for (const dataItem of dataList) {
+    const op = document.createElement("option");
     op.value = dataItem.url;
     op.text = dataItem.title;
     scSelect.appendChild(op);
@@ -140,8 +155,24 @@ function enableScrolling() {
 function showToc() {
   disableScrolling();
   document.getElementById("toc").style.visibility = "visible";
+  showUpCurrentTocItem();
   // バックボタン対応のため履歴を追加
   window.history.pushState({ activity: 'toc' }, '');
+}
+
+// 現在地の目次項目を目立たせる関数
+function showUpCurrentTocItem() {
+  // 強調解除
+  const tocList = document.getElementById('tocList');
+  tocList.children[tocItemIndex].classList.remove('current');
+
+  // 現在地を検出
+  tocItemIndex = detectTocItemIndex();
+
+  // 現在地の目次項目を強調する
+  const currentItem = tocList.children[tocItemIndex];
+  currentItem.classList.add('current');
+  currentItem.scrollIntoView({block: 'center'});
 }
 
 // 目次を閉じる関数
@@ -218,7 +249,7 @@ function scLoadFromMenu() {
 
 // 台本データを追加する関数
 function scAdd() {
-  let url = prompt('台本データの URL');
+  const url = prompt('台本データの URL');
   if (!url)
     return;
 

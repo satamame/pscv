@@ -45,12 +45,6 @@ self.addEventListener('fetch', function(event) {
   const regex = /^https?:\/\/[^/]+/;
   const url = event.request.url.replace(regex, '');
 
-  // TODO: 削除すること (デバッグ用)
-  // console.log(`*** url: ${url}`);
-  // caches.match(event.request).then(response => {
-  //   console.log(`*** cache: ${response}`);
-  // });
-
   // キャッシュされるファイルなら、キャッシュを優先する
   if (filesToCache.includes(url)) {
     event.respondWith(
