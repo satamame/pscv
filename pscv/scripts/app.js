@@ -83,20 +83,24 @@ function reload() {
 
   navigator.serviceWorker.getRegistration()
   .then(registration => {
-    registration.update()
-    .then(registration => {
-      const installingWorker = registration.installing;
-      if (installingWorker != null) {
-        installingWorker.onstatechange = e => {
-          if (e.target.state == 'installed')
-            alert('更新がインストールされました。台本ビューアを再起動してください。');
+    if (registration.waiting != null) {
+      alert('更新がインストールされています。台本ビューアを再起動してください。');
+    }
+    else {
+      registration.update()
+      .then(registration => {
+        const installingWorker = registration.installing;
+        if (installingWorker != null) {
+          installingWorker.onstatechange = e => {
+            if (e.target.state == 'installed')
+              alert('更新がインストールされました。台本ビューアを再起動してください。');
+          }
         }
-      } else if (registration.waiting != null) {
-        alert('更新がインストールされています。台本ビューアを再起動してください。');
-      } else {
-        alert('更新はありませんでした。');
-      }
-    });
+        else {
+          alert('更新はありませんでした。');
+        }
+      });
+    }
   });
 }
 
