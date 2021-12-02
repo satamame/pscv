@@ -84,7 +84,7 @@ function reload() {
   navigator.serviceWorker.getRegistration()
   .then(registration => {
     if (registration.waiting != null) {
-      alert('更新がインストールされています。台本ビューアを再起動してください。');
+      alert('インストール済みの更新があります。台本ビューアを再起動してください。');
     }
     else {
       registration.update()

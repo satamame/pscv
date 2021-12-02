@@ -64,10 +64,12 @@ if ('serviceWorker' in navigator) {
   .then(registration => {
     registration.addEventListener('updatefound', () => {
       const installingWorker = registration.installing;
-      installingWorker.onstatechange = e => {
-        if (e.target.state == 'installed')
-          alert('更新がインストールされました。台本ビューアを再起動してください。');
-      };
+      if (installingWorker != null) {
+        installingWorker.onstatechange = e => {
+          if (e.target.state == 'installed')
+            alert('更新がインストールされました。台本ビューアを再起動してください。');
+        };
+      }
     });
   });
 }
