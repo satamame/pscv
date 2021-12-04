@@ -93,8 +93,23 @@ function loadPSc(pscData) {
 // 行番号を指定してジャンプする関数
 function jumpToLine(lineNum) {
   hideToc();
-  const lineElm = document.getElementById('main').children[lineNum];
-  lineElm.scrollIntoView();
+
+  let y = 0;
+  if (lineNum > 0) {
+    // スクロール先の要素を決める
+    const main = document.getElementById('main');
+    let lineElm = main.children[lineNum];
+
+    // 子要素があれば、そっちを使う
+    if (lineElm.children.length > 0) {
+      lineElm = lineElm.children[0]
+    }
+
+    // スクロール先の Y 座標を求める
+    const marginTop = window.getComputedStyle(lineElm).getPropertyValue('margin-top');
+    y = lineElm.offsetTop - parseFloat(marginTop);
+  }
+  main.scrollTo(0, y);
 }
 
 // 現在地の目次項目が何番目かを返す関数
