@@ -163,6 +163,12 @@ html, body {
   cursor: pointer;
 }
 
-.setting-item {
+.panel div {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+p.setting-item {
+  margin-top: 16px ;
   color: darkcyan;
 }

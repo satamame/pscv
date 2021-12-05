@@ -7,6 +7,7 @@ let scrollV = 0;
 // localStorage に保存するデータ
 let dataList = [];
 let selectedDataUrl = '';
+let fontSize = '16px';
 
 window.onload = (event) => {
   // Android OS なら、Back ボタンの制御をする
@@ -15,6 +16,21 @@ window.onload = (event) => {
     controlBackBtn();
   }
 
+  // イベントハンドラを初期化する
+  initEventHandlers();
+
+  // 文字サイズを初期化する
+  initFontSize();
+
+  // dataList を初期化して台本を描画する
+  initDataList();
+
+  // バージョンを表示する
+  document.getElementById('appVersion').innerHTML = appVersion;
+};
+
+// イベントハンドラを初期化する関数
+function initEventHandlers() {
   // 目次ボタンにクリックハンドラを設定
   document.getElementById("tocButton").addEventListener("click", (e) => {
     showToc();
@@ -64,17 +80,16 @@ window.onload = (event) => {
     scDelete();
   });
 
+  // 文字サイズ選択メニューに選択ハンドラを設定
+  document.getElementById('fontSizeSelect').addEventListener("change", (e) => {
+    changeFontSize();
+  });
+
   // 「更新」ボタンにクリックハンドラを設定
   document.getElementById("updateButton").addEventListener("click", (e) => {
     reload();
   });
-
-  // dataList を初期化して台本を描画する
-  initDataList();
-
-  // バージョンを表示する
-  document.getElementById('appVersion').innerHTML = appVersion;
-};
+}
 
 // サービスワーカーとリソースを再読込する関数
 function reload() {
@@ -102,6 +117,35 @@ function reload() {
       });
     }
   });
+}
+
+// 文字サイズを初期化する関数
+function initFontSize() {
+  // localStorage から fontSize を取得する
+  if (localStorage.fontSize)
+    fontSize = localStorage.fontSize;
+
+  // 文字サイズ選択メニューを更新する
+  const fontSizeSelect = document.getElementById('fontSizeSelect');
+  for (const option of fontSizeSelect.options) {
+    option.selected = (option.value == fontSize);
+  }
+
+  // HTML に反映させる
+  const main = document.getElementById('main');
+  main.style.fontSize = fontSize;
+}
+
+// 文字サイズ選択メニューの値で文字サイズを反映させる関数
+function changeFontSize() {
+  // グローバル変数と localStorage を更新
+  const fontSizeSelect = document.getElementById('fontSizeSelect');
+  fontSize = fontSizeSelect.value;
+  localStorage.fontSize = fontSize;
+
+  // HTML に反映させる
+  const main = document.getElementById('main');
+  main.style.fontSize = fontSize;
 }
 
 // dataList を初期化して台本を描画する関数
