@@ -11,7 +11,7 @@ const map2class = {
   ENDMARK: 'endmark',
   COMMENT: 'comment',
   EMPTY: 'empty'
-}
+};
 
 // main 要素内の台本をクリアする関数
 function clearPSc() {

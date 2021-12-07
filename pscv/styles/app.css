@@ -67,6 +67,15 @@ html, body {
   padding-bottom: 12px;
 }
 
+.vertical {
+  writing-mode: vertical-rl;
+  -webkit-writing-mode: vertical-rl;
+}
+
+.upright {
+  text-orientation: upright;
+}
+
 .modal {
   position: fixed;
   top: 0;

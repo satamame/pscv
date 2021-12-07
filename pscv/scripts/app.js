@@ -4,10 +4,19 @@ let tocItems = [];
 let tocItemIndex = 0;
 let scrollV = 0;
 
+const fontSizeInPixel = {
+  1: '12px',
+  2: '14px',
+  3: '16px',
+  4: '18px',
+  5: '20px'
+};
+
 // localStorage に保存するデータ
 let dataList = [];
 let selectedDataUrl = '';
-let fontSize = '16px';
+let fontSize = 3;
+let writingMode = 0;
 
 window.onload = (event) => {
   // Android OS なら、Back ボタンの制御をする
@@ -21,6 +30,9 @@ window.onload = (event) => {
 
   // 文字サイズを初期化する
   initFontSize();
+
+  // 横書き/縦書きを初期化する
+  initWritingMode();
 
   // dataList を初期化して台本を描画する
   initDataList();
@@ -85,6 +97,11 @@ function initEventHandlers() {
     changeFontSize();
   });
 
+  // 向きメニューに選択ハンドラを設定
+  document.getElementById('writingModeSelect').addEventListener("change", (e) => {
+    changeWritingMode();
+  });
+
   // 「更新」ボタンにクリックハンドラを設定
   document.getElementById("updateButton").addEventListener("click", (e) => {
     reload();
@@ -128,24 +145,66 @@ function initFontSize() {
   // 文字サイズ選択メニューを更新する
   const fontSizeSelect = document.getElementById('fontSizeSelect');
   for (const option of fontSizeSelect.options) {
-    option.selected = (option.value == fontSize);
+    option.selected = (parseInt(option.value) == fontSize);
   }
 
   // HTML に反映させる
   const main = document.getElementById('main');
-  main.style.fontSize = fontSize;
+  main.style.fontSize = fontSizeInPixel[fontSize];
 }
 
 // 文字サイズ選択メニューの値で文字サイズを反映させる関数
 function changeFontSize() {
   // グローバル変数と localStorage を更新
   const fontSizeSelect = document.getElementById('fontSizeSelect');
-  fontSize = fontSizeSelect.value;
+  fontSize = parseInt(fontSizeSelect.value);
   localStorage.fontSize = fontSize;
 
   // HTML に反映させる
   const main = document.getElementById('main');
-  main.style.fontSize = fontSize;
+  main.style.fontSize = fontSizeInPixel[fontSize];
+}
+
+// 横書き/縦書きを初期化する関数
+function initWritingMode() {
+  // localStorage から writingMode を取得する
+  if (localStorage.writingMode)
+    writingMode = localStorage.writingMode;
+
+  // 向きメニューを更新する
+  const writingModeSelect = document.getElementById('writingModeSelect');
+  for (const option of writingModeSelect.options) {
+    option.selected = (parseInt(option.value) == writingMode);
+  }
+
+  // HTML に反映させる
+  applyWritingMode();
+}
+
+// 向きメニューの値で横書き/縦書きを反映させる関数
+function changeWritingMode() {
+  // グローバル変数と localStorage を更新
+  const writingModeSelect = document.getElementById('writingModeSelect');
+  writingMode = parseInt(writingModeSelect.value);
+  localStorage.writingMode = writingMode;
+
+  // HTML に反映させる
+  applyWritingMode();
+}
+
+// 横書き/縦書きを HTML に反映させる関数
+function applyWritingMode() {
+  const main = document.getElementById('main');
+  if (writingMode > 0) {
+    main.classList.add('vertical');
+    if (writingMode > 1)
+      main.classList.add('upright');
+    else
+      main.classList.remove('upright');
+  } else {
+    main.classList.remove('vertical');
+    main.classList.remove('upright');
+  }
 }
 
 // dataList を初期化して台本を描画する関数
