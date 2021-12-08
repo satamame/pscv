@@ -9,14 +9,16 @@ const fontSizeInPixel = {
   2: '14px',
   3: '16px',
   4: '18px',
-  5: '20px'
+  5: '20px',
+  6: '22px',
+  7: '24px'
 };
 
 // localStorage に保存するデータ
 let dataList = [];
 let selectedDataUrl = '';
-let fontSize = 3;
-let writingMode = 0;
+let fontSize = 4;           // 1-7
+let writingMode = 0;        // 0: 横, 1: 縦, 2: 縦 (英数字も)
 
 window.onload = (event) => {
   // Android OS なら、Back ボタンの制御をする
@@ -28,8 +30,8 @@ window.onload = (event) => {
   // イベントハンドラを初期化する
   initEventHandlers();
 
-  // 文字サイズを初期化する
-  initFontSize();
+  // 文字サイズ選択メニューを初期化する
+  initFontSizeMenu();
 
   // 横書き/縦書きを初期化する
   initWritingMode();
@@ -136,21 +138,30 @@ function reload() {
   });
 }
 
-// 文字サイズを初期化する関数
-function initFontSize() {
+// 文字サイズ選択メニューを初期化する関数
+function initFontSizeMenu() {
   // localStorage から fontSize を取得する
   if (localStorage.fontSize)
-    fontSize = localStorage.fontSize;
+    if (localStorage.fontSize in fontSizeInPixel)
+      fontSize = localStorage.fontSize;
 
-  // 文字サイズ選択メニューを更新する
+  // 文字サイズ選択メニューを初期化する
   const fontSizeSelect = document.getElementById('fontSizeSelect');
-  for (const option of fontSizeSelect.options) {
-    option.selected = (parseInt(option.value) == fontSize);
+  while (fontSizeSelect.lastChild) {
+    fontSizeSelect.removeChild(fontSizeSelect.lastChild);
+  }
+  for (const key in fontSizeInPixel) {
+    const op = document.createElement("option");
+    op.value = key;
+    op.text = key;
+    fontSizeSelect.appendChild(op);
+    if (op.value == fontSize) {
+      op.selected = true;
+    }
   }
 
-  // HTML に反映させる
-  const main = document.getElementById('main');
-  main.style.fontSize = fontSizeInPixel[fontSize];
+  // グローバル変数, localStorage, HTML に反映させる
+  changeFontSize();
 }
 
 // 文字サイズ選択メニューの値で文字サイズを反映させる関数
