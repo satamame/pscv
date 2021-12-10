@@ -94,7 +94,9 @@ function loadPSc(pscData) {
 function jumpToLine(lineNum) {
   hideToc();
 
+  let x = 0;
   let y = 0;
+
   if (lineNum > 0) {
     // スクロール先の要素を決める
     const main = document.getElementById('main');
@@ -105,16 +107,31 @@ function jumpToLine(lineNum) {
       lineElm = lineElm.children[0]
     }
 
-    // スクロール先の Y 座標を求める
-    const marginTop = window.getComputedStyle(lineElm).getPropertyValue('margin-top');
-    y = lineElm.offsetTop - parseFloat(marginTop);
+    // スクロール先の座標を求める
+    if (writingMode < 1) {
+      const marginTop = window.getComputedStyle(lineElm).getPropertyValue('margin-top');
+      y = lineElm.offsetTop - parseFloat(marginTop);
+    } else {
+      const marginRight = window.getComputedStyle(lineElm).getPropertyValue('margin-right');
+      const viewWidth = document.getElementById('main').offsetWidth;
+      x = lineElm.offsetLeft + lineElm.offsetWidth + parseFloat(marginRight) - viewWidth;
+    }
   }
-  main.scrollTo(0, y);
+  main.scrollTo(x, y);
 }
 
 // 現在地の目次項目が何番目かを返す関数
 function detectTocItemIndex() {
-  const scrollTop = document.getElementById('main').scrollTop;
+  if (writingMode < 1)
+    return detectTocItemIndexH();
+  else
+    return detectTocItemIndexV();
+}
+
+// 現在地の目次項目が何番目かを返す関数 (横書きの場合)
+function detectTocItemIndexH() {
+  const main = document.getElementById('main');
+  const scrollTop = main.scrollTop;
 
   // 下まで走査した時の初期値を、最後の目次項目にする
   let tocItemIndex = tocItems.length -1;
@@ -122,7 +139,7 @@ function detectTocItemIndex() {
   // 画面の上端以下にある目次項目を探す
   for (let i = 0; i < tocItems.length; i++) {
     const lineNum = tocItems[i];
-    const lineElm = document.getElementById('main').children[lineNum];
+    const lineElm = main.children[lineNum];
 
     if (lineElm.offsetTop - scrollTop >= 0) {
       tocItemIndex = i;
@@ -135,11 +152,46 @@ function detectTocItemIndex() {
 
   if (lineNum > 0) {
     // 見つかった目次項目の、ひとつ上の台本行要素
-    const prevElm = document.getElementById('main').children[lineNum - 1];
+    const prevElm = main.children[lineNum - 1];
     const prevElmTop = prevElm.offsetTop - scrollTop;
 
     // ひとつ上の要素が画面内に収まっていたら、ひとつ前の目次要素にする
     if (prevElmTop >= 0)
+      tocItemIndex -= 1;
+  }
+
+  return tocItemIndex;
+}
+
+// 現在地の目次項目が何番目かを返す関数 (縦書きの場合)
+function detectTocItemIndexV() {
+  const main = document.getElementById('main');
+  const scrollRight = main.scrollLeft + main.offsetWidth;
+
+  // 左まで走査した時の初期値を、最後の目次項目にする
+  let tocItemIndex = tocItems.length -1;
+
+  // 画面の右端またはそれより左にある目次項目を探す
+  for (let i = 0; i < tocItems.length; i++) {
+    const lineNum = tocItems[i];
+    const lineElm = main.children[lineNum];
+
+    if (lineElm.offsetLeft + lineElm.offsetWidth - scrollRight <= 0) {
+      tocItemIndex = i;
+      break;
+    }
+  }
+
+  // 見つかった目次項目の行番号
+  const lineNum = tocItems[tocItemIndex];
+
+  if (lineNum > 0) {
+    // 見つかった目次項目の、ひとつ右の台本行要素
+    const prevElm = main.children[lineNum - 1];
+    const prevElmRight = prevElm.offsetLeft + prevElm.offsetWidth - scrollRight;
+
+    // ひとつ右の要素が画面内に収まっていたら、ひとつ前の目次要素にする
+    if (prevElmRight <= 0)
       tocItemIndex -= 1;
   }
 
