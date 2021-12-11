@@ -73,15 +73,24 @@
 <script src="scripts/psc.js"></script>
 <script type="application/javascript">
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
-  .then(registration => {
-    registration.addEventListener('updatefound', () => {
-      const installingWorker = registration.installing;
-      if (installingWorker != null) {
-        installingWorker.onstatechange = e => {
-          if (e.target.state == 'installed')
-            alert('更新がインストールされました。台本ビューアを再起動してください。');
-        };
+  navigator.serviceWorker.getRegistration()
+  .then (registration => {
+    // 登録中の SW がなければ、これが初回登録である
+    const firstRegistration = (registration === undefined);
+    // SW を登録する
+    navigator.serviceWorker.register('sw.js')
+    .then(registration => {
+      // 初回登録でなければ更新が見つかったかチェックする
+      if (!firstRegistration) {
+        registration.addEventListener('updatefound', () => {
+          const installingWorker = registration.installing;
+          if (installingWorker != null) {
+            installingWorker.onstatechange = e => {
+              if (e.target.state == 'installed')
+                alert('更新がインストールされました。台本ビューアを再起動してください。');
+            };
+          }
+        });
       }
     });
   });
