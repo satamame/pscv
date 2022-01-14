@@ -7,6 +7,8 @@
 <link rel="stylesheet" type="text/css" href="styles/app.css">
 <link rel="stylesheet" type="text/css" href="styles/psc.css">
 <link rel="manifest" href="manifest.json">
+<script async src="https://unpkg.com/pwacompat" crossorigin="anonymous"></script>
+<link rel="icon" type="image/png" href="icons/icon_128.png" sizes="128x128" />
 </head>
 <body>
 
@@ -60,8 +62,21 @@
         <option value='2'>縦書き (英数字も)</option>
       </select>
     </div>
-    <p class="setting-item">セリフの色</p>
-    <p class="setting-item">役のアイコン</p>
+    <p class="setting-item">セリフの表示</p>
+    <div>
+      人物
+      <select id="customCharSelect">
+      </select><br>
+      文字の色
+      <select id="customColorSelect">
+      </select><br>
+      背景の色
+      <select id="customBgSelect">
+      </select><br>
+      アイコン
+      <select id="customIconSelect">
+      </select>
+    </div>
     <p class="setting-item">台本ビューア</p>
     <p>Ver. <span id="appVersion"></span></p>
     <button id="updateButton">更新</button>
@@ -86,8 +101,11 @@ if ('serviceWorker' in navigator) {
           const installingWorker = registration.installing;
           if (installingWorker != null) {
             installingWorker.onstatechange = e => {
-              if (e.target.state == 'installed')
+              if (e.target.state == 'installed') {
+                // 念のため現在の SW の登録を解除する
+                registration.unregister();
                 alert('更新がインストールされました。台本ビューアを再起動してください。');
+              }
             };
           }
         });

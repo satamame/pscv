@@ -9,6 +9,12 @@ html, body {
   margin: 0;
   height: 100%;
   width: 100%;
+  font-family: "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka, Arial, Helvetica;
+}
+
+button, select {
+  border-radius: 5px;
+  border: 1px solid #555;
 }
 
 /* 動的に付与するスタイル */

@@ -118,6 +118,7 @@ function reload() {
   navigator.serviceWorker.getRegistration()
   .then(registration => {
     if (registration.waiting != null) {
+      registration.unregister();
       alert('インストール済みの更新があります。台本ビューアを再起動してください。');
     }
     else {
@@ -126,8 +127,10 @@ function reload() {
         const installingWorker = registration.installing;
         if (installingWorker != null) {
           installingWorker.onstatechange = e => {
-            if (e.target.state == 'installed')
+            if (e.target.state == 'installed') {
+              registration.unregister();
               alert('更新がインストールされました。台本ビューアを再起動してください。');
+            }
           }
         }
         else {
