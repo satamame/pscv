@@ -12,25 +12,44 @@
 </head>
 <body>
 
+<!-- ヘッダ ------------------------------------------------------------------>
 <header class="app-header">
   <img id="tocButton" class="header-button" src="img/list.png" />
   <h1 id="headerTitle" class="header-title"></h1>
   <img id="settingButton" class="header-button" src="img/gear.png" />
 </header>
 
+<!-- 台本コンテンツ ---------------------------------------------------------->
 <main id="main"></main>
 
+<!-- 目次パネル -------------------------------------------------------------->
 <nav id="toc" class="modal">
   <div class="overlay"></div>
   <div class="app-toc panel">
     <div class="panel-header">
-      <h2>目次</h2>
+      <h2>検索</h2>
       <img id="tocCloseButton" class="panel-header-button" src="img/close.png" />
+    </div>
+    <div>
+      <p></p><input id="srchInput" type="search"></p>
+      <p>
+        <select id="srchTargetSelect">
+          <option value='all'>全て</option>
+          <option value='name'>名前</option>
+          <option value='lines'>セリフ</option>
+          <option value='direction'>ト書き</option>
+        </select>
+        <button id="srchButton">検索</button>
+      </p>
+    </div>
+    <div class="panel-header">
+      <h2>目次</h2>
     </div>
     <ul id="tocList" class="toc-list"></ul>
   </div>
 </nav>
 
+<!-- 設定パネル -------------------------------------------------------------->
 <div id="setting" class="modal">
   <div class="overlay"></div>
   <div class="app-setting panel">
@@ -62,6 +81,7 @@
         <option value='2'>縦書き (英数字も)</option>
       </select>
     </div>
+    <!--
     <p class="setting-item">セリフの表示</p>
     <div>
       人物
@@ -77,6 +97,7 @@
       <select id="customIconSelect">
       </select>
     </div>
+    -->
     <p class="setting-item">台本ビューア</p>
     <p>Ver. <span id="appVersion"></span></p>
     <button id="updateButton">更新</button>

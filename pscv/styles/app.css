@@ -10,9 +10,10 @@ html, body {
   height: 100%;
   width: 100%;
   font-family: "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka, Arial, Helvetica;
+  -webkit-text-size-adjust: 100%;  /* Safari対策 */
 }
 
-button, select {
+button, select, input {
   border-radius: 5px;
   border: 1px solid #555;
 }
@@ -85,8 +86,26 @@ button, select {
   padding: 16px;
 }
 
+.panel-header {
+  margin: 8px auto 8px;
+}
+
+.panel-header h2 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.panel-header-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+}
+
 .panel div {
-  margin: 16px auto 16px;
+  margin: 8px auto 24px;
 }
 
 .panel p {
@@ -105,6 +124,12 @@ button, select {
   vertical-align: middle;
 }
 
+.panel input {
+  height: 30px;
+  font-size: 18px;
+  vertical-align: middle;
+}
+
 .app-toc {
   background: white;
   position: fixed;
@@ -118,7 +143,7 @@ button, select {
 .toc-list {
   list-style: none;
   margin: 0px;
-  padding: 8px;
+  padding: 0;
 }
 
 .toc-list li {
@@ -140,25 +165,6 @@ button, select {
   right: 0;
   bottom: 0;
   left: 0;
-}
-
-.panel-header h2 {
-  font-size: 22px;
-  margin: 0;
-}
-
-.panel-header-button {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 22px;
-  height: 22px;
-  cursor: pointer;
-}
-
-.panel div {
-  margin-top: 8px;
-  margin-bottom: 8px;
 }
 
 p.setting-item {
