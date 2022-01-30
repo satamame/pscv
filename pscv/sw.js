@@ -6,6 +6,7 @@ var filesToCache = [
     '/pscv/img/close.png',
     '/pscv/img/gear.png',
     '/pscv/img/list.png',
+    '/pscv/img/magnifier.png',
     '/pscv/index.html',
     '/pscv/scripts/app.js',
     '/pscv/scripts/back.js',

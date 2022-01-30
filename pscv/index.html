@@ -13,10 +13,23 @@
 <body>
 
 <!-- ヘッダ ------------------------------------------------------------------>
-<header class="app-header">
-  <img id="tocButton" class="header-button" src="img/list.png" />
+<header id="normalHeader" class="app-header">
+  <img id="tocButton" class="header-button header-button-left" src="img/list.png" />
   <h1 id="headerTitle" class="header-title"></h1>
-  <img id="settingButton" class="header-button" src="img/gear.png" />
+  <img id="settingButton" class="header-button header-button-right" src="img/gear.png" />
+</header>
+
+<header id="srchHeader" class="app-header app-header-search" hidden>
+  <img id="headerSrchButton" class="header-button header-button-left" src="img/magnifier.png" />
+  <div class="header-search-box">
+    <div id="srchWord" class="header-search-word"></div>
+    <div class="header-search-nav">
+      <button>前</button>
+      <button>次</button>
+      <span>999/999</span>
+    </div>
+  </div>
+  <img id="srchCloseButton" class="header-button header-button-right" src="img/close.png" />
 </header>
 
 <!-- 台本コンテンツ ---------------------------------------------------------->

@@ -3,6 +3,7 @@ const appVersion = '0.0.1';
 let tocItems = [];
 let tocItemIndex = 0;
 let scrollV = 0;
+let srchWord = '';
 
 const fontSizeInPixel = {
   1: '12px',
@@ -61,6 +62,22 @@ function initEventHandlers() {
   document.getElementById("tocCloseButton").addEventListener("click", (e) => {
     hideToc();
   });
+
+  // 「検索」ボタンにクリックハンドラを設定
+  document.getElementById("srchButton").addEventListener("click", (e) => {
+    hideToc();
+    startSearching();
+  })
+
+  // 検索ヘッダの虫眼鏡ボタンにクリックハンドラを設定
+  document.getElementById("headerSrchButton").addEventListener("click", (e) => {
+    showToc();
+  })
+
+  // 検索ヘッダの閉じるボタンにクリックハンドラを設定
+  document.getElementById("srchCloseButton").addEventListener("click", (e) => {
+    stopSearching();
+  })
 
   // 設定ボタンにクリックハンドラを設定
   document.getElementById("settingButton").addEventListener("click", (e) => {
@@ -302,6 +319,24 @@ function hideToc() {
   enableScrolling();
   // バックボタン対応のため追加した履歴を削除
   window.history.back();
+}
+
+// 検索を開始する関数
+function startSearching() {
+  srchWord = document.getElementById("srchInput").value;
+  if (!srchWord)
+    return;
+
+  document.getElementById("srchWord").innerText = srchWord;
+  document.getElementById("normalHeader").hidden = true;
+  document.getElementById("srchHeader").hidden = false;
+}
+
+// 検索ヘッダを閉じる関数
+function stopSearching() {
+  document.getElementById("normalHeader").hidden = false;
+  document.getElementById("srchHeader").hidden = true;
+
 }
 
 // 設定を表示する関数
