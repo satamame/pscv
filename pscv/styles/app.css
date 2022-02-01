@@ -37,6 +37,7 @@ button, select, input {
 
 .app-header-search {
   background: #eaf2ff;
+  visibility: hidden;
 }
 
 .header-title {
@@ -45,6 +46,8 @@ button, select, input {
   line-height: 24px;
   margin: 14px 52px 10px 52px;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .header-button {
@@ -76,6 +79,7 @@ button, select, input {
   display: inline-block;
   flex: 1 1 auto;
   height: 26px;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }

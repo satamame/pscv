@@ -4,6 +4,8 @@ let tocItems = [];
 let tocItemIndex = 0;
 let scrollV = 0;
 let srchWord = '';
+let srchTarget = 0;
+let srchMatches = [];
 
 const fontSizeInPixel = {
   1: '12px',
@@ -65,7 +67,6 @@ function initEventHandlers() {
 
   // 「検索」ボタンにクリックハンドラを設定
   document.getElementById("srchButton").addEventListener("click", (e) => {
-    hideToc();
     startSearching();
   })
 
@@ -294,8 +295,14 @@ function showToc() {
   disableScrolling();
   document.getElementById("toc").style.visibility = "visible";
   showUpCurrentTocItem();
-  // バックボタン対応のため履歴を追加
-  window.history.pushState({ activity: 'toc' }, '');
+
+  if (document.getElementById("srchHeader").style.visibility == "visible") {
+    // 検索ヘッダが表示中ならバックボタン対応のための履歴を差し替え
+    window.history.replaceState({ activity: 'toc' }, '');
+  } else {
+    // さもなくばバックボタン対応のため履歴を追加
+    window.history.pushState({ activity: 'toc' }, '');
+  }
 }
 
 // 現在地の目次項目を目立たせる関数
@@ -317,8 +324,11 @@ function showUpCurrentTocItem() {
 function hideToc() {
   document.getElementById("toc").style.visibility = "hidden";
   enableScrolling();
-  // バックボタン対応のため追加した履歴を削除
-  window.history.back();
+
+  if (document.getElementById("srchHeader").style.visibility != "visible") {
+    // 検索ヘッダが表示中でなければ、バックボタン対応のため追加した履歴を削除
+    window.history.back();
+  }
 }
 
 // 検索を開始する関数
@@ -327,16 +337,33 @@ function startSearching() {
   if (!srchWord)
     return;
 
+  // 検索ヘッダを表示する
   document.getElementById("srchWord").innerText = srchWord;
-  document.getElementById("normalHeader").hidden = true;
-  document.getElementById("srchHeader").hidden = false;
+  document.getElementById("normalHeader").style.visibility = "hidden";
+  document.getElementById("srchHeader").style.visibility = "visible";
+
+  // 検索実行
+  srchTarget = document.getElementById("srchTargetSelect").value;
+  listSrchMatches(srchWord, srchTarget);
+
+  if (document.getElementById("toc").style.visibility == "visible") {
+    // 目次が表示中なら閉じて、バックボタン対応のための履歴を差し替え
+    document.getElementById("toc").style.visibility = "hidden";
+    enableScrolling();
+    window.history.replaceState({ activity: 'search' }, '');
+  } else {
+    // さもなくばバックボタン対応のため履歴を追加
+    window.history.pushState({ activity: 'search' }, '');
+  }
 }
 
 // 検索ヘッダを閉じる関数
 function stopSearching() {
-  document.getElementById("normalHeader").hidden = false;
-  document.getElementById("srchHeader").hidden = true;
+  document.getElementById("normalHeader").style.visibility = "visible";
+  document.getElementById("srchHeader").style.visibility = "hidden";
 
+  // バックボタン対応のため追加した履歴を削除
+  window.history.back();
 }
 
 // 設定を表示する関数

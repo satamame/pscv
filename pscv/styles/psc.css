@@ -131,3 +131,7 @@ main.vertical .dialogue p:nth-child(2) {
   font-size: 0.9em;
   text-align: right;
 }
+
+span.matched {
+  background: #ff8;
+}

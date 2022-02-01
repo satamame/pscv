@@ -12,6 +12,10 @@ function controlBackBtn() {
     if (document.getElementById("toc").style.visibility == "visible") {
       hookHistoryBack();
       hideToc();
+    } else if (document.getElementById("srchHeader").style.visibility == "visible") {
+      // 検索ヘッダが表示中なら閉じる
+      hookHistoryBack();
+      stopSearching();
     }
 
     // 設定が表示中なら閉じる

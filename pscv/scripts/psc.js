@@ -168,7 +168,7 @@ function detectTocItemIndexV() {
   const main = document.getElementById('main');
   const scrollRight = main.scrollLeft + main.offsetWidth;
 
-  // 左まで走査した時の初期値を、最後の目次項目にする
+  // 目次項目が見つからなかった場合の値を、最後の目次項目にする
   let tocItemIndex = tocItems.length -1;
 
   // 画面の右端またはそれより左にある目次項目を探す
@@ -196,4 +196,55 @@ function detectTocItemIndexV() {
   }
 
   return tocItemIndex;
+}
+
+// 検索結果をクリアする関数
+function clearSrchMatches() {
+  srchMatches = [];
+}
+
+// 検索に一致した文字列を HTML 要素にして配列に格納する関数
+function listSrchMatches(srchWord, target) {
+  /*
+   srchWord: 検索ワード
+   target:   対象 (all, name, line, direction)
+  */
+
+  clearSrchMatches();
+
+  const main = document.getElementById('main');
+  let xpath = '';
+  switch (target) {
+    case 'name':
+      xpath = "div[@class='dialogue']/p[1]";
+      break;
+    case 'line':
+      xpath = "div[@class='dialogue']/p[position()>1]";
+      break;
+    case 'direction':
+      xpath = "div[@class='direction']/p";
+      break;
+    default:
+      xpath = 'div/p';
+  }
+
+  // 検索対象となる p 要素を取得
+  let xpathResult = document.evaluate(
+    xpath, main, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+
+  // 正規表現オブジェクト
+  let re = new RegExp(srchWord, 'gi');
+
+  for ( var i=0 ; i < xpathResult.snapshotLength; i++ ) {
+    let htmlStr = '';
+    // 子ノードに分けて、テキストノードなら処理する
+    for (const node of xpathResult.snapshotItem(i).childNodes) {
+      if (node.nodeType == Node.TEXT_NODE)
+        // テキストノードだった場合はマッチした部分文字列を強調表示する
+        htmlStr += node.textContent.replace(re, '<span class="matched">$&</span>');
+      else
+        htmlStr += node.outerHTML;
+    }
+    xpathResult.snapshotItem(i).innerHTML = htmlStr;
+  }
 }
