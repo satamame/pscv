@@ -4,8 +4,9 @@ let tocItems = [];
 let tocItemIndex = 0;
 let scrollV = 0;
 let srchWord = '';
-let srchTarget = 0;
+let srchTarget = 'all';
 let srchMatches = [];
+let srchMatchedCount = 0;
 
 const fontSizeInPixel = {
   1: '12px',
@@ -344,7 +345,9 @@ function startSearching() {
 
   // 検索実行
   srchTarget = document.getElementById("srchTargetSelect").value;
-  listSrchMatches(srchWord, srchTarget);
+  srchMatches = listSrchMatches(srchWord, srchTarget);
+  srchMatchedCount = srchMatches.length;
+  document.getElementById("srchCount").textContent = `1/${srchMatchedCount}`;
 
   if (document.getElementById("toc").style.visibility == "visible") {
     // 目次が表示中なら閉じて、バックボタン対応のための履歴を差し替え
@@ -359,6 +362,9 @@ function startSearching() {
 
 // 検索ヘッダを閉じる関数
 function stopSearching() {
+  // 検索結果の強調表示をクリア
+  clearSrchMatches();
+
   document.getElementById("normalHeader").style.visibility = "visible";
   document.getElementById("srchHeader").style.visibility = "hidden";
 

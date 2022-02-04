@@ -198,12 +198,33 @@ function detectTocItemIndexV() {
   return tocItemIndex;
 }
 
-// 検索結果をクリアする関数
+// 検索結果の強調表示をクリアする関数
 function clearSrchMatches() {
-  srchMatches = [];
+  const main = document.getElementById('main');
+
+  // 強調表示された span を持つ p 要素を取得する
+  let xpath = "//p[span[contains(@class, 'matched')]]";
+  let matchedElements = document.evaluate(
+    xpath, main, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+
+  // 各 p 要素について、子の強調を解除する
+  for ( var i=0 ; i < matchedElements.snapshotLength; i++ ) {
+    const el = matchedElements.snapshotItem(i);
+    let htmlStr = '';
+    // 子ノードに分けて、強調された span ならテキストにする
+    for (const node of el.childNodes) {
+      if (node.nodeName.toLowerCase() == 'span' && node.classList.contains('matched'))
+        htmlStr += node.textContent;
+      else if (node.nodeType == Node.TEXT_NODE)
+        htmlStr += node.textContent;
+      else
+        htmlStr += node.outerHTML;
+    }
+    el.innerHTML = htmlStr;
+  }
 }
 
-// 検索に一致した文字列を HTML 要素にして配列に格納する関数
+// 検索に一致した文字列を HTML 要素にして配列に入れて返す関数
 function listSrchMatches(srchWord, target) {
   /*
    srchWord: 検索ワード
@@ -228,23 +249,35 @@ function listSrchMatches(srchWord, target) {
       xpath = 'div/p';
   }
 
-  // 検索対象となる p 要素を取得
-  let xpathResult = document.evaluate(
+  // 検索対象となる p 要素を取得する
+  let srchTargetElements = document.evaluate(
     xpath, main, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 
   // 正規表現オブジェクト
   let re = new RegExp(srchWord, 'gi');
 
-  for ( var i=0 ; i < xpathResult.snapshotLength; i++ ) {
+  for ( var i=0 ; i < srchTargetElements.snapshotLength; i++ ) {
+    const el = srchTargetElements.snapshotItem(i);
     let htmlStr = '';
     // 子ノードに分けて、テキストノードなら処理する
-    for (const node of xpathResult.snapshotItem(i).childNodes) {
+    for (const node of el.childNodes) {
       if (node.nodeType == Node.TEXT_NODE)
         // テキストノードだった場合はマッチした部分文字列を強調表示する
         htmlStr += node.textContent.replace(re, '<span class="matched">$&</span>');
       else
         htmlStr += node.outerHTML;
     }
-    xpathResult.snapshotItem(i).innerHTML = htmlStr;
+    el.innerHTML = htmlStr;
   }
+
+  // 強調表示した部分を取り出して配列にする
+  const foundElements = [];
+  xpath = "//span[@class='matched']";
+  let matchedElements = document.evaluate(
+    xpath, main, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+  for ( var j=0 ; j < matchedElements.snapshotLength; j++ ) {
+    foundElements.push(matchedElements.snapshotItem(j));
+  }
+
+  return foundElements;
 }
