@@ -14,8 +14,8 @@ html, body {
 }
 
 button, select, input {
-  border-radius: 5px;
   border: 1px solid #555;
+  border-radius: 5px;
 }
 
 /* 動的に付与するスタイル */

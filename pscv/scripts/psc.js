@@ -210,7 +210,7 @@ function clearSrchMatches() {
     xpath, main, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 
   // 各 p 要素について、子の強調を解除する
-  for ( var i=0 ; i < matchedElements.snapshotLength; i++ ) {
+  for (var i = 0; i < matchedElements.snapshotLength; i++) {
     const el = matchedElements.snapshotItem(i);
     let htmlStr = '';
     // 子ノードに分けて、強調された span ならテキストにする
@@ -258,7 +258,7 @@ function listSrchMatches(srchWord, target) {
   // 正規表現オブジェクト
   let re = new RegExp(srchWord, 'gi');
 
-  for ( var i=0 ; i < srchTargetElements.snapshotLength; i++ ) {
+  for (var i = 0; i < srchTargetElements.snapshotLength; i++) {
     const el = srchTargetElements.snapshotItem(i);
     let htmlStr = '';
     // 子ノードに分けて、テキストノードなら処理する
@@ -284,16 +284,28 @@ function listSrchMatches(srchWord, target) {
   return foundElements;
 }
 
-// 画面上にある検索結果のインデックスを返す
-// TODO: 実装すること
+// 画面上端 (右端) 以降にある検索結果のインデックスを返す
 function indexOfSrchMatchInView() {
-
-  console.log(`*** srchMatches.length: ${srchMatches.length}`);
-
-  if (srchMatches.length > 0)
-    return 1;
-  else
+  if (srchMatches.length <= 0)
     return 0;
+
+  const main = document.getElementById('main');
+  if (writingMode < 1) {
+    // 横書きの場合
+    for (var i = 0; i < srchMatches.length; i++) {
+      if (srchMatches[i].offsetTop >= main.scrollTop)
+        return i + 1;
+    }
+    return 1;
+  } else {
+    // 縦書きの場合
+    const scrollRight = main.scrollLeft + main.offsetWidth;
+    for (var i = 0; i < srchMatches.length; i++) {
+      if (srchMatches[i].offsetLeft + srchMatches[i].offsetWidth <= scrollRight)
+        return i + 1;
+    }
+    return 1;
+  }
 }
 
 // 注目する検索結果を index 番目の検索結果にする

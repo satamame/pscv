@@ -353,12 +353,6 @@ function startSearching() {
   document.getElementById("normalHeader").style.visibility = "hidden";
   document.getElementById("srchHeader").style.visibility = "visible";
 
-  // 検索実行
-  srchTarget = document.getElementById("srchTargetSelect").value;
-  srchMatches = listSrchMatches(srchWord, srchTarget);
-  srchMatchIndex = indexOfSrchMatchInView();
-  gotoSrchMatch(srchMatchIndex);
-
   if (document.getElementById("toc").style.visibility == "visible") {
     // 目次が表示中なら閉じて、バックボタン対応のための履歴を差し替え
     document.getElementById("toc").style.visibility = "hidden";
@@ -368,18 +362,32 @@ function startSearching() {
     // さもなくばバックボタン対応のため履歴を追加
     window.history.pushState({ activity: 'search' }, '');
   }
+
+  // 検索実行
+  srchTarget = document.getElementById("srchTargetSelect").value;
+  srchMatches = listSrchMatches(srchWord, srchTarget);
+  srchMatchIndex = indexOfSrchMatchInView();
+  gotoSrchMatch(srchMatchIndex);
 }
 
 // 注目する検索結果をひとつ前にする関数
 function srchPrev() {
-  if (srchMatchIndex > 1) {
+  if (srchMatchIndex <= 0)
+    return;
+  if (srchMatchIndex <= 1)
+    gotoSrchMatch(srchMatches.length);
+  else {
     gotoSrchMatch(srchMatchIndex - 1);
   }
 }
 
 // 注目する検索結果をひとつ後にする関数
 function srchNext() {
-  if (srchMatchIndex < srchMatches.length) {
+  if (srchMatchIndex <= 0)
+    return;
+  if (srchMatchIndex >= srchMatches.length)
+    gotoSrchMatch(1);
+  else {
     gotoSrchMatch(srchMatchIndex + 1);
   }
 }
