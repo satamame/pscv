@@ -109,9 +109,11 @@ function jumpToLine(lineNum) {
 
     // スクロール先の座標を求める
     if (writingMode < 1) {
+      // 横書きの場合
       const marginTop = window.getComputedStyle(lineElm).getPropertyValue('margin-top');
       y = lineElm.offsetTop - parseFloat(marginTop);
     } else {
+      // 縦書きの場合
       const marginRight = window.getComputedStyle(lineElm).getPropertyValue('margin-right');
       const viewWidth = document.getElementById('main').offsetWidth;
       x = lineElm.offsetLeft + lineElm.offsetWidth + parseFloat(marginRight) - viewWidth;
@@ -280,4 +282,31 @@ function listSrchMatches(srchWord, target) {
   }
 
   return foundElements;
+}
+
+// 画面上にある検索結果のインデックスを返す
+// TODO: 実装すること
+function indexOfSrchMatchInView() {
+
+  console.log(`*** srchMatches.length: ${srchMatches.length}`);
+
+  if (srchMatches.length > 0)
+    return 1;
+  else
+    return 0;
+}
+
+// 注目する検索結果を index 番目の検索結果にする
+function gotoSrchMatch(index) {
+  if (srchMatchIndex > 0) {
+    const current = srchMatches[srchMatchIndex - 1];
+    current.classList.remove('current');
+  }
+  if (index > 0) {
+    const newEl = srchMatches[index - 1];
+    newEl.classList.add('current');
+    newEl.scrollIntoView({block: "center"});
+  }
+  srchMatchIndex = index;
+  document.getElementById("srchCount").textContent = `${srchMatchIndex}/${srchMatches.length}`;
 }

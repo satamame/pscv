@@ -1,12 +1,14 @@
-// グローバル変数の定義
 const appVersion = '0.0.1';
+const debug = true;
+
+// グローバル変数の定義
 let tocItems = [];
 let tocItemIndex = 0;
 let scrollV = 0;
 let srchWord = '';
 let srchTarget = 'all';
 let srchMatches = [];
-let srchMatchedCount = 0;
+let srchMatchIndex = 0;
 
 const fontSizeInPixel = {
   1: '12px',
@@ -79,6 +81,14 @@ function initEventHandlers() {
   // 検索ヘッダの閉じるボタンにクリックハンドラを設定
   document.getElementById("srchCloseButton").addEventListener("click", (e) => {
     stopSearching();
+  })
+
+  // 検索ヘッダの「前」「次」ボタンにクリックハンドラを設定
+  document.getElementById("srchPrevButton").addEventListener("click", (e) => {
+    srchPrev();
+  })
+  document.getElementById("srchNextButton").addEventListener("click", (e) => {
+    srchNext();
   })
 
   // 設定ボタンにクリックハンドラを設定
@@ -346,8 +356,8 @@ function startSearching() {
   // 検索実行
   srchTarget = document.getElementById("srchTargetSelect").value;
   srchMatches = listSrchMatches(srchWord, srchTarget);
-  srchMatchedCount = srchMatches.length;
-  document.getElementById("srchCount").textContent = `1/${srchMatchedCount}`;
+  srchMatchIndex = indexOfSrchMatchInView();
+  gotoSrchMatch(srchMatchIndex);
 
   if (document.getElementById("toc").style.visibility == "visible") {
     // 目次が表示中なら閉じて、バックボタン対応のための履歴を差し替え
@@ -357,6 +367,20 @@ function startSearching() {
   } else {
     // さもなくばバックボタン対応のため履歴を追加
     window.history.pushState({ activity: 'search' }, '');
+  }
+}
+
+// 注目する検索結果をひとつ前にする関数
+function srchPrev() {
+  if (srchMatchIndex > 1) {
+    gotoSrchMatch(srchMatchIndex - 1);
+  }
+}
+
+// 注目する検索結果をひとつ後にする関数
+function srchNext() {
+  if (srchMatchIndex < srchMatches.length) {
+    gotoSrchMatch(srchMatchIndex + 1);
   }
 }
 

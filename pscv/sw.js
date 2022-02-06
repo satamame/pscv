@@ -1,7 +1,8 @@
-var cacheName = 'pscv 0.0.1';
+const cacheName = 'pscv 0.0.1';
+const debug = true;
 
-// キャッシュすべきファイルのリスト
-var filesToCache = [
+// キャッシュ対象ファイル
+const filesToCache = [
     '/pscv/',
     '/pscv/img/close.png',
     '/pscv/img/gear.png',
@@ -18,6 +19,7 @@ var filesToCache = [
 // インストール時に発火するイベント
 self.addEventListener('install', function(event) {
   event.waitUntil(
+    // キャッシュ対象ファイルを事前読込みする
     caches.open(cacheName)
     .then(function(cache) {
       return cache.addAll(filesToCache);
@@ -28,6 +30,7 @@ self.addEventListener('install', function(event) {
 // 起動時に発火するイベント
 self.addEventListener('activate', function(event) {
   event.waitUntil(
+    // キャッシュ名の異なるキャッシュを削除する
     caches.keys()
     .then(function(keyList) {
       return Promise.all(keyList.map(function(key) {
@@ -46,8 +49,11 @@ self.addEventListener('fetch', function(event) {
   const regex = /^https?:\/\/[^/]+/;
   const url = event.request.url.replace(regex, '');
 
-  // キャッシュされるファイルなら、キャッシュを優先する
+  if (debug) console.log(`*** Requested url: ${url}`);
+
+  // キャッシュ対象ファイルなら、キャッシュを優先する
   if (filesToCache.includes(url)) {
+    if (debug) console.log('*** to be cached.');
     event.respondWith(
       caches.match(event.request)
       .then(function(response) {
@@ -61,8 +67,9 @@ self.addEventListener('fetch', function(event) {
         });
       })
     );
-  // キャッシュされないファイルなら、普通にリクエストする
+  // キャッシュ対象ファイルでなければ、普通にリクエストする
   } else {
+    if (debug) console.log('*** NOT to be cached.');
     event.respondWith(fetch(event.request));
   }
 });

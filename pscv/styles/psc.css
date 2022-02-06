@@ -133,5 +133,9 @@ main.vertical .dialogue p:nth-child(2) {
 }
 
 span.matched {
-  background: #ff8;
+  background: #ee8;
+}
+
+span.matched.current {
+  background: #ec8
 }
