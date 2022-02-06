@@ -72,6 +72,9 @@ function initEventHandlers() {
   document.getElementById("srchButton").addEventListener("click", (e) => {
     startSearching();
   })
+  document.getElementById("srchInput").addEventListener("keypress", (e) => {
+    startSearchingIfEnter(e);
+  })
 
   // 検索ヘッダの虫眼鏡ボタンにクリックハンドラを設定
   document.getElementById("headerSrchButton").addEventListener("click", (e) => {
@@ -368,6 +371,13 @@ function startSearching() {
   srchMatches = listSrchMatches(srchWord, srchTarget);
   srchMatchIndex = indexOfSrchMatchInView();
   gotoSrchMatch(srchMatchIndex);
+}
+
+// 検索ボックスでエンターが押されたら検索を開始する関数
+function startSearchingIfEnter(e) {
+  e.currentTarget.blur();
+  if (e.key == 'Enter')
+    startSearching();
 }
 
 // 注目する検索結果をひとつ前にする関数
