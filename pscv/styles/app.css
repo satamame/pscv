@@ -2,6 +2,11 @@
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;  /* 強調をなくす */
+}
+
+body {
+  overscroll-behavior: none;  /* ドラッグでリロードさせない */
 }
 
 html, body {
@@ -16,6 +21,10 @@ html, body {
 button, select, input {
   border: 1px solid #555;
   border-radius: 5px;
+}
+
+button:active, a:active, img:active, li:active {
+  opacity: 0.5;
 }
 
 /* 動的に付与するスタイル */
