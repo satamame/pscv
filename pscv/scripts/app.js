@@ -9,6 +9,7 @@ let srchWord = '';
 let srchTarget = 'all';
 let srchMatches = [];
 let srchMatchIndex = 0;
+const ua = window.navigator.userAgent.toLowerCase();
 
 const fontSizeInPixel = {
   1: '12px',
@@ -27,8 +28,16 @@ let fontSize = 4;           // 1-7
 let writingMode = 0;        // 0: 横, 1: 縦, 2: 縦 (英数字も)
 
 window.onload = (event) => {
+  // Android OS なら main の高さを固定する (キーボード対策)
+  const main = document.getElementById("main");
+  if (ua.indexOf("android") !== -1) {
+    fixMainHeight();
+  } else {
+    // Android OS でなければ画面サイズに合わせる
+    main.style.bottom = 0;
+  }
+
   // Android OS なら、Back ボタンの制御をする
-  const ua = window.navigator.userAgent.toLowerCase();
   if (ua.indexOf("android") !== -1) {
     controlBackBtn();
   }
@@ -51,6 +60,20 @@ window.onload = (event) => {
 
 // イベントハンドラを初期化する関数
 function initEventHandlers() {
+  // Android OS なら Window が回転した時の処理を設定
+  if (ua.indexOf("android") !== -1) {
+    window.addEventListener("orientationchange", () => {
+      let delay = 100;
+      // キーボードが出ていたら閉じて、その分待つ
+      if (document.activeElement.id == 'srchInput') {
+        document.activeElement.blur();
+        delay = 300;
+      }
+      // 少し待って main の高さを画面の高さに合わせる
+      setTimeout(fixMainHeight, delay);
+    });
+  }
+
   // 目次ボタンにクリックハンドラを設定
   document.getElementById("tocButton").addEventListener("click", (e) => {
     showToc();
@@ -72,8 +95,10 @@ function initEventHandlers() {
   document.getElementById("srchButton").addEventListener("click", (e) => {
     startSearching();
   })
+
+  // 検索フィールドにキープレスハンドラを設定
   document.getElementById("srchInput").addEventListener("keypress", (e) => {
-    startSearchingIfEnter(e);
+    keypressOnSrchField(e);
   })
 
   // 検索ヘッダの虫眼鏡ボタンにクリックハンドラを設定
@@ -140,6 +165,15 @@ function initEventHandlers() {
   document.getElementById("updateButton").addEventListener("click", (e) => {
     reload();
   });
+}
+
+// 台本部分の高さを画面に合わせて固定する関数
+function fixMainHeight() {
+  const main = document.getElementById("main");
+  let h = window.innerHeight;
+  if (h == main.width)
+    h = window.innerWidth;
+  document.getElementById("main").style.height = `${h - 48}px`;
 }
 
 // サービスワーカーとリソースを再読込する関数
@@ -373,11 +407,14 @@ function startSearching() {
   gotoSrchMatch(srchMatchIndex);
 }
 
-// 検索ボックスでエンターが押されたら検索を開始する関数
-function startSearchingIfEnter(e) {
-  e.currentTarget.blur();
-  if (e.key == 'Enter')
+// 検索フィールドでキーが押された時の処理をする関数
+function keypressOnSrchField(e) {
+  // エンターキーなら検索を実行する
+  if (e.key == 'Enter') {
+    e.currentTarget.blur();
     startSearching();
+    e.preventDefault();
+  }
 }
 
 // 注目する検索結果をひとつ前にする関数
