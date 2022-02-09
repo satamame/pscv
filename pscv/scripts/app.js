@@ -58,115 +58,6 @@ window.onload = (event) => {
   document.getElementById('appVersion').innerHTML = appVersion;
 };
 
-// イベントハンドラを初期化する関数
-function initEventHandlers() {
-  // Android OS なら Window が回転した時の処理を設定
-  if (ua.indexOf("android") !== -1) {
-    window.addEventListener("orientationchange", () => {
-      let delay = 100;
-      // キーボードが出ていたら閉じて、その分待つ
-      if (document.activeElement.id == 'srchInput') {
-        document.activeElement.blur();
-        delay = 300;
-      }
-      // 少し待って main の高さを画面の高さに合わせる
-      setTimeout(fixMainHeight, delay);
-    });
-  }
-
-  // 目次ボタンにクリックハンドラを設定
-  document.getElementById("tocButton").addEventListener("click", (e) => {
-    showToc();
-  });
-
-  // 目次ダイアログのオーバーレイにクリックハンドラを設定
-  const toc = document.getElementById("toc");
-  const tocOverlay = toc.getElementsByClassName("overlay")[0];
-  tocOverlay.addEventListener("click", (e) => {
-    hideToc();
-  });
-
-  // 目次ダイアログの閉じるボタンにクリックハンドラを設定
-  document.getElementById("tocCloseButton").addEventListener("click", (e) => {
-    hideToc();
-  });
-
-  // 「検索」ボタンにクリックハンドラを設定
-  document.getElementById("srchButton").addEventListener("click", (e) => {
-    startSearching();
-  })
-
-  // 検索フィールドにキープレスハンドラを設定
-  document.getElementById("srchInput").addEventListener("keypress", (e) => {
-    keypressOnSrchField(e);
-  })
-
-  // 検索ヘッダの虫眼鏡ボタンにクリックハンドラを設定
-  document.getElementById("headerSrchButton").addEventListener("click", (e) => {
-    showToc();
-  })
-
-  // 検索ヘッダの閉じるボタンにクリックハンドラを設定
-  document.getElementById("srchCloseButton").addEventListener("click", (e) => {
-    stopSearching();
-  })
-
-  // 検索ヘッダの「前」「次」ボタンにクリックハンドラを設定
-  document.getElementById("srchPrevButton").addEventListener("click", (e) => {
-    srchPrev();
-  })
-  document.getElementById("srchNextButton").addEventListener("click", (e) => {
-    srchNext();
-  })
-
-  // 設定ボタンにクリックハンドラを設定
-  document.getElementById("settingButton").addEventListener("click", (e) => {
-    showSetting();
-  });
-
-  // 設定ダイアログのオーバーレイにクリックハンドラを設定
-  const setting = document.getElementById("setting");
-  const settingOverlay = setting.getElementsByClassName("overlay")[0];
-  settingOverlay.addEventListener("click", (e) => {
-    hideSetting();
-  });
-
-  // 設定ダイアログの閉じるボタンにクリックハンドラを設定
-  document.getElementById("settingCloseButton").addEventListener("click", (e) => {
-    hideSetting();
-  });
-
-  // 「読込」ボタンにクリックハンドラを設定
-  document.getElementById("scLoadButton").addEventListener("click", (e) => {
-    scLoadFromMenu();
-  });
-
-  // 「新規」ボタンにクリックハンドラを設定
-  document.getElementById("scAddButton").addEventListener("click", (e) => {
-    scAdd();
-  });
-
-  // 「削除」ボタンにクリックハンドラを設定
-  document.getElementById("scDeleteButton").addEventListener("click", (e) => {
-    scDelete();
-  });
-
-  // 文字サイズ選択メニューに選択ハンドラを設定
-  document.getElementById('fontSizeSelect').addEventListener("change", (e) => {
-    changeFontSize();
-  });
-
-  // 向きメニューに選択ハンドラを設定
-  document.getElementById('writingModeSelect').addEventListener("change", (e) => {
-    changeWritingMode();
-  });
-
-  // 「更新」ボタンにクリックハンドラを設定
-  document.getElementById("updateButton").addEventListener("click", (e) => {
-    reload();
-  });
-}
-
 // 台本部分の高さを画面に合わせて固定する関数
 function fixMainHeight() {
   const main = document.getElementById("main");
@@ -407,14 +298,11 @@ function startSearching() {
   gotoSrchMatch(srchMatchIndex);
 }
 
-// 検索フィールドでキーが押された時の処理をする関数
-function keypressOnSrchField(e) {
-  // エンターキーなら検索を実行する
-  if (e.key == 'Enter') {
-    e.currentTarget.blur();
-    startSearching();
-    e.preventDefault();
-  }
+// エンターキーが押されたことによって検索をする関数
+function searchByEnterKey(e) {
+  e.currentTarget.blur();
+  startSearching();
+  e.preventDefault();
 }
 
 // 注目する検索結果をひとつ前にする関数

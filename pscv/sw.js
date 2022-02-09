@@ -11,6 +11,7 @@ const filesToCache = [
     '/pscv/index.html',
     '/pscv/scripts/app.js',
     '/pscv/scripts/back.js',
+    '/pscv/scripts/init.js',
     '/pscv/scripts/psc.js',
     '/pscv/styles/app.css',
     '/pscv/styles/psc.css',

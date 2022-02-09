@@ -7,6 +7,7 @@
 
 body {
   overscroll-behavior: none;  /* ドラッグでリロードさせない */
+  touch-action: manipulation;  /* ダブルタップでズームさせない */
 }
 
 html, body {
@@ -15,7 +16,7 @@ html, body {
   height: 100%;
   width: 100%;
   font-family: "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka, Arial, Helvetica;
-  -webkit-text-size-adjust: 100%;  /* Safari対策 */
+  -webkit-text-size-adjust: 100%;  /* Safari 回転対策 */
 }
 
 button, select, input {
