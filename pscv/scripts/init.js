@@ -16,7 +16,8 @@ function initEventHandlers() {
 
   // main にスクロールハンドラを設定
   document.getElementById('main').addEventListener("scroll", (e) => {
-
+    if (viewTopTrackingEnabled && viewTopTrackingId == null)
+      startTrackingViewTop();
   });
 
   // 目次ボタンにクリックハンドラを設定

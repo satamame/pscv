@@ -9,6 +9,9 @@ let srchWord = '';
 let srchTarget = 'all';
 let srchMatches = [];
 let srchMatchIndex = 0;
+let trackingLineIndex = 0;
+let viewTopTrackingId = null;
+let viewTopTrackingEnabled = true;
 const ua = window.navigator.userAgent.toLowerCase();
 
 const fontSizeInPixel = {
