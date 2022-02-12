@@ -3,11 +3,11 @@
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;  /* 強調をなくす */
+  touch-action: manipulation;  /* ダブルタップでズームさせない */
 }
 
 body {
   overscroll-behavior: none;  /* ドラッグでリロードさせない */
-  touch-action: manipulation;  /* ダブルタップでズームさせない */
 }
 
 html, body {
@@ -216,4 +216,8 @@ button:active, a:active, img:active, li:active {
 p.setting-item {
   margin-top: 16px ;
   color: darkcyan;
+}
+
+p#updateAlert {
+  color: red;
 }

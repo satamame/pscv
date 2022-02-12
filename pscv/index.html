@@ -114,6 +114,7 @@
     <p class="setting-item">台本ビューア</p>
     <p>Ver. <span id="appVersion"></span></p>
     <button id="updateButton">更新</button>
+    <p id="updateAlert"></p>
   </div>
 </div>
 
@@ -137,9 +138,9 @@ if ('serviceWorker' in navigator) {
           if (installingWorker != null) {
             installingWorker.onstatechange = e => {
               if (e.target.state == 'installed') {
-                // 念のため現在の SW の登録を解除する
-                registration.unregister();
+                registration.unregister();  // 効果が疑わしいので保留
                 alert('更新がインストールされました。台本ビューアを再起動してください。');
+                disableUpdateButton();
               }
             };
           }

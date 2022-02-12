@@ -69,8 +69,9 @@ function reload() {
   navigator.serviceWorker.getRegistration()
   .then(registration => {
     if (registration.waiting != null) {
-      registration.unregister();
+      // registration.unregister();  // 効果が疑わしいので保留
       alert('インストール済みの更新があります。台本ビューアを再起動してください。');
+      disableUpdateButton();
     }
     else {
       registration.update()
@@ -79,8 +80,9 @@ function reload() {
         if (installingWorker != null) {
           installingWorker.onstatechange = e => {
             if (e.target.state == 'installed') {
-              registration.unregister();
+              // registration.unregister();  // 効果が疑わしいので保留
               alert('更新がインストールされました。台本ビューアを再起動してください。');
+              disableUpdateButton();
             }
           }
         }
@@ -90,6 +92,12 @@ function reload() {
       });
     }
   });
+}
+
+// 更新ボタンを無効化しメッセージを表示する関数
+function disableUpdateButton() {
+  document.getElementById('updateButton').disabled = true;
+  document.getElementById('updateAlert').textContent = '台本ビューアを再起動してください。';
 }
 
 // 台本部分の高さを画面に合わせて固定する関数 (Android キーボード対策)
