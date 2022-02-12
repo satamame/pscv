@@ -1,23 +1,20 @@
 // イベントハンドラを初期化する関数
 function initEventHandlers() {
-  // Window が回転した時の処理を設定
+  // 画面回転時の処理を設定
   if (ua.indexOf("android") !== -1) {
-    // Android OS ならキーボードを閉じて main の高さを調整
     window.addEventListener("orientationchange", () => {
-      let delay = 100;
-      // キーボードが出ていたら閉じて、その分待つ
-      if (document.activeElement.id == 'srchInput') {
-        document.activeElement.blur();
-        delay = 200;
-      }
-      // 少し待って main の高さを画面の高さに合わせる
-      setTimeout(fixMainHeight, delay);
+      orientationChangedOnAndroid();
+    });
+  } else {
+    window.addEventListener("orientationchange", () => {
+      orientationChanged();
     });
   }
 
   // main にスクロールハンドラを設定
   document.getElementById('main').addEventListener("scroll", (e) => {
-    if (viewTopTrackingEnabled && viewTopTrackingId == null)
+    // スクロールロック中は台本行の追跡を開始しない
+    if (!scrollLocked && viewTopTrackingId == null)
       startTrackingViewTop();
   });
 

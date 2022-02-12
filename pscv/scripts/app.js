@@ -2,15 +2,15 @@ const appVersion = '0.0.1';
 const debug = true;
 
 // グローバル変数の定義
-let tocItems = [];
-let tocItemIndex = 0;
+let tocItems = [];                  // 見出し要素のインデックスリスト
+let tocItemIndex = 0;               // 目次で現在地としている見出しインデックス
+let scrollLocked = false;           // スクロールをロックしているかのフラグ
 let srchWord = '';
 let srchTarget = 'all';
 let srchMatches = [];
 let srchMatchIndex = 0;
 let trackingLineIndex = 0;
 let viewTopTrackingId = null;
-let viewTopTrackingEnabled = true;
 const ua = window.navigator.userAgent.toLowerCase();
 
 const fontSizeInPixel = {
@@ -44,9 +44,6 @@ window.onload = (event) => {
     controlBackBtn();
   }
 
-  // イベントハンドラを初期化する
-  initEventHandlers();
-
   // 文字サイズ選択メニューを初期化する
   initFontSizeMenu();
 
@@ -58,16 +55,10 @@ window.onload = (event) => {
 
   // バージョンを表示する
   document.getElementById('appVersion').innerHTML = appVersion;
-};
 
-// 台本部分の高さを画面に合わせて固定する関数
-function fixMainHeight() {
-  const main = document.getElementById("main");
-  let h = window.innerHeight;
-  if (h == main.width)
-    h = window.innerWidth;
-  document.getElementById("main").style.height = `${h - 48}px`;
-}
+  // イベントハンドラを初期化する
+  initEventHandlers();
+};
 
 // サービスワーカーとリソースを再読込する関数
 function reload() {
@@ -98,6 +89,46 @@ function reload() {
       });
     }
   });
+}
+
+// 台本部分の高さを画面に合わせて固定する関数 (Android キーボード対策)
+function fixMainHeight() {
+  const main = document.getElementById("main");
+  let h = window.innerHeight;
+  if (h == main.width)
+    h = window.innerWidth;
+  document.getElementById("main").style.height = `${h - 48}px`;
+}
+
+// 画面回転時の処理 (Android OS)
+function orientationChangedOnAndroid() {
+  // スクロールロック
+  lockScroll();
+
+  let delay = 100;
+  // キーボードが出ていたら閉じて、その分待つ
+  if (document.activeElement.id == 'srchInput') {
+    document.activeElement.blur();
+    delay = 200;
+  }
+  // 少し待って main の高さを画面の高さに合わせる
+  setTimeout(() => {
+    fixMainHeight();
+    // スクロール位置を調整してスクロールをアンロック
+    jumpToLine(trackingLineIndex);
+    unlockScroll();
+  }, delay);
+}
+
+// 画面回転時の処理 (Android 以外の OS)
+function orientationChanged() {
+  // スクロールロック
+  lockScroll();
+  setTimeout(() => {
+    // スクロール位置を調整してスクロールをアンロック
+    jumpToLine(trackingLineIndex);
+    unlockScroll();
+  }, 100);
 }
 
 // 文字サイズ選択メニューを初期化する関数
@@ -218,20 +249,24 @@ function updateScMenu() {
 }
 
 // 台本のスクロールをロックする関数
-function lockMainScroll() {
+function lockScroll() {
+  scrollLocked = true;
+  if (viewTopTrackingId != null)
+    window.clearInterval(viewTopTrackingId);
   const main = document.getElementById('main');
   main.classList.add('scroll-disabled');
 }
 
 // 台本のスクロールロックを解除する関数
-function unlockMainScroll() {
+function unlockScroll() {
   const main = document.getElementById('main');
   main.classList.remove('scroll-disabled');
+  scrollLocked = false;
 }
 
 // 目次を表示する関数
 function showToc() {
-  lockMainScroll();
+  lockScroll();
   document.getElementById("toc").style.visibility = "visible";
   showUpCurrentTocItem();
 
@@ -262,7 +297,7 @@ function showUpCurrentTocItem() {
 // 目次を閉じる関数
 function hideToc() {
   document.getElementById("toc").style.visibility = "hidden";
-  unlockMainScroll();
+  unlockScroll();
 
   if (document.getElementById("srchHeader").style.visibility != "visible") {
     // 検索ヘッダが表示中でなければ、バックボタン対応のため追加した履歴を削除
@@ -284,7 +319,7 @@ function startSearching() {
   if (document.getElementById("toc").style.visibility == "visible") {
     // 目次が表示中なら閉じて、バックボタン対応のための履歴を差し替え
     document.getElementById("toc").style.visibility = "hidden";
-    unlockMainScroll();
+    unlockScroll();
     window.history.replaceState({ activity: 'search' }, '');
   } else {
     // さもなくばバックボタン対応のため履歴を追加
@@ -341,7 +376,7 @@ function stopSearching() {
 
 // 設定を表示する関数
 function showSetting() {
-  lockMainScroll();
+  lockScroll();
   document.getElementById("setting").style.visibility = "visible";
   // バックボタン対応のため履歴を追加
   window.history.pushState({ activity: 'setting' }, '');
@@ -350,7 +385,7 @@ function showSetting() {
 // 設定を閉じる関数
 function hideSetting() {
   document.getElementById("setting").style.visibility = "hidden";
-  unlockMainScroll();
+  unlockScroll();
   // バックボタン対応のため追加した履歴を削除
   window.history.back();
 }

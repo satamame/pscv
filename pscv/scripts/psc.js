@@ -348,11 +348,6 @@ function startTrackingViewTop() {
   if (viewTopTrackingId != null)
     window.clearInterval(viewTopTrackingId);
 
-  if (!viewTopTrackingEnabled)
-    return;
-
-  if (debug) console.log('*** startTrackingViewTop is enabled.');
-
   // writingMode に応じて追跡用の関数を呼び続ける
   if (writingMode < 1)
     viewTopTrackingId = window.setInterval(trackViewTopH, 10);
