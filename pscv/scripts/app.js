@@ -11,6 +11,7 @@ let srchMatches = [];
 let srchMatchIndex = 0;
 let trackingLineIndex = 0;
 let viewTopTrackingId = null;
+let lastFontSize = 4;
 let lastWritingMode = 0;
 const ua = window.navigator.userAgent.toLowerCase();
 
@@ -383,6 +384,7 @@ function stopSearching() {
 // 設定を表示する関数
 function showSetting() {
   lockScroll();
+  lastFontSize = fontSize;        // フォントサイズを憶えておく
   lastWritingMode = writingMode;  // 横書き/縦書き を憶えておく
   document.getElementById("setting").style.visibility = "visible";
   // バックボタン対応のため履歴を追加
@@ -393,8 +395,8 @@ function showSetting() {
 function hideSetting() {
   document.getElementById("setting").style.visibility = "hidden";
 
-  // 横書き/縦書き が変わったならスクロールを調整
-  if (writingMode != lastWritingMode) {
+  // フォントサイズや 横書き/縦書き が変わったならスクロールを調整
+  if (fontSize != lastFontSize || writingMode != lastWritingMode) {
     jumpToLine(trackingLineIndex);
     unlockScroll();
     // ずれがあった時のために台本行の追跡をする
