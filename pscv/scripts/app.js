@@ -100,35 +100,32 @@ function fixMainHeight() {
   document.getElementById("main").style.height = `${h - 48}px`;
 }
 
-// 画面回転時の処理 (Android OS)
-function orientationChangedOnAndroid() {
+// 画面回転時の処理
+function orientationChanged() {
   // スクロールロック
-  lockScroll();
+  const lastScrollLocked = scrollLocked;
+  if (!scrollLocked)
+    lockScroll();
 
   let delay = 100;
   // キーボードが出ていたら閉じて、その分待つ
   if (document.activeElement.id == 'srchInput') {
     document.activeElement.blur();
-    delay = 200;
+    delay = 300;
   }
-  // 少し待って main の高さを画面の高さに合わせる
+  // 少し待って Android なら main の高さを画面の高さに合わせる
   setTimeout(() => {
-    fixMainHeight();
-    // スクロール位置を調整してスクロールをアンロック
-    jumpToLine(trackingLineIndex);
-    unlockScroll();
-  }, delay);
-}
+    if (ua.indexOf("android") !== -1)
+      fixMainHeight();
 
-// 画面回転時の処理 (Android 以外の OS)
-function orientationChanged() {
-  // スクロールロック
-  lockScroll();
-  setTimeout(() => {
     // スクロール位置を調整してスクロールをアンロック
     jumpToLine(trackingLineIndex);
-    unlockScroll();
-  }, 100);
+    if (!lastScrollLocked) {
+      unlockScroll();
+      // ずれがあった時のために台本行の追跡をする
+      startTrackingViewTop();
+    }
+  }, delay);
 }
 
 // 文字サイズ選択メニューを初期化する関数
@@ -225,7 +222,6 @@ function initDataList() {
 
   // dataList と selectedDataUrl から台本選択メニューを更新する
   updateScMenu();
-
   // dataList と selectedDataUrl の状態を HTML に反映させる
   scLoad();
 }
@@ -251,6 +247,7 @@ function updateScMenu() {
 // 台本のスクロールをロックする関数
 function lockScroll() {
   scrollLocked = true;
+  // 台本行の追跡中なら中断する
   if (viewTopTrackingId != null)
     window.clearInterval(viewTopTrackingId);
   const main = document.getElementById('main');

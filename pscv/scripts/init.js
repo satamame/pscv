@@ -1,15 +1,9 @@
 // イベントハンドラを初期化する関数
 function initEventHandlers() {
   // 画面回転時の処理を設定
-  if (ua.indexOf("android") !== -1) {
-    window.addEventListener("orientationchange", () => {
-      orientationChangedOnAndroid();
-    });
-  } else {
-    window.addEventListener("orientationchange", () => {
-      orientationChanged();
-    });
-  }
+  window.addEventListener("orientationchange", () => {
+    orientationChanged();
+  });
 
   // main にスクロールハンドラを設定
   document.getElementById('main').addEventListener("scroll", (e) => {
@@ -112,4 +106,4 @@ function initEventHandlers() {
   document.getElementById("updateButton").addEventListener("click", (e) => {
     reload();
   });
-  }
+}

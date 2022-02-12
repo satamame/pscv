@@ -97,8 +97,6 @@ function loadPSc(pscData) {
 
 // 行番号を指定してジャンプする関数
 function jumpToLine(lineNum) {
-  hideToc();
-
   let x = 0;
   let y = 0;
 
@@ -130,11 +128,14 @@ function jumpToLine(lineNum) {
 
 // インデックスを指定して目次項目にジャンプする関数
 function jumpToTocItem(i) {
+  hideToc();
+
   // 台本行の追跡を中断し、現在地を更新する
   if (viewTopTrackingId != null)
     window.clearInterval(viewTopTrackingId);
   lineNum = tocItems[i];
   trackingLineIndex = lineNum;
+
   // その行へジャンプする
   jumpToLine(lineNum);
 }
