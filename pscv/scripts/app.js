@@ -4,7 +4,6 @@ const debug = true;
 // グローバル変数の定義
 let tocItems = [];
 let tocItemIndex = 0;
-let scrollV = 0;
 let srchWord = '';
 let srchTarget = 'all';
 let srchMatches = [];
@@ -218,23 +217,21 @@ function updateScMenu() {
   }
 }
 
-// 台本をスクロールできなくする関数
-function disableScrolling() {
+// 台本のスクロールをロックする関数
+function lockMainScroll() {
   const main = document.getElementById('main');
-  scrollV = main.scrollTop;
   main.classList.add('scroll-disabled');
 }
 
-// 台本をスクロール可能にする関数
-function enableScrolling() {
+// 台本のスクロールロックを解除する関数
+function unlockMainScroll() {
   const main = document.getElementById('main');
   main.classList.remove('scroll-disabled');
-  main.scrollTop = scrollV;
 }
 
 // 目次を表示する関数
 function showToc() {
-  disableScrolling();
+  lockMainScroll();
   document.getElementById("toc").style.visibility = "visible";
   showUpCurrentTocItem();
 
@@ -265,7 +262,7 @@ function showUpCurrentTocItem() {
 // 目次を閉じる関数
 function hideToc() {
   document.getElementById("toc").style.visibility = "hidden";
-  enableScrolling();
+  unlockMainScroll();
 
   if (document.getElementById("srchHeader").style.visibility != "visible") {
     // 検索ヘッダが表示中でなければ、バックボタン対応のため追加した履歴を削除
@@ -287,7 +284,7 @@ function startSearching() {
   if (document.getElementById("toc").style.visibility == "visible") {
     // 目次が表示中なら閉じて、バックボタン対応のための履歴を差し替え
     document.getElementById("toc").style.visibility = "hidden";
-    enableScrolling();
+    unlockMainScroll();
     window.history.replaceState({ activity: 'search' }, '');
   } else {
     // さもなくばバックボタン対応のため履歴を追加
@@ -344,7 +341,7 @@ function stopSearching() {
 
 // 設定を表示する関数
 function showSetting() {
-  disableScrolling();
+  lockMainScroll();
   document.getElementById("setting").style.visibility = "visible";
   // バックボタン対応のため履歴を追加
   window.history.pushState({ activity: 'setting' }, '');
@@ -353,7 +350,7 @@ function showSetting() {
 // 設定を閉じる関数
 function hideSetting() {
   document.getElementById("setting").style.visibility = "hidden";
-  enableScrolling();
+  unlockMainScroll();
   // バックボタン対応のため追加した履歴を削除
   window.history.back();
 }
@@ -385,9 +382,6 @@ function scLoad() {
   // タイトルをヘッダに反映させる
   const headerTitle = document.getElementById('headerTitle');
   headerTitle.innerHTML = title;
-
-  // スクロール位置をリセットする
-  scrollV = 0;
 }
 
 // 台本選択メニューで選択された台本を読み込む関数
