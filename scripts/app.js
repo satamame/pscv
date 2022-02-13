@@ -460,10 +460,11 @@ function scLoad() {
 function scLoadFromMenu() {
   // 選択中の URL を取得
   const scSelect = document.getElementById('scSelect');
-  if (scSelect.selectedOptions.length < 1)
-    return;
+  let url = '';
+  if (scSelect.selectedOptions.length >= 1)
+    url = scSelect.value;
+  if (debug) console.log(`*** scLoadFromMenu URL: ${url}`);
 
-  const url = scSelect.value;
   if (url != selectedDataUrl) {
     // この台本を選択中にする
     selectedDataUrl = url;
