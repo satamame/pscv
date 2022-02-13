@@ -13,6 +13,7 @@ let trackingLineIndex = 0;
 let viewTopTrackingId = null;
 let lastFontSize = 4;
 let lastWritingMode = 0;
+let scUpdated = false;
 const ua = window.navigator.userAgent.toLowerCase();
 
 const fontSizeInPixel = {
@@ -384,6 +385,7 @@ function stopSearching() {
 // 設定を表示する関数
 function showSetting() {
   lockScroll();
+  scUpdated = false;              // 台本が変わったフラグを初期化
   lastFontSize = fontSize;        // フォントサイズを憶えておく
   lastWritingMode = writingMode;  // 横書き/縦書き を憶えておく
   document.getElementById("setting").style.visibility = "visible";
@@ -395,9 +397,12 @@ function showSetting() {
 function hideSetting() {
   document.getElementById("setting").style.visibility = "hidden";
 
-  // フォントサイズや 横書き/縦書き が変わったならスクロールを調整
-  if (fontSize != lastFontSize || writingMode != lastWritingMode) {
+  if (debug) console.log(`*** scUpdated: ${scUpdated}`);
+
+  // 台本やフォントサイズや 横書き/縦書き が変わったならスクロールを調整
+  if (scUpdated || fontSize != lastFontSize || writingMode != lastWritingMode) {
     jumpToLine(trackingLineIndex);
+    if (debug) console.log('*** Scroll restored.');
     unlockScroll();
     // ずれがあった時のために台本行の追跡をする
     startTrackingViewTop();
@@ -410,6 +415,8 @@ function hideSetting() {
 
 // dataList と selectedDataUrl の状態を HTML に反映させる関数
 function scLoad() {
+  // 台本が変わったフラグを立てる
+  scUpdated = true;
   // 台本が反映されたかの判定用にタイトルを初期化
   let title = '';
 
@@ -449,7 +456,7 @@ function scLoad() {
   headerTitle.innerHTML = title;
 }
 
-// 台本選択メニューで選択された台本を読み込む関数
+// 台本選択メニューで選択された台本を読み込む関数 (変更があった時)
 function scLoadFromMenu() {
   // 選択中の URL を取得
   const scSelect = document.getElementById('scSelect');
@@ -529,22 +536,21 @@ function scReload() {
 
   // dataList から選択中の台本データを抽出
   const url = selected.value;
-  const currentData = dataList.filter(item => {return (item.url == url);});
-  if (currentData.length < 1)
+  const selectedData = dataList.filter(item => {return (item.url == url);});
+  if (selectedData.length < 1)
     return;
-  const pscData = currentData[0];
 
   fetch(url).then(response => {
     if (response.ok) {
       response.json().then(data => {
         // データを上書きする
-        pscData.title = data.psc.title;
-        pscData.psc = data.psc;
-        // この台本を選択中にして localStorage に保存する
-        selectedDataUrl = url
-        localStorage.selectedDataUrl = selectedDataUrl;
+        selectedData[0].title = data.psc.title;
+        selectedData[0].psc = data.psc;
         localStorage.dataList = JSON.stringify(dataList);
-        // HTML に反映させる
+        // この台本を選択中にする
+        selectedDataUrl = url;
+        localStorage.selectedDataUrl = selectedDataUrl;
+        // dataList と selectedDataUrl の状態を HTML に反映させる
         scLoad();
       });
     } else {

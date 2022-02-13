@@ -15,6 +15,8 @@ const map2class = {
 
 // main 要素内の台本をクリアする関数
 function clearPSc() {
+  if (debug) console.log('*** clearPSc called.');
+
   // 台本行の追跡を中断し、現在地を初期化する
   if (viewTopTrackingId != null)
     window.clearInterval(viewTopTrackingId);
