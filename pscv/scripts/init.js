@@ -87,6 +87,11 @@ function initEventHandlers() {
     scAdd();
   });
 
+  // 「再取得」ボタンにクリックハンドラを設定
+  document.getElementById("scReloadButton").addEventListener("click", (e) => {
+    scReload();
+  });
+
   // 「削除」ボタンにクリックハンドラを設定
   document.getElementById("scDeleteButton").addEventListener("click", (e) => {
     scDelete();

@@ -426,10 +426,22 @@ function scLoad() {
     title = selected[0].title;
   }
 
-  // タイトルが設定されていなければヘッダと main を初期化
+  // タイトルが設定されていなければヘルプを表示
   if (!title) {
     title = '台本ビューア';
-    clearPSc();
+    fetch('psc/help.json').then(response => {
+      if (response.ok) {
+        response.json().then(data => {
+          loadPSc(data.psc);
+          title = data.title;
+        });
+      } else {
+        clearPSc();
+      }
+    })
+    .catch(error => {
+      clearPSc();
+    });
   }
 
   // タイトルをヘッダに反映させる
@@ -441,8 +453,10 @@ function scLoad() {
 function scLoadFromMenu() {
   // 選択中の URL を取得
   const scSelect = document.getElementById('scSelect');
-  const url = scSelect.value;
+  if (scSelect.selectedOptions.length < 1)
+    return;
 
+  const url = scSelect.value;
   if (url != selectedDataUrl) {
     // この台本を選択中にする
     selectedDataUrl = url;
@@ -503,25 +517,66 @@ function scAddToList(data, url) {
   scLoad();
 }
 
+// 台本データを再取得する関数
+function scReload() {
+  const scSelect = document.getElementById('scSelect');
+  if (scSelect.selectedOptions.length < 1)
+    return;
+
+  const selected = scSelect.selectedOptions[0];
+  const doReload = confirm(`「${selected.text}」を再取得します。`);
+  if (!doReload) return;
+
+  // dataList から選択中の台本データを抽出
+  const url = selected.value;
+  const currentData = dataList.filter(item => {return (item.url == url);});
+  if (currentData.length < 1)
+    return;
+  const pscData = currentData[0];
+
+  fetch(url).then(response => {
+    if (response.ok) {
+      response.json().then(data => {
+        // データを上書きする
+        pscData.title = data.psc.title;
+        pscData.psc = data.psc;
+        // この台本を選択中にして localStorage に保存する
+        selectedDataUrl = url
+        localStorage.selectedDataUrl = selectedDataUrl;
+        localStorage.dataList = JSON.stringify(dataList);
+        // HTML に反映させる
+        scLoad();
+      });
+    } else {
+      alert('台本データを取得できませんでした。');
+    }
+  })
+  .catch(error => {
+    alert('台本データを取得できませんでした。');
+  });
+}
+
 // 台本データを削除する関数
 function scDelete() {
   const scSelect = document.getElementById('scSelect');
+  if (scSelect.selectedOptions.length < 1)
+    return;
+
   const selected = scSelect.selectedOptions[0];
   const doDelete = confirm(`「${selected.text}」を削除します。`);
+  if (!doDelete) return;
 
-  if (doDelete) {
-    // 選択中の URL の台本を dataList から削除
-    dataList = dataList.filter(item => {
-      return (item.url != selected.value);
-    });
+  // 選択中の URL の台本を dataList から削除
+  dataList = dataList.filter(item => {
+    return (item.url != selected.value);
+  });
 
-    // localStorage に反映させる
-    localStorage.dataList = JSON.stringify(dataList);
+  // localStorage に反映させる
+  localStorage.dataList = JSON.stringify(dataList);
 
-    // dataList と selectedDataUrl から台本選択メニューを更新する
-    updateScMenu();
+  // dataList と selectedDataUrl から台本選択メニューを更新する
+  updateScMenu();
 
-    // 台本選択メニューで選択された台本を読み込む
-    scLoadFromMenu();
-  }
+  // 台本選択メニューで選択された台本を読み込む
+  scLoadFromMenu();
 }
