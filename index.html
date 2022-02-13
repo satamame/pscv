@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>台本ビューア</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" type="text/css" href="styles/app.css">
+<link rel="stylesheet" type="text/css" href="styles/psc.css">
+<link rel="manifest" href="manifest.json">
+<script async src="https://unpkg.com/pwacompat" crossorigin="anonymous"></script>
+<link rel="icon" type="image/png" href="icons/icon_192_any.png" sizes="192x192" />
+</head>
+<body>
+
+<!-- ヘッダ ------------------------------------------------------------------>
+<header id="normalHeader" class="app-header">
+  <img id="tocButton" class="header-button header-button-left" src="img/list.png" />
+  <h1 id="headerTitle" class="header-title"></h1>
+  <img id="settingButton" class="header-button header-button-right" src="img/gear.png" />
+</header>
+
+<header id="srchHeader" class="app-header app-header-search">
+  <img id="headerSrchButton" class="header-button header-button-left" src="img/magnifier.png" />
+  <div class="header-search-box">
+    <div id="srchWord" class="header-search-word"></div>
+    <div class="header-search-nav">
+      <button id="srchPrevButton">前</button>
+      <button id="srchNextButton">次</button>
+      <span id="srchCount"></span>
+    </div>
+  </div>
+  <img id="srchCloseButton" class="header-button header-button-right" src="img/close.png" />
+</header>
+
+<!-- 台本コンテンツ ---------------------------------------------------------->
+<main id="main"></main>
+
+<!-- 目次パネル -------------------------------------------------------------->
+<nav id="toc" class="modal">
+  <div class="overlay"></div>
+  <div class="app-toc panel">
+    <div class="panel-header">
+      <h2>検索</h2>
+      <img id="tocCloseButton" class="panel-header-button" src="img/close.png" />
+    </div>
+    <div>
+      <p><input id="srchInput" type="search" inputmode="search"></p>
+      <p>
+        <select id="srchTargetSelect">
+          <option value='all'>全て</option>
+          <option value='name'>名前</option>
+          <option value='line'>セリフ</option>
+          <option value='direction'>ト書き</option>
+        </select>
+        <button id="srchButton">検索</button>
+      </p>
+    </div>
+    <div class="panel-header">
+      <h2>目次</h2>
+    </div>
+    <ul id="tocList" class="toc-list"></ul>
+  </div>
+</nav>
+
+<!-- 設定パネル -------------------------------------------------------------->
+<div id="setting" class="modal">
+  <div class="overlay"></div>
+  <div class="app-setting panel">
+    <div class="panel-header">
+      <h2>設定</h2>
+      <img id="settingCloseButton" class="panel-header-button" src="img/close.png" />
+    </div>
+    <p class="setting-item">台本を読み込む</p>
+    <div>
+      <select id="scSelect">
+      </select>
+      <button id="scLoadButton">読込</button>
+    </div>
+    <div>
+      <button id="scAddButton">新規</button>
+      <button id="scReloadButton">再取得</button>
+      <button id="scDeleteButton">削除</button>
+    </div>
+    <p class="setting-item">文字サイズ</p>
+    <div>
+      <select id="fontSizeSelect">
+      </select>
+    </div>
+    <p class="setting-item">向き</p>
+    <div>
+      <select id="writingModeSelect">
+        <option value='0'>横書き</option>
+        <option value='1'>縦書き</option>
+        <option value='2'>縦書き (英数字も)</option>
+      </select>
+    </div>
+    <!--
+    <p class="setting-item">セリフの表示</p>
+    <div>
+      人物
+      <select id="customCharSelect">
+      </select><br>
+      文字の色
+      <select id="customColorSelect">
+      </select><br>
+      背景の色
+      <select id="customBgSelect">
+      </select><br>
+      アイコン
+      <select id="customIconSelect">
+      </select>
+    </div>
+    -->
+    <p class="setting-item">台本ビューア</p>
+    <p>Ver. <span id="appVersion"></span></p>
+    <button id="updateButton">更新</button>
+    <p id="updateAlert"></p>
+  </div>
+</div>
+
+<script src="scripts/app.js"></script>
+<script src="scripts/init.js"></script>
+<script src="scripts/back.js"></script>
+<script src="scripts/psc.js"></script>
+<script type="application/javascript">
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistration()
+  .then (registration => {
+    // 登録中の SW がなければ、これが初回登録である
+    const firstRegistration = (registration === undefined);
+    // SW を登録する
+    navigator.serviceWorker.register('sw.js')
+    .then(registration => {
+      // 初回登録でなければ更新が見つかったかチェックする
+      if (!firstRegistration) {
+        registration.addEventListener('updatefound', () => {
+          const installingWorker = registration.installing;
+          if (installingWorker != null) {
+            installingWorker.onstatechange = e => {
+              if (e.target.state == 'installed') {
+                registration.unregister();  // 効果が疑わしいので保留
+                alert('更新がインストールされました。台本ビューアを再起動してください。');
+                disableUpdateButton();
+              }
+            };
+          }
+        });
+      }
+    });
+  });
+}
+</script>
+
+</body>
+</html>
