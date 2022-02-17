@@ -1,0 +1,223 @@
+/* 標準的な要素のスタイルの上書き */
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;  /* 強調をなくす */
+  touch-action: manipulation;  /* ダブルタップでズームさせない */
+}
+
+body {
+  overscroll-behavior: none;  /* ドラッグでリロードさせない */
+}
+
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  font-family: "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka, Arial, Helvetica;
+  -webkit-text-size-adjust: 100%;  /* Safari 回転対策 */
+}
+
+button, select, input {
+  border: 1px solid #555;
+  border-radius: 5px;
+}
+
+button:active, a:active, img:active, li:active {
+  opacity: 0.5;
+}
+
+/* 動的に付与するスタイル */
+
+.scroll-disabled {
+  position: fixed;
+}
+
+/* アプリ固有の要素のスタイル */
+
+.app-header {
+  width: 100%;
+  height: 48px;
+  background: #EEB63D;
+  position: fixed;
+  text-align: center;
+  z-index: 1;
+}
+
+.app-header-search {
+  background: #eaf2ff;
+  visibility: hidden;
+}
+
+.header-title {
+  color: #FFF;
+  font-size: 24px;
+  line-height: 24px;
+  margin: 14px 52px 10px 52px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-button {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.header-button-left {
+  position: fixed;
+  top: 10px;
+  left: 16px;
+}
+
+.header-button-right {
+  position: fixed;
+  top: 10px;
+  right: 16px;
+}
+
+.header-search-box {
+  display: flex;
+  font-size: 20px;
+  line-height: 24px;
+  margin: 14px 52px 10px 52px;
+}
+
+.header-search-word {
+  display: inline-block;
+  flex: 1 1 auto;
+  height: 26px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-search-nav {
+  display: inline-block;
+  flex: 0 0 auto;
+  margin-left: 8px;
+}
+
+.header-search-nav button {
+  width: 36px;
+  height: 26px;
+  font-size: 16px;
+  vertical-align: bottom;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  z-index: 2;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  opacity: 0.25;
+}
+
+.panel {
+  font-size: 20px;
+  padding: 16px;
+}
+
+.panel-header {
+  margin: 8px auto 8px;
+}
+
+.panel-header h2 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.panel-header-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+}
+
+.panel div {
+  margin: 8px auto 24px;
+}
+
+.panel p {
+  margin: 8px auto 8px;
+}
+
+.panel select {
+  height: 30px;
+  font-size: 18px;
+  vertical-align: middle;
+}
+
+.panel button {
+  height: 30px;
+  font-size: 18px;
+  vertical-align: middle;
+}
+
+.panel input {
+  height: 30px;
+  font-size: 18px;
+  vertical-align: middle;
+}
+
+.app-toc {
+  background: white;
+  position: fixed;
+  overflow: auto;
+  top: 48px;
+  bottom: 0;
+  left: 0;
+  min-width: 150px;
+}
+
+.toc-list {
+  list-style: none;
+  margin: 0px;
+  padding: 0;
+}
+
+.toc-list li {
+  color: darkcyan;
+  white-space: nowrap;
+  margin: 16px;
+  cursor: pointer;
+}
+
+.toc-list li.current {
+  font-weight: bold;
+}
+
+.app-setting {
+  background: white;
+  position: fixed;
+  overflow: auto;
+  top: 48px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+p.setting-item {
+  margin-top: 16px ;
+  color: darkcyan;
+}
+
+p#updateAlert {
+  color: red;
+}
