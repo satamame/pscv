@@ -1,19 +1,3 @@
-// TODO: 不要なら削除
-const map2class = {
-  TITLE: 'title',
-  AUTHOR: 'author',
-  CHARSHEADLINE: 'chars-headline',
-  CHARACTER: 'character',
-  H1: 'headline-1',
-  H2: 'headline-2',
-  H3: 'headline-3',
-  DIRECTION: 'direction',
-  DIALOGUE: 'dialogue',
-  ENDMARK: 'endmark',
-  COMMENT: 'comment',
-  EMPTY: 'empty'
-};
-
 // 行番号を指定してジャンプする関数
 function jumpToLine(lineNum) {
   let x = 0;

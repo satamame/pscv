@@ -24,16 +24,34 @@ let fontSize = 4;           // 1-7
 let writingMode = 0;        // 0: 横, 1: 縦, 2: 縦 (英数字も)
 
 window.onload = (event) => {
-  // TODO: tocItems を初期化する
+  // tocItems を初期化する (browseronly 版のみ)
+  const main = document.getElementById('main');
+  const tocList = document.getElementById('tocList')
+  for (let i = 0; i < main.children.length; i++) {
+    // 見出しなら目次に追加する
+    const elm = main.children[i];
+    if (
+      elm.classList.contains('title')
+      || elm.classList.contains('chars-headline')
+      || elm.classList.contains('headline-1')
+      || elm.classList.contains('headline-2')
+      || elm.classList.contains('headline-3')
+    ) {
+      const tocItem = document.createElement('li');
+      tocItem.innerHTML = elm.textContent;
+      tocItem.setAttribute('onclick', `jumpToTocItem(${tocItems.length});`);
+      tocList.appendChild(tocItem);
+
+      // 目次項目リストにも番号を追加する
+      tocItems.push(i);
+    }
+  }
 
   // 文字サイズ選択メニューを初期化する
   initFontSizeMenu();
 
   // 横書き/縦書きを初期化する
   initWritingMode();
-
-  // バージョンを表示する
-  document.getElementById('appVersion').innerHTML = appVersion;
 
   // イベントハンドラを初期化する
   initEventHandlers();
@@ -183,9 +201,6 @@ function showSetting() {
 // 設定を閉じる関数
 function hideSetting() {
   document.getElementById("setting").style.visibility = "hidden";
-
-  if (debug) console.log(`*** scUpdated: ${scUpdated}`);
-
   // 台本やフォントサイズや 横書き/縦書き が変わったならスクロールを調整
   if (fontSize != lastFontSize || writingMode != lastWritingMode) {
     jumpToLine(trackingLineIndex);
