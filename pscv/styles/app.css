@@ -218,6 +218,10 @@ p.setting-item {
   color: darkcyan;
 }
 
+input#scFromFileInput {
+  display:none;
+}
+
 p#updateAlert {
   color: red;
 }

@@ -16,10 +16,20 @@ PWA としてスマホ等にインストールすることが可能です。
 
 ## データ作成
 
-Python の [playscript](https://pypi.org/project/playscript/) というパッケージで JSON データを作って、以下の形にして .json ファイルとして保存します。
-
-    {"psc": <playscript で作った JSON>}
-
-できたファイルを適当なサーバにアップロードして、台本ビューアの設定画面の「新規」でその URL を入力すると、読み込まれてローカルに保存されます。
-
+Python の [playscript](https://pypi.org/project/playscript/) というパッケージで JSON データを作ります。  
 playscript で JSON データを作るには、[Fountain (日本式)](https://satamame.github.io/playscript/master/fountain.html) で書いたものを変換するのが良いです。
+
+台本ビューアに読み込む方法は、Web 経由で読み込む方法と、ファイルから読み込む方法があります。
+
+### Web 経由で読み込む方法
+
+1. 以下の形の JSON データを https で取得できるようにします。
+    ```JSON
+    {"psc": <playscript で作った JSON>}
+    ```
+2. 台本ビューアの設定画面の「URL から読み込む」でその URL を入力します。
+
+### ファイルから読み込む方法
+
+1. playscript で作った JSON を .json ファイルとして保存します。
+2. 台本ビューアの設定画面の「ファイルから読み込む」でそのファイルを選択します。

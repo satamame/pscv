@@ -82,11 +82,6 @@ function initEventHandlers() {
     scLoadFromMenu();
   });
 
-  // 「新規」ボタンにクリックハンドラを設定
-  document.getElementById("scAddButton").addEventListener("click", (e) => {
-    scAdd();
-  });
-
   // 「再取得」ボタンにクリックハンドラを設定
   document.getElementById("scReloadButton").addEventListener("click", (e) => {
     scReload();
@@ -95,6 +90,24 @@ function initEventHandlers() {
   // 「削除」ボタンにクリックハンドラを設定
   document.getElementById("scDeleteButton").addEventListener("click", (e) => {
     scDelete();
+  });
+
+  // 「URL から読み込む」ボタンにクリックハンドラを設定
+  document.getElementById("scFromUrlButton").addEventListener("click", (e) => {
+    scFromUrl();
+  });
+
+  // 「ファイルから読み込む」ボタンに選択ハンドラを設定
+  document.getElementById("scFromFileButton").addEventListener("click", (e) => {
+    const fileInput = document.getElementById("scFromFileInput");
+    // 同じファイルを読み込み直すことができるように
+    fileInput.value = null;
+    fileInput.click();
+  });
+
+  // ファイルを選択した時のハンドラを設定
+  document.getElementById("scFromFileInput").addEventListener("change", (e) => {
+    scFromFile(e);
   });
 
   // 文字サイズ選択メニューに選択ハンドラを設定
