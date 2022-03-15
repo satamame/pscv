@@ -253,6 +253,40 @@ function updateScMenu() {
       op.selected = true;
     }
   }
+  // 「読込/再取得/削除」ボタンの有効/無効を更新する
+  updateScButtonStatus();
+}
+
+// 台本選択メニューで台本を変更した時の処理
+function changeScript() {
+  // 「読込/再取得/削除」ボタンの有効/無効を更新する
+  updateScButtonStatus();
+}
+
+// 「読込/再取得/削除」ボタンの有効/無効を更新する関数
+function updateScButtonStatus() {
+  const scSelect = document.getElementById('scSelect');
+  const loadButton = document.getElementById("scLoadButton")
+  const reloadButton = document.getElementById("scReloadButton");
+  const deleteButton = document.getElementById("scDeleteButton");
+  // dataList から選択中の台本データを抽出
+  const selected = dataList.filter(item => {
+    return (item.id == scSelect.value);
+  });
+  // 台本が選択されているなら「読込/削除」ボタンを有効にする
+  if (selected.length >= 1) {
+    loadButton.disabled = false;
+    deleteButton.disabled = false;
+    // URL があるなら「再取得」ボタンを有効にする
+    if (selected[0].url)
+      reloadButton.disabled = false;
+    else
+      reloadButton.disabled = true;
+  } else {
+    loadButton.disabled = true;
+    deleteButton.disabled = true;
+    reloadButton.disabled = true;
+  }
 }
 
 // 台本のスクロールをロックする関数

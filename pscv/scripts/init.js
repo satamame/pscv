@@ -77,6 +77,11 @@ function initEventHandlers() {
     hideSetting();
   });
 
+  // 台本選択メニューに選択ハンドラを設定
+  document.getElementById("scSelect").addEventListener("change", (e) => {
+    changeScript();
+  });
+
   // 「読込」ボタンにクリックハンドラを設定
   document.getElementById("scLoadButton").addEventListener("click", (e) => {
     scLoadFromMenu();
