@@ -77,14 +77,14 @@ function initEventHandlers() {
     hideSetting();
   });
 
-  // 「読込」ボタンにクリックハンドラを設定
-  document.getElementById("scLoadButton").addEventListener("click", (e) => {
-    scLoadFromMenu();
+  // 台本選択メニューに選択ハンドラを設定
+  document.getElementById("scSelect").addEventListener("change", (e) => {
+    updateScButtonStatus();
   });
 
-  // 「新規」ボタンにクリックハンドラを設定
-  document.getElementById("scAddButton").addEventListener("click", (e) => {
-    scAdd();
+  // 「表示」ボタンにクリックハンドラを設定
+  document.getElementById("scLoadButton").addEventListener("click", (e) => {
+    scLoadFromMenu();
   });
 
   // 「再取得」ボタンにクリックハンドラを設定
@@ -95,6 +95,24 @@ function initEventHandlers() {
   // 「削除」ボタンにクリックハンドラを設定
   document.getElementById("scDeleteButton").addEventListener("click", (e) => {
     scDelete();
+  });
+
+  // 「URL から取得する」ボタンにクリックハンドラを設定
+  document.getElementById("scFromUrlButton").addEventListener("click", (e) => {
+    scFromUrl();
+  });
+
+  // 「ファイルを読み込む」ボタンに選択ハンドラを設定
+  document.getElementById("scFromFileButton").addEventListener("click", (e) => {
+    const fileInput = document.getElementById("scFromFileInput");
+    // 同じファイルを読み込み直すことができるように
+    fileInput.value = null;
+    fileInput.click();
+  });
+
+  // ファイルを選択した時のハンドラを設定
+  document.getElementById("scFromFileInput").addEventListener("change", (e) => {
+    scFromFile(e);
   });
 
   // 文字サイズ選択メニューに選択ハンドラを設定
