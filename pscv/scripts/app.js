@@ -257,12 +257,6 @@ function updateScMenu() {
   updateScButtonStatus();
 }
 
-// 台本選択メニューで台本を変更した時の処理
-function changeScript() {
-  // 「読込/再取得/削除」ボタンの有効/無効を更新する
-  updateScButtonStatus();
-}
-
 // 「読込/再取得/削除」ボタンの有効/無効を更新する関数
 function updateScButtonStatus() {
   const scSelect = document.getElementById('scSelect');
@@ -509,7 +503,7 @@ function scLoadFromMenu() {
   }
 }
 
-// 台本データを URL から読み込む関数
+// 台本データを URL から取得する関数
 function scFromUrl() {
   const url = prompt('台本データの URL');
   if (!url)
@@ -521,11 +515,11 @@ function scFromUrl() {
         scAddToList(data, url);
       });
     } else {
-      alert('台本データを読み込めませんでした。');
+      alert('台本データを取得できませんでした。');
     }
   })
   .catch(error => {
-    alert('台本データを読み込めませんでした。');
+    alert('台本データを取得できませんでした。');
   });
 }
 
@@ -553,24 +547,40 @@ function getNewId () {
   return i;
 }
 
+// 台本選択メニューで選択中の台本データを取得する関数
+function getSelectedData() {
+  const scSelect = document.getElementById('scSelect');
+  if (scSelect.selectedOptions.length < 1)
+    return null;
+
+  const selected = scSelect.selectedOptions[0];
+  const id = parseInt(selected.value);
+  const selectedData = dataList.filter(item => {return (item.id == id);});
+  if (selectedData.length < 1)
+    return null;
+
+  return selectedData[0];
+}
+
 // 台本データをリストに追加する関数
 function scAddToList(data, url) {
-  // すでに同じ URL があれば、古い方を削除する
-  if (url) {
-    const dupe = dataList.find(item => item.url == url);
-    if (dupe) {
-      dataList = dataList.filter(item => {
-        return (item.url != url);
-      });
-      alert('同じ URL の古いエントリを削除しました。');
-    }
-  }
-
   // タイトルがなければ追加しない
   const title = data.psc.title;
   if (!title) {
     alert('台本データにタイトルがないため読み込めません。');
     return;
+  }
+
+  // すでに同じ URL があれば、古い方を削除する
+  if (url) {
+    const dupe = dataList.find(item => item.url == url);
+    if (dupe) {
+      const doDelete = confirm('同じ URL の古い台本は削除されます。');
+      if (!doDelete) return;
+      dataList = dataList.filter(item => {
+        return (item.url != url);
+      });
+    }
   }
 
   // 台本データに ID と URL とタイトルを埋め込む
@@ -595,35 +605,27 @@ function scAddToList(data, url) {
 
 // 台本データを再取得する関数
 function scReload() {
-  const scSelect = document.getElementById('scSelect');
-  if (scSelect.selectedOptions.length < 1)
-    return;
+  // 台本選択メニューで選択中の台本のデータ
+  const selected = getSelectedData();
+  if (!selected) return;
 
-  const selected = scSelect.selectedOptions[0];
-  const doReload = confirm(`「${selected.text}」を再取得します。`);
+  const doReload = confirm(`「${selected.title}」を再取得します。`);
   if (!doReload) return;
 
-  // dataList から選択中の台本データを抽出
-  const id = parseInt(selected.value);
-  const selectedData = dataList.filter(item => {return (item.id == id);});
-  if (selectedData.length < 1)
-    return;
-
-  const url = selectedData[0].url;
-  if (!url) {
+  if (!selected.url) {
     alert('再取得できませんでした。');
     return;
   }
 
-  fetch(url).then(response => {
+  fetch(selected.url).then(response => {
     if (response.ok) {
       response.json().then(data => {
         // データを上書きする
-        selectedData[0].title = data.psc.title;
-        selectedData[0].psc = data.psc;
+        selected.title = data.psc.title;
+        selected.psc = data.psc;
         localStorage.dataList = JSON.stringify(dataList);
         // この台本を選択中にする
-        selectedDataId = id;
+        selectedDataId = selected.id;
         localStorage.selectedDataId = selectedDataId;
         // dataList と selectedDataUrl の状態を HTML に反映させる
         scLoad();
