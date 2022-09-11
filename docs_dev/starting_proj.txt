@@ -1,0 +1,12 @@
+> yarn create vite pscv --template svelte-ts
+
+プロジェクトフォルダが出来るので入る (または中身を上に移動)
+
+> yarn
+
+パッケージがインストールされる
+Svelte + TypeScript の環境が完成
+
+> yarn dev
+
+開発サーバが起動する
