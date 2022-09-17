@@ -463,7 +463,7 @@ function scLoad() {
 
   // タイトルが設定されていなければヘルプを表示
   if (!title) {
-    title = '台本ビューア';
+    title = '台本ビューア 0.01';
     fetch('psc/help.json').then(response => {
       if (response.ok) {
         response.json().then(data => {
