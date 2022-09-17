@@ -1,6 +1,6 @@
 > yarn create vite pscv --template svelte-ts
 
-プロジェクトフォルダが出来るので入る (または中身を上に移動)
+プロジェクトフォルダが出来るので cd で入る (または中身をここに移動)
 
 > yarn
 
@@ -10,3 +10,8 @@ Svelte + TypeScript の環境が完成
 > yarn dev
 
 開発サーバが起動する
+
+tsconfig.json の compilerOptions の下に以下を設定する
+"forceConsistentCasingInFileNames": false
+コンポーネントのファイル名を PascalCase にしてもエラーが出なくなる
+

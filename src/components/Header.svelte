@@ -1,13 +1,27 @@
 <script lang="ts">
+  import { headerColor } from '../lib/const'
+  import { createEventDispatcher } from 'svelte'
+
+  const dispatch = createEventDispatcher()
+
+  function openToc() {
+    dispatch('openToc')
+  }
+
+  function openMainMenu() {
+    dispatch('openMainMenu')
+  }
 </script>
 
-<header>
-  <button class="left-button">
-    <img alt="目次" src="public/format_list_bulleted_black_24dp.svg" />
+<header style="background-color: {headerColor};">
+  <button class="left-button" on:click={openToc}>
+    <img alt="目次" src="/ui_icon/toc_black_24dp.svg" />
   </button>
+
   <h1>タイトル</h1>
-  <button class="right-button">
-    <img alt="設定" src="public/settings_black_24dp.svg" />
+
+  <button class="right-button" on:click={openMainMenu}>
+    <img alt="メニュー" src="/ui_icon/menu_open_black_24dp.svg" />
   </button>
 </header>
 
@@ -15,15 +29,16 @@
   header {
     position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
     height: 48px;
-    background: #EEB63D;
     text-align: center;
   }
   header h1 {
     color: white;
     font-size: 24px;
-    margin: 12px 50px;
+    line-height: 24px;
+    margin: 14px 52px 10PX;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

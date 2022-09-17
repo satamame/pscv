@@ -1,8 +1,18 @@
 <script lang="ts">
-  import Header from "./components/Header.svelte";
+  import Header from "./components/Header.svelte"
+  import Toc from "./components/Toc.svelte"
+  import MainMenu from "./components/MainMenu.svelte"
+
+  let tocIsOpen = false
+  let menuIsOpen = false
+  $: isModal = tocIsOpen || menuIsOpen
 </script>
 
-<Header />
+<Header
+  on:openToc={() => { tocIsOpen = true }}
+  on:openMainMenu={() => { menuIsOpen = true }}
+/>
+
 <main>
   <div>bbb</div>
   <div>bbb</div>
@@ -40,6 +50,14 @@
   <div>bbb</div>
   <div>ccccc</div>
 </main>
+
+{#if tocIsOpen}
+  <Toc on:close={() => { tocIsOpen = false }} />
+{/if}
+
+{#if menuIsOpen}
+  <MainMenu on:close={() => { menuIsOpen = false }} />
+{/if}
 
 <style>
   main {

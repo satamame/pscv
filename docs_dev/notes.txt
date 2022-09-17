@@ -1,0 +1,7 @@
+使用する material icon
+https://fonts.google.com/icons?icon.style=Rounded&icon.set=Material+Icons
+- Rounded
+- Web
+- Density: 1x
+- Size: 24dp
+- Color: Black
