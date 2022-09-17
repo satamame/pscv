@@ -16,8 +16,8 @@ PWA としてスマホ等にインストールすることが可能です。
 
 ## データ作成
 
-Python の [playscript](https://pypi.org/project/playscript/) というパッケージで JSON データを作ります。  
-playscript で JSON データを作るには、[Fountain (日本式)](https://satamame.github.io/playscript/master/fountain.html) で書いたものを変換するのが良いです。
+Python の [playscript](https://pypi.org/project/playscript/) というパッケージで [Fountain (日本式)](https://satamame.github.io/playscript/master/fountain.html) から変換するのが良いです。  
+[pscapi](https://github.com/satamame/pscapi) を使えば、Python や playscript をインストールしなくてもブラウザで変換できます。
 
 台本ビューアに読み込む方法は、Web 経由で読み込む方法と、ファイルから読み込む方法があります。
 

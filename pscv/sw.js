@@ -1,4 +1,4 @@
-const cacheName = 'pscv 0.0.1';
+const cacheName = 'pscv 0.0.2';
 const debug = true;
 
 // キャッシュ対象ファイル

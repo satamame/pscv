@@ -1,4 +1,4 @@
-const appVersion = '0.0.1';
+const appVersion = '0.0.2';
 const debug = true;
 
 // グローバル変数の定義
@@ -463,7 +463,7 @@ function scLoad() {
 
   // タイトルが設定されていなければヘルプを表示
   if (!title) {
-    title = '台本ビューア';
+    title = '台本ビューア 0.0.2';
     fetch('psc/help.json').then(response => {
       if (response.ok) {
         response.json().then(data => {
