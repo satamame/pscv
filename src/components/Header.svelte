@@ -2,6 +2,9 @@
   import { headerColor } from '../lib/const'
   import { createEventDispatcher } from 'svelte'
 
+  import tocIcon from '/ui_icon/toc_black_24dp.svg'
+  import menuIcon from '/ui_icon/menu_open_black_24dp.svg'
+
   const dispatch = createEventDispatcher()
 
   function openToc() {
@@ -15,13 +18,13 @@
 
 <header style="background-color: {headerColor};">
   <button class="left-button" on:click={openToc}>
-    <img alt="目次" src="/ui_icon/toc_black_24dp.svg" />
+    <img alt="目次" src={tocIcon} />
   </button>
 
   <h1>タイトル</h1>
 
   <button class="right-button" on:click={openMainMenu}>
-    <img alt="メニュー" src="/ui_icon/menu_open_black_24dp.svg" />
+    <img alt="メニュー" src={menuIcon} />
   </button>
 </header>
 

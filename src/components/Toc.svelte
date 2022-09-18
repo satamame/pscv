@@ -3,6 +3,8 @@
   import Overlay from "./Overlay.svelte"
   import LoremIpsum from './LoremIpsum.svelte'
 
+  import closeIcon from '/ui_icon/close_black_24dp.svg'
+
   const dispatch = createEventDispatcher()
 
   let panel
@@ -35,7 +37,7 @@
 <div class="panel panel-gone" bind:this={panel}>
   <h1>目次</h1>
   <button class="close-button">
-    <img alt="閉じる" src="/ui_icon/close_black_24dp.svg" on:click={close} />
+    <img alt="閉じる" src={closeIcon} on:click={close} />
   </button>
 
   <div style="padding: 2px 16px 14px;">
@@ -53,10 +55,11 @@
     max-height: 100%;
     background: white;
     overflow: auto;
-    transition: transform 0.2s;
+    transition: transform 0.2s, opacity 0.2s;
   }
   .panel-gone {
     transform: translateX(-180px);
+    opacity: 0;
   }
   .overlay {
     transition: opacity 0.2s;
