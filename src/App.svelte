@@ -4,21 +4,40 @@
   import MainMenu from "./components/MainMenu.svelte"
   import LoremIpsum from './components/LoremIpsum.svelte'
 
+  let main
+
   let tocIsOpen = false
   let menuIsOpen = false
+
   $: isModal = tocIsOpen || menuIsOpen
+
+  // Scroll lock/unlock
+  $: if (main) {
+    if (isModal) {
+      const scrollTop = document.documentElement.scrollTop
+      document.documentElement.style.position = 'fixed'
+      main.style.top = `${48 - scrollTop}px`
+      main.style.bottom = 0
+    } else {
+      const scrollTop = 48 - main.offsetTop
+      main.style.bottom = null
+      main.style.top = '48px'
+      document.documentElement.style.position = 'static'
+      document.documentElement.scrollTop = scrollTop
+    }
+  }
 </script>
+
+<main bind:this={main}>
+
+  <LoremIpsum blockCount={4} />
+
+</main>
 
 <Header
   on:openToc={() => { tocIsOpen = true }}
   on:openMainMenu={() => { menuIsOpen = true }}
 />
-
-<main>
-
-  <LoremIpsum blockCount={4} />
-
-</main>
 
 {#if tocIsOpen}
   <Toc on:close={() => { tocIsOpen = false }} />
@@ -30,12 +49,12 @@
 
 <style>
   main {
-    position: fixed;
+    position: absolute;
     top: 48px;
     left: 0;
     right: 0;
-    bottom: 0;
+    /* bottom: 0; */
     overflow: auto;
-    padding: 2px 12px 12px 18px;
+    padding: 8px 12px 12px 18px;
   }
 </style>

@@ -30,7 +30,11 @@
 
     let html = ''
     for (let i = 0; i < blockCount; i++) {
-      html += `<div style="margin-bottom: ${blockGap}em">`
+      if (i < blockCount - 1) {
+        html += `<div style="margin-bottom: ${blockGap}em">`
+      } else {
+        html += '<div>'
+      }
       let pos = 0
       let blockContent = ''
       for (let j = 0; j < lineCount; j++) {
@@ -47,3 +51,4 @@
 </script>
 
 <div>{@html innerHtml}</div>
+

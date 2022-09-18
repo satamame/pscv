@@ -41,7 +41,7 @@
   </button>
 
   <div style="padding: 2px 16px 14px;">
-    <LoremIpsum lineLength={20} blockCount={2} />
+    <LoremIpsum lineCount={10} />
   </div>
 
 </div>
@@ -52,6 +52,7 @@
     top: 0;
     right: 0;
     min-width: 180px;
+    max-width: 100%;
     max-height: 100%;
     background: white;
     overflow: auto;
@@ -76,7 +77,6 @@
     width: 28px;
     height: 28px;
     border-width: 0;
-    border-radius: 0;
     padding: 0;
     background: transparent;
     cursor: pointer;

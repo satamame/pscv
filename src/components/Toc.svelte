@@ -52,6 +52,7 @@
     top: 0;
     left: 0;
     min-width: 180px;
+    max-width: 100%;
     max-height: 100%;
     background: white;
     overflow: auto;
@@ -76,7 +77,6 @@
     width: 28px;
     height: 28px;
     border-width: 0;
-    border-radius: 0;
     padding: 0;
     background: transparent;
     cursor: pointer;
