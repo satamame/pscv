@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte'
   import Overlay from "./Overlay.svelte"
+  import LoremIpsum from './LoremIpsum.svelte'
 
   const dispatch = createEventDispatcher()
 
@@ -36,36 +37,11 @@
   <button class="close-button">
     <img alt="閉じる" src="/ui_icon/close_black_24dp.svg" on:click={close} />
   </button>
-  <div>setting</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>settings</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>settings</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>settings</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>settings</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>settings</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>setting</div>
-  <div>settings</div>
+
+  <div style="padding: 2px 16px 14px;">
+    <LoremIpsum lineLength={20} blockCount={2} />
+  </div>
+
 </div>
 
 <style>

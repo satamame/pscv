@@ -2,6 +2,7 @@
   import Header from "./components/Header.svelte"
   import Toc from "./components/Toc.svelte"
   import MainMenu from "./components/MainMenu.svelte"
+  import LoremIpsum from './components/LoremIpsum.svelte'
 
   let tocIsOpen = false
   let menuIsOpen = false
@@ -14,41 +15,9 @@
 />
 
 <main>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>ccccc</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>ccccc</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>ccccc</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>ccccc</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>ccccc</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>ccccc</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>bbb</div>
-  <div>ccccc</div>
+
+  <LoremIpsum blockCount={4} />
+
 </main>
 
 {#if tocIsOpen}
