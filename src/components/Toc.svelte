@@ -31,17 +31,17 @@
   }
 </script>
 
-<div class="overlay overlay-gone" bind:this={overlay}>
-  <Overlay on:click={close} />
+<div class="overlay overlay-gone" bind:this="{overlay}" >
+  <Overlay on:click="{close}" />
 </div>
-<div class="panel panel-gone" bind:this={panel}>
+<div class="panel panel-gone" bind:this="{panel}" >
   <h1>目次</h1>
   <button class="close-button">
-    <img alt="閉じる" src={closeIcon} on:click={close} />
+    <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
   </button>
 
   <div style="padding: 2px 16px 14px;">
-    <LoremIpsum lineLength={20} blockCount={2} />
+    <LoremIpsum lineLength="{20}" lineCount="{10}" blockCount="{2}" />
   </div>
 
 </div>

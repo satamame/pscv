@@ -1,13 +1,13 @@
 <script lang="ts">
   /**
    * Overlay component for modal interface
-  */
+   */
   export let color = 'black'
   export let opacity = 0.25
 </script>
 
 <div
-  style:background-color={color}
+  style:background-color="{color}"
   style:opacity
   on:click
 ></div>

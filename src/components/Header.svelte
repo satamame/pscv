@@ -6,25 +6,17 @@
   import menuIcon from '/ui_icon/menu_open_black_24dp.svg'
 
   const dispatch = createEventDispatcher()
-
-  function openToc() {
-    dispatch('openToc')
-  }
-
-  function openMainMenu() {
-    dispatch('openMainMenu')
-  }
 </script>
 
 <header style="background-color: {headerColor};">
-  <button class="left-button" on:click={openToc}>
-    <img alt="目次" src={tocIcon} />
+  <button class="left-button" on:click="{() => dispatch('openToc')}" >
+    <img alt="目次" src="{tocIcon}" />
   </button>
 
   <h1>タイトル</h1>
 
-  <button class="right-button" on:click={openMainMenu}>
-    <img alt="メニュー" src={menuIcon} />
+  <button class="right-button" on:click="{() => dispatch('openMainMenu')}" >
+    <img alt="メニュー" src="{menuIcon}" />
   </button>
 </header>
 
