@@ -3,10 +3,10 @@
 
   const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW({
     onRegistered(swr) {
-      console.log(`SW registered: ${swr}`);
+      console.log(`SW registered: ${swr}`)
     },
     onRegisterError(error) {
-      console.log('SW registration error', error);
+      console.log('SW registration error', error)
     }
   });
 
@@ -15,7 +15,7 @@
     needRefresh.set(false)
   }
 
-  $: toast = $offlineReady || $needRefresh;
+  $: toast = $offlineReady || $needRefresh
 </script>
 
 {#if toast}
@@ -52,23 +52,21 @@
     bottom: 0;
     margin: 16px;
     padding: 12px;
-    border: 2px solid #444;
-    border-radius: 4px;
+    border: 1px solid #555;
+    border-radius: 6px;
     z-index: 1;
     text-align: left;
-    box-shadow: 4px 4px 8px 0 darkgray;
-    background-color: white;
+    box-shadow: 2px 2px 8px 0 darkgray;
+    background-color: #FFFDF6;
   }
   .pwa-toast .message {
-    font-size: larger;
+    font-size: large;
     margin-bottom: 8px;
   }
   .pwa-toast button {
-    font-size: larger;
-    border: 1px solid #444;
+    font-size: medium;
     outline: none;
     margin-right: 12px;
-    border-radius: 4px;
     padding: 4px 10px;
   }
 </style>

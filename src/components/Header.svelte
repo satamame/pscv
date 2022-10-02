@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { headerColor } from '../lib/const'
+  import { appHeaderColor } from '../lib/const'
   import { createEventDispatcher } from 'svelte'
 
   import tocIcon from '/ui_icon/toc_black_24dp.svg'
@@ -8,7 +8,7 @@
   const dispatch = createEventDispatcher()
 </script>
 
-<header style="background-color: {headerColor};">
+<header style="background-color: {appHeaderColor};">
   <button class="left-button" on:click="{() => dispatch('openToc')}" >
     <img alt="目次" src="{tocIcon}" />
   </button>

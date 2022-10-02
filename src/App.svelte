@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { appVersion } from './lib/const'
+
   import Header from "./components/Header.svelte"
   import Toc from "./components/Toc.svelte"
   import MainMenu from "./components/MainMenu.svelte"
@@ -28,7 +30,7 @@
 </script>
 
 <main bind:this="{main}" >
-  <div>Ver.0.1a.1</div>
+  <div>{appVersion}</div>
   <LoremIpsum blockCount="{4}" />
 </main>
 

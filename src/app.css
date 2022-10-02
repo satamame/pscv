@@ -15,8 +15,10 @@ body {
 }
 
 button, select, input {
+  color: black;
   border: 1px solid #555;
   border-radius: 5px;
+  background-color: #F8F8F8;
 }
 
 button:active, a:active, img:active, li:active {
