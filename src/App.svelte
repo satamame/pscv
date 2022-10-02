@@ -3,6 +3,7 @@
   import Toc from "./components/Toc.svelte"
   import MainMenu from "./components/MainMenu.svelte"
   import LoremIpsum from './components/LoremIpsum.svelte'
+  import ReloadPrompt from "./components/ReloadPrompt.svelte";
 
   let main
 
@@ -27,15 +28,16 @@
 </script>
 
 <main bind:this="{main}" >
-
+  <div>Ver.0.1a.1</div>
   <LoremIpsum blockCount="{4}" />
-
 </main>
 
 <Header
   on:openToc="{() => { tocIsOpen = true }}"
   on:openMainMenu="{() => { menuIsOpen = true }}"
 />
+
+<ReloadPrompt />
 
 {#if tocIsOpen}
   <Toc on:close="{() => { tocIsOpen = false }}" />
