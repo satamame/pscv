@@ -19,8 +19,22 @@ button, select, input {
   border: 1px solid #555;
   border-radius: 5px;
   background-color: #F8F8F8;
+  cursor: pointer;
 }
 
 button:active, a:active, img:active, li:active {
   opacity: 0.5;
+}
+
+.icon-button {
+  width: 28px;
+  height: 28px;
+  border-width: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.icon-button img {
+  width: 100%;
+  height: 100%;
 }

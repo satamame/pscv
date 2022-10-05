@@ -1,16 +1,18 @@
 <script lang="ts">
-  import { appVersion } from './lib/const'
+  import { APP_VERSION } from './lib/const'
 
   import Header from "./components/Header.svelte"
   import Toc from "./components/Toc.svelte"
   import MainMenu from "./components/MainMenu.svelte"
   import LoremIpsum from './components/LoremIpsum.svelte'
-  import ReloadPrompt from "./components/ReloadPrompt.svelte";
+  import About from './components/About.svelte'
+  import ReloadPrompt from "./components/ReloadPrompt.svelte"
 
   let main
 
   let tocIsOpen = false
   let menuIsOpen = false
+  let aboutIsOpen = false
 
   $: isModal = tocIsOpen || menuIsOpen
 
@@ -30,7 +32,7 @@
 </script>
 
 <main bind:this="{main}" >
-  <div>{appVersion}</div>
+  <div>{APP_VERSION}</div>
   <LoremIpsum blockCount="{4}" />
 </main>
 
@@ -39,15 +41,22 @@
   on:openMainMenu="{() => { menuIsOpen = true }}"
 />
 
-<ReloadPrompt />
-
 {#if tocIsOpen}
   <Toc on:close="{() => { tocIsOpen = false }}" />
 {/if}
 
 {#if menuIsOpen}
-  <MainMenu on:close="{() => { menuIsOpen = false }}" />
+  <MainMenu
+    on:close="{() => { menuIsOpen = false }}"
+    on:openAbout="{() => {aboutIsOpen = true}}"
+  />
 {/if}
+
+{#if aboutIsOpen}
+  <About on:close="{() => { aboutIsOpen = false }}" />
+{/if}
+
+<ReloadPrompt />
 
 <style>
   main {

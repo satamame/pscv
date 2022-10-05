@@ -1,19 +1,16 @@
 <script lang="ts">
+  import { APP_VERSION } from '../lib/const'
   import { createEventDispatcher, onMount } from 'svelte'
-  import Overlay from "./Overlay.svelte"
-  import LoremIpsum from './LoremIpsum.svelte'
 
   import closeIcon from '/ui_icon/close_black_24dp.svg'
 
   const dispatch = createEventDispatcher()
 
   let panel
-  let overlay
   let disabled = false
 
   onMount(async () => {
     setTimeout(() => {
-      overlay.classList.remove('overlay-gone')
       panel.classList.remove('panel-gone')
     }, 0)
   })
@@ -23,7 +20,6 @@
     if (disabled) { return }
     disabled = true
 
-    overlay.classList.add('overlay-gone')
     panel.classList.add('panel-gone')
     setTimeout(() => {
       dispatch('close')
@@ -31,17 +27,14 @@
   }
 </script>
 
-<div class="overlay overlay-gone" bind:this="{overlay}" >
-  <Overlay on:click="{close}" />
-</div>
 <div class="panel panel-gone" bind:this="{panel}" >
-  <h1>目次</h1>
+  <h1>台本ビューアについて</h1>
   <button class="icon-button close-button">
     <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
   </button>
 
   <div style="padding: 2px 16px 14px;">
-    <LoremIpsum lineLength="{20}" lineCount="{10}" blockCount="{2}" />
+    バージョン {APP_VERSION}
   </div>
 
 </div>
@@ -51,21 +44,14 @@
     position: fixed;
     top: 0;
     left: 0;
-    min-width: 180px;
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
     background: white;
     overflow: auto;
     transition: transform 0.2s, opacity 0.2s;
   }
   .panel-gone {
-    transform: translateX(-180px);
-    opacity: 0;
-  }
-  .overlay {
-    transition: opacity 0.2s;
-  }
-  .overlay-gone {
+    transform: translateY(180px);
     opacity: 0;
   }
   h1 {

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte'
   import Overlay from "./Overlay.svelte"
-  import LoremIpsum from './LoremIpsum.svelte'
 
   import closeIcon from '/ui_icon/close_black_24dp.svg'
 
@@ -29,6 +28,11 @@
       dispatch('close')
     }, 200)
   }
+
+  function openAbout() {
+    close()
+    dispatch('openAbout')
+  }
 </script>
 
 <div class="overlay overlay-gone" bind:this="{overlay}" >
@@ -36,13 +40,15 @@
 </div>
 <div class="panel panel-gone" bind:this="{panel}" >
   <h1>メニュー</h1>
-  <button class="close-button">
+  <button class="icon-button close-button">
     <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
   </button>
 
-  <div style="padding: 2px 16px 14px;">
-    <LoremIpsum lineLength="{30}" lineCount="{30}" />
-  </div>
+  <ul>
+    <li>表示</li>
+    <li>台本データ</li>
+    <li on:click="{openAbout}">バージョン情報</li>
+  </ul>
 
 </div>
 
@@ -73,21 +79,19 @@
     font-size: 24px;
     line-height: 24px;
   }
-  button {
-    width: 28px;
-    height: 28px;
-    border-width: 0;
-    padding: 0;
-    background: transparent;
-    cursor: pointer;
-  }
-  button img {
-    width: 100%;
-    height: 100%;
-  }
   .close-button {
     position: absolute;
     top: 10px;
     right: 16px;
+  }
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  li {
+    border-top: 1px solid #555;
+    padding: 8px;
+    cursor: pointer;
   }
 </style>

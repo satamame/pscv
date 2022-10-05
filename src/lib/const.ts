@@ -1,2 +1,2 @@
-export const appVersion = '0.1.0-alpha.16'
-export const appHeaderColor = '#EEB63D'
+export const APP_VERSION = '0.1.0-alpha.20'
+export const HEADER_COLOR = '#EEB63D'
