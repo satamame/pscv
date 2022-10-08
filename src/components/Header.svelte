@@ -1,7 +1,6 @@
 <script lang="ts">
   import { HEADER_COLOR } from '../lib/const'
   import { createEventDispatcher } from 'svelte'
-
   import tocIcon from '/ui_icon/toc_black_24dp.svg'
   import menuIcon from '/ui_icon/menu_open_black_24dp.svg'
 

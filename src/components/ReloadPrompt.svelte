@@ -1,9 +1,16 @@
 <script lang="ts">
-  import { useRegisterSW } from 'virtual:pwa-register/svelte';
+  import { createEventDispatcher } from 'svelte'
+  import { fade } from 'svelte/transition'
+  import { appUpdateAvailable } from '../lib/store'
+  import { useRegisterSW } from 'virtual:pwa-register/svelte'
+
+  const dispatch = createEventDispatcher()
+
+  let closed = false
 
   const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW({
-    onRegistered(swr) {
-      console.log(`SW registered: ${swr}`)
+    onRegisteredSW(url, swr) {
+      console.log(`SW registered: ${url}, ${swr}`)
     },
     onRegisterError(error) {
       console.log('SW registration error', error)
@@ -11,15 +18,28 @@
   });
 
   function close() {
-    offlineReady.set(false)
-    needRefresh.set(false)
+    closed = true
+    if ($needRefresh) { appUpdateAvailable.set(true) }
   }
 
-  $: toast = $offlineReady || $needRefresh
+  export function updateSW() {
+    if (!closed) {
+      closed = true
+      updateServiceWorker(true)
+    } else {
+      if ($needRefresh) {
+        updateServiceWorker(true)
+      } else {
+        alert('新しいバージョンが見つかりませんでした。')
+      }
+    }
+  }
+
+  $: toast = !closed && ($offlineReady || $needRefresh)
 </script>
 
 {#if toast}
-  <div class="pwa-toast" role="alert">
+  <div class="pwa-toast" role="alert" transition:fade="{{ duration: 100 }}">
     <div class="message">
       {#if $needRefresh}
         <span>
@@ -32,7 +52,7 @@
       {/if}
     </div>
     {#if $needRefresh}
-      <button on:click="{() => updateServiceWorker(true)}">
+      <button on:click="{updateSW}">
         更新する
       </button>
     {/if}

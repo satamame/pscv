@@ -2,7 +2,6 @@
   import { createEventDispatcher, onMount } from 'svelte'
   import Overlay from "./Overlay.svelte"
   import LoremIpsum from './LoremIpsum.svelte'
-
   import closeIcon from '/ui_icon/close_black_24dp.svg'
 
   const dispatch = createEventDispatcher()

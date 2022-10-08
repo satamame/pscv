@@ -1,6 +1,5 @@
 <script lang="ts">
   import { APP_VERSION } from './lib/const'
-
   import Header from "./components/Header.svelte"
   import Toc from "./components/Toc.svelte"
   import MainMenu from "./components/MainMenu.svelte"
@@ -9,6 +8,7 @@
   import ReloadPrompt from "./components/ReloadPrompt.svelte"
 
   let main
+  let reloadPrompt
 
   let tocIsOpen = false
   let menuIsOpen = false
@@ -53,10 +53,16 @@
 {/if}
 
 {#if aboutIsOpen}
-  <About on:close="{() => { aboutIsOpen = false }}" />
+  <About
+    on:close="{() => { aboutIsOpen = false }}"
+    on:updateApp="{() => { reloadPrompt.updateSW() }}"
+  />
 {/if}
 
-<ReloadPrompt />
+<ReloadPrompt
+  bind:this="{reloadPrompt}"
+  on:enableUpdate="{() => { updateAvailable = true }}"
+/>
 
 <style>
   main {

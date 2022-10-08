@@ -1,7 +1,7 @@
 <script lang="ts">
   import { APP_VERSION } from '../lib/const'
   import { createEventDispatcher, onMount } from 'svelte'
-
+  import { appUpdateAvailable } from '../lib/store'
   import closeIcon from '/ui_icon/close_black_24dp.svg'
 
   const dispatch = createEventDispatcher()
@@ -21,6 +21,13 @@
     gone = true
     setTimeout(() => { dispatch('close') }, 200)
   }
+
+  function updateApp() {
+    if (!disabled) {
+      close()
+      dispatch('updateApp')
+    }
+  }
 </script>
 
 <div class="panel" class:gone>
@@ -29,8 +36,13 @@
     <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
   </button>
 
-  <div style="padding: 2px 16px 14px;">
-    バージョン {APP_VERSION}
+  <div style="margin: 2px 16px 14px;">
+    <p>バージョン {APP_VERSION}</p>
+    {#if $appUpdateAvailable}
+      <button on:click="{updateApp}">
+        今すぐ台本ビューアを更新する
+      </button>
+    {/if}
   </div>
 </div>
 
