@@ -6,13 +6,11 @@
 
   const dispatch = createEventDispatcher()
 
-  let panel
+  let gone = true
   let disabled = false
 
   onMount(async () => {
-    setTimeout(() => {
-      panel.classList.remove('panel-gone')
-    }, 0)
+    setTimeout(() => { gone = false }, 0)
   })
 
   function close() {
@@ -20,14 +18,12 @@
     if (disabled) { return }
     disabled = true
 
-    panel.classList.add('panel-gone')
-    setTimeout(() => {
-      dispatch('close')
-    }, 200)
+    gone = true
+    setTimeout(() => { dispatch('close') }, 200)
   }
 </script>
 
-<div class="panel panel-gone" bind:this="{panel}" >
+<div class="panel" class:gone>
   <h1>台本ビューアについて</h1>
   <button class="icon-button close-button">
     <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
@@ -36,7 +32,6 @@
   <div style="padding: 2px 16px 14px;">
     バージョン {APP_VERSION}
   </div>
-
 </div>
 
 <style>
@@ -50,8 +45,8 @@
     overflow: auto;
     transition: transform 0.2s, opacity 0.2s;
   }
-  .panel-gone {
-    transform: translateY(180px);
+  .panel.gone {
+    transform: translateY(540px);
     opacity: 0;
   }
   h1 {

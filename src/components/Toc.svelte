@@ -7,15 +7,11 @@
 
   const dispatch = createEventDispatcher()
 
-  let panel
-  let overlay
+  let gone = true
   let disabled = false
 
   onMount(async () => {
-    setTimeout(() => {
-      overlay.classList.remove('overlay-gone')
-      panel.classList.remove('panel-gone')
-    }, 0)
+    setTimeout(() => { gone = false }, 0)
   })
 
   function close() {
@@ -23,18 +19,16 @@
     if (disabled) { return }
     disabled = true
 
-    overlay.classList.add('overlay-gone')
-    panel.classList.add('panel-gone')
-    setTimeout(() => {
-      dispatch('close')
-    }, 200)
+    gone = true
+    setTimeout(() => { dispatch('close') }, 200)
   }
 </script>
 
-<div class="overlay overlay-gone" bind:this="{overlay}" >
+<div class="overlay" class:gone>
   <Overlay on:click="{close}" />
 </div>
-<div class="panel panel-gone" bind:this="{panel}" >
+
+<div class="panel" class:gone>
   <h1>目次</h1>
   <button class="icon-button close-button">
     <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
@@ -43,7 +37,6 @@
   <div style="padding: 2px 16px 14px;">
     <LoremIpsum lineLength="{20}" lineCount="{10}" blockCount="{2}" />
   </div>
-
 </div>
 
 <style>
@@ -58,14 +51,14 @@
     overflow: auto;
     transition: transform 0.2s, opacity 0.2s;
   }
-  .panel-gone {
+  .panel.gone {
     transform: translateX(-180px);
     opacity: 0;
   }
   .overlay {
     transition: opacity 0.2s;
   }
-  .overlay-gone {
+  .overlay.gone {
     opacity: 0;
   }
   h1 {

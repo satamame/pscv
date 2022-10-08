@@ -19,10 +19,7 @@
 </script>
 
 {#if toast}
-  <div
-    class="pwa-toast"
-    role="alert"
-  >
+  <div class="pwa-toast" role="alert">
     <div class="message">
       {#if $needRefresh}
         <span>
@@ -35,11 +32,11 @@
       {/if}
     </div>
     {#if $needRefresh}
-      <button on:click={() => updateServiceWorker(true)}>
+      <button on:click="{() => updateServiceWorker(true)}">
         更新する
       </button>
     {/if}
-    <button on:click={close}>
+    <button on:click="{close}">
       閉じる
     </button>
   </div>
@@ -61,7 +58,7 @@
   }
   .pwa-toast .message {
     font-size: large;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
   }
   .pwa-toast button {
     font-size: medium;
