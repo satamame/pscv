@@ -30,13 +30,14 @@
     <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
   </button>
 
-  <div style="margin: 2px 16px 14px;">
-    <p>バージョン {APP_VERSION}</p>
+  <div class="container">
+    <p>バージョン<br>{APP_VERSION}</p>
     {#if $appUpdateAvailable}
       <button on:click|once="{updateApp}">
         今すぐ台本ビューアを更新する
       </button>
     {/if}
+    <p>&copy;2022 satamame</p>
   </div>
 </div>
 
@@ -64,5 +65,12 @@
     position: absolute;
     top: 10px;
     right: 16px;
+  }
+  .container {
+    text-align: center;
+    margin: 24px 16px 14px;
+  }
+  button {
+    font-size: 15px;
   }
 </style>
