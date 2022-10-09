@@ -49,7 +49,7 @@
 {#if menuIsOpen}
   <MainMenu
     on:close="{() => { menuIsOpen = false }}"
-    on:openAbout="{() => {aboutIsOpen = true}}"
+    on:openAbout="{() => { aboutIsOpen = true }}"
   />
 {/if}
 
