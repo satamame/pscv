@@ -1,12 +1,9 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
   import { fade } from 'svelte/transition'
   import { appUpdateAvailable } from '../lib/store'
   import { useRegisterSW } from 'virtual:pwa-register/svelte'
 
-  const dispatch = createEventDispatcher()
-
-  let closed = false
+  let gone = false
 
   const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW({
     onRegisteredSW(url, swr) {
@@ -17,14 +14,14 @@
     }
   });
 
-  function close() {
-    closed = true
+  function dismiss() {
+    gone = true
     if ($needRefresh) { appUpdateAvailable.set(true) }
   }
 
-  export function updateSW() {
-    if (!closed) {
-      closed = true
+  export function updateApp() {
+    if (!gone) {
+      gone = true
       updateServiceWorker(true)
     } else {
       if ($needRefresh) {
@@ -35,7 +32,7 @@
     }
   }
 
-  $: toast = !closed && ($offlineReady || $needRefresh)
+  $: toast = !gone && ($offlineReady || $needRefresh)
 </script>
 
 {#if toast}
@@ -52,11 +49,11 @@
       {/if}
     </div>
     {#if $needRefresh}
-      <button on:click="{updateSW}">
+      <button on:click="{updateApp}">
         更新する
       </button>
     {/if}
-    <button on:click="{close}">
+    <button on:click="{dismiss}">
       閉じる
     </button>
   </div>

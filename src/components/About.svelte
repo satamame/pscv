@@ -7,26 +7,20 @@
   const dispatch = createEventDispatcher()
 
   let gone = true
-  let disabled = false
 
   onMount(async () => {
     setTimeout(() => { gone = false }, 0)
   })
 
   function close() {
-    // Just in case clicked during transition.
-    if (disabled) { return }
-    disabled = true
-
+    if (gone) { return }
     gone = true
     setTimeout(() => { dispatch('close') }, 200)
   }
 
   function updateApp() {
-    if (!disabled) {
-      close()
-      dispatch('updateApp')
-    }
+    close()
+    dispatch('updateApp')
   }
 </script>
 
@@ -39,7 +33,7 @@
   <div style="margin: 2px 16px 14px;">
     <p>バージョン {APP_VERSION}</p>
     {#if $appUpdateAvailable}
-      <button on:click="{updateApp}">
+      <button on:click|once="{updateApp}">
         今すぐ台本ビューアを更新する
       </button>
     {/if}

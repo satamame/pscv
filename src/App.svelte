@@ -55,14 +55,11 @@
 {#if aboutIsOpen}
   <About
     on:close="{() => { aboutIsOpen = false }}"
-    on:updateApp="{() => { reloadPrompt.updateSW() }}"
+    on:updateApp="{() => { reloadPrompt.updateApp() }}"
   />
 {/if}
 
-<ReloadPrompt
-  bind:this="{reloadPrompt}"
-  on:enableUpdate="{() => { updateAvailable = true }}"
-/>
+<ReloadPrompt bind:this="{reloadPrompt}" />
 
 <style>
   main {

@@ -6,17 +6,13 @@
   const dispatch = createEventDispatcher()
 
   let gone = true
-  let disabled = false
 
   onMount(async () => {
     setTimeout(() => { gone = false }, 0)
   })
 
   function close() {
-    // Just in case clicked during transition.
-    if (disabled) { return }
-    disabled = true
-
+    if (gone) { return }
     gone = true
     setTimeout(() => { dispatch('close') }, 200)
   }
