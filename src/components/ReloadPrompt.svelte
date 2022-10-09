@@ -1,7 +1,10 @@
 <script lang="ts">
   import { fade } from 'svelte/transition'
-  import { appUpdateAvailable } from '../lib/store'
+  import { createEventDispatcher } from 'svelte'
+  import { appUpdateFunc } from '../lib/store'
   import { useRegisterSW } from 'virtual:pwa-register/svelte'
+
+  const dispatch = createEventDispatcher()
 
   let gone = false
 
@@ -14,22 +17,11 @@
     }
   });
 
-  function dismiss() {
+  function close() {
+    if (gone) { return }
     gone = true
-    if ($needRefresh) { appUpdateAvailable.set(true) }
-  }
-
-  export function updateApp() {
-    if (!gone) {
-      gone = true
-      updateServiceWorker(true)
-    } else {
-      if ($needRefresh) {
-        updateServiceWorker(true)
-      } else {
-        alert('新しいバージョンが見つかりませんでした。')
-      }
-    }
+    if ($needRefresh) { appUpdateFunc.set(updateServiceWorker) }
+    setTimeout(() => { dispatch('close') }, 100)
   }
 
   $: toast = !gone && ($offlineReady || $needRefresh)
@@ -49,11 +41,11 @@
       {/if}
     </div>
     {#if $needRefresh}
-      <button on:click="{updateApp}">
+      <button on:click|once="{() => updateServiceWorker(true)}">
         更新する
       </button>
     {/if}
-    <button on:click="{dismiss}">
+    <button on:click="{close}">
       閉じる
     </button>
   </div>

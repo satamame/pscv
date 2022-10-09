@@ -8,25 +8,26 @@
   import ReloadPrompt from "./components/ReloadPrompt.svelte"
 
   let main
-  let reloadPrompt
 
   let tocIsOpen = false
   let menuIsOpen = false
   let aboutIsOpen = false
+  let reloadIsOpen = true
 
   $: isModal = tocIsOpen || menuIsOpen
 
   // Scroll lock/unlock
   $: if (main) {
+    const root = document.documentElement
     if (isModal) {
-      const scrollTop = document.documentElement.scrollTop
-      document.documentElement.style.position = 'fixed'
+      const scrollTop = root.scrollTop
+      root.style.position = 'fixed'
       main.style.top = `${48 - scrollTop}px`
     } else {
       const scrollTop = 48 - main.offsetTop
       main.style.top = '48px'
-      document.documentElement.style.position = 'static'
-      document.documentElement.scrollTop = scrollTop
+      root.style.position = 'static'
+      root.scrollTop = scrollTop
     }
   }
 </script>
@@ -53,13 +54,12 @@
 {/if}
 
 {#if aboutIsOpen}
-  <About
-    on:close="{() => { aboutIsOpen = false }}"
-    on:updateApp="{() => { reloadPrompt.updateApp() }}"
-  />
+  <About on:close="{() => { aboutIsOpen = false }}" />
 {/if}
 
-<ReloadPrompt bind:this="{reloadPrompt}" />
+{#if reloadIsOpen}
+  <ReloadPrompt on:close="{() => { reloadIsOpen = false }}" />
+{/if}
 
 <style>
   main {
