@@ -12,7 +12,7 @@
     setTimeout(() => { gone = false }, 0)
   })
 
-  function close() {
+  export function close() {
     if (gone) { return }
     gone = true
     setTimeout(() => { dispatch('close') }, 200)
@@ -48,7 +48,7 @@
     transition: transform 0.2s, opacity 0.2s;
   }
   .panel.gone {
-    transform: translateY(540px);
+    transform: translateY(270px);
     opacity: 0;
   }
   h1 {

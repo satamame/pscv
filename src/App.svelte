@@ -1,5 +1,7 @@
 <script lang="ts">
   import { APP_VERSION } from './lib/const'
+  import type { PanelCloseFunc } from './lib/back'
+  import { initBackHandler } from './lib/back'
   import Header from "./components/Header.svelte"
   import Toc from "./components/Toc.svelte"
   import MainMenu from "./components/MainMenu.svelte"
@@ -7,7 +9,13 @@
   import About from './components/About.svelte'
   import ReloadPrompt from "./components/ReloadPrompt.svelte"
 
+  const ua = navigator.userAgent.toLowerCase()
+  const isAndroid = ua.indexOf("android") >= 0
+
   let main
+  let toc
+  let menu
+  let about
 
   let tocIsOpen = false
   let menuIsOpen = false
@@ -30,6 +38,18 @@
       root.scrollTop = scrollTop
     }
   }
+
+  // Initialize Android's back button handler
+  if (isAndroid) {
+    initBackHandler((): PanelCloseFunc => {
+      // This callback returns panels' close functions
+      return {
+        toc: toc?.close,
+        menu: menu?.close,
+        about: about?.close,
+      }
+    })
+  }
 </script>
 
 <main bind:this="{main}" >
@@ -43,18 +63,19 @@
 />
 
 {#if tocIsOpen}
-  <Toc on:close="{() => { tocIsOpen = false }}" />
+  <Toc bind:this="{toc}" on:close="{() => { tocIsOpen = false }}" />
 {/if}
 
 {#if menuIsOpen}
   <MainMenu
+    bind:this="{menu}"
     on:close="{() => { menuIsOpen = false }}"
     on:openAbout="{() => { aboutIsOpen = true }}"
   />
 {/if}
 
 {#if aboutIsOpen}
-  <About on:close="{() => { aboutIsOpen = false }}" />
+  <About bind:this="{about}" on:close="{() => { aboutIsOpen = false }}" />
 {/if}
 
 {#if reloadIsOpen}
