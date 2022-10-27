@@ -1,7 +1,7 @@
 <script lang="ts">
   import { APP_VERSION } from './lib/const'
   import type { PanelCloseFunc } from './lib/back'
-  import { initBackHandler } from './lib/back'
+  import { initBackHandler, keepBackable } from './lib/back'
   import Header from "./components/Header.svelte"
   import Toc from "./components/Toc.svelte"
   import MainMenu from "./components/MainMenu.svelte"
@@ -39,16 +39,19 @@
     }
   }
 
-  // Initialize Android's back button handler
-  if (isAndroid) {
-    initBackHandler((): PanelCloseFunc => {
-      // This callback returns panels' close functions
-      return {
-        toc: toc?.close,
-        menu: menu?.close,
-        about: about?.close,
-      }
-    })
+  window.onload = (event) => {
+    // Initialize Android's back button handler
+    if (isAndroid) {
+      keepBackable()
+      initBackHandler((): PanelCloseFunc => {
+        // This callback returns panels' close functions
+        return {
+          toc: toc?.close,
+          menu: menu?.close,
+          about: about?.close,
+        }
+      })
+    }
   }
 </script>
 
