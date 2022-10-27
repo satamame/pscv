@@ -18,7 +18,8 @@
   }
 
   function openAbout() {
-    close()
+    if (gone) { return }
+    gone = true
     dispatch('openAbout')
   }
 </script>

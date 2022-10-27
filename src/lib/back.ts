@@ -6,8 +6,8 @@ export type PanelCloseFunc = {
 
 // Be ready to hook next back
 export function keepBackable() {
-  if (!window.history.state || !window.history.state.hookBack) {
-    window.history.pushState({ hookBack: true }, '')
+  if (!history.state || !history.state.hookBack) {
+    history.pushState({ hookBack: true }, '')
   }
 }
 

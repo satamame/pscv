@@ -39,19 +39,16 @@
     }
   }
 
-  window.onload = (event) => {
-    // Initialize Android's back button handler
-    if (isAndroid) {
-      keepBackable()
-      initBackHandler((): PanelCloseFunc => {
-        // This callback returns panels' close functions
-        return {
-          toc: toc?.close,
-          menu: menu?.close,
-          about: about?.close,
-        }
-      })
-    }
+  // Initialize Android's back button handler
+  if (isAndroid) {
+    initBackHandler((): PanelCloseFunc => {
+      // This callback returns panels' close functions
+      return {
+        toc: toc?.close,
+        menu: menu?.close,
+        about: about?.close,
+      }
+    })
   }
 </script>
 
@@ -61,24 +58,31 @@
 </main>
 
 <Header
-  on:openToc="{() => { tocIsOpen = true }}"
-  on:openMainMenu="{() => { menuIsOpen = true }}"
+  on:openToc="{() => { keepBackable(); tocIsOpen = true }}"
+  on:openMainMenu="{() => { keepBackable(); menuIsOpen = true }}"
 />
 
 {#if tocIsOpen}
-  <Toc bind:this="{toc}" on:close="{() => { tocIsOpen = false }}" />
+  <Toc
+    bind:this="{toc}"
+    on:close="{() => { tocIsOpen = false; history.back() }}"
+  />
 {/if}
 
 {#if menuIsOpen}
+  <!-- TODO : 動いているが、書き方をきれいにしたい -->
   <MainMenu
     bind:this="{menu}"
-    on:close="{() => { menuIsOpen = false }}"
-    on:openAbout="{() => { aboutIsOpen = true }}"
+    on:close="{() => { menuIsOpen = false; history.back() }}"
+    on:openAbout="{() => { aboutIsOpen = true; setTimeout(() => { menuIsOpen = false }, 200) }}"
   />
 {/if}
 
 {#if aboutIsOpen}
-  <About bind:this="{about}" on:close="{() => { aboutIsOpen = false }}" />
+  <About
+    bind:this="{about}"
+    on:close="{() => { aboutIsOpen = false; history.back() }}"
+  />
 {/if}
 
 {#if reloadIsOpen}
