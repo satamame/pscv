@@ -1,7 +1,10 @@
 <script lang="ts">
-  import { APP_VERSION } from '../lib/const'
   import { createEventDispatcher, onMount } from 'svelte'
+  import { APP_VERSION } from '../lib/const'
   import { appUpdateFunc } from '../lib/store'
+  import { isAndroid } from '../lib/ua'
+  import { keepBackable } from '../lib/back'
+
   import closeIcon from '/ui_icon/close_black_24dp.svg'
 
   const dispatch = createEventDispatcher()
@@ -9,13 +12,17 @@
   let gone = true
 
   onMount(async () => {
+    if (isAndroid) { keepBackable() }
     setTimeout(() => { gone = false }, 0)
   })
 
   export function close() {
     if (gone) { return }
     gone = true
-    setTimeout(() => { dispatch('close') }, 200)
+    setTimeout(() => {
+      dispatch('close')
+      if (isAndroid) { history.back() }
+    }, 200)
   }
 </script>
 

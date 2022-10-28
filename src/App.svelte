@@ -1,16 +1,16 @@
 <script lang="ts">
   import { APP_VERSION } from './lib/const'
-  import type { PanelCloseFunc } from './lib/back'
-  import { initBackHandler, keepBackable } from './lib/back'
+  import { isAndroid } from './lib/ua'
+
+  import type { BackFunc } from './lib/back'
+  import { initBackHandler } from './lib/back'
+
   import Header from "./components/Header.svelte"
   import Toc from "./components/Toc.svelte"
   import MainMenu from "./components/MainMenu.svelte"
   import LoremIpsum from './components/LoremIpsum.svelte'
   import About from './components/About.svelte'
   import ReloadPrompt from "./components/ReloadPrompt.svelte"
-
-  const ua = navigator.userAgent.toLowerCase()
-  const isAndroid = ua.indexOf("android") >= 0
 
   let main
   let toc
@@ -41,8 +41,8 @@
 
   // Initialize Android's back button handler
   if (isAndroid) {
-    initBackHandler((): PanelCloseFunc => {
-      // This callback returns panels' close functions
+    initBackHandler((): BackFunc => {
+      // This callback returns functions to be invoked by back button
       return {
         toc: toc?.close,
         menu: menu?.close,
@@ -58,30 +58,29 @@
 </main>
 
 <Header
-  on:openToc="{() => { keepBackable(); tocIsOpen = true }}"
-  on:openMainMenu="{() => { keepBackable(); menuIsOpen = true }}"
+  on:openToc="{() => { tocIsOpen = true }}"
+  on:openMainMenu="{() => { menuIsOpen = true }}"
 />
 
 {#if tocIsOpen}
   <Toc
     bind:this="{toc}"
-    on:close="{() => { tocIsOpen = false; history.back() }}"
+    on:close="{() => { tocIsOpen = false }}"
   />
 {/if}
 
 {#if menuIsOpen}
-  <!-- TODO : 動いているが、書き方をきれいにしたい -->
   <MainMenu
     bind:this="{menu}"
-    on:close="{() => { menuIsOpen = false; history.back() }}"
-    on:openAbout="{() => { aboutIsOpen = true; setTimeout(() => { menuIsOpen = false }, 200) }}"
+    on:close="{() => { menuIsOpen = false }}"
+    on:openAbout="{() => { aboutIsOpen = true }}"
   />
 {/if}
 
 {#if aboutIsOpen}
   <About
     bind:this="{about}"
-    on:close="{() => { aboutIsOpen = false; history.back() }}"
+    on:close="{() => { aboutIsOpen = false }}"
   />
 {/if}
 

@@ -1,5 +1,8 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte'
+  import { isAndroid } from '../lib/ua'
+  import { keepBackable } from '../lib/back'
+
   import Overlay from "./Overlay.svelte"
   import closeIcon from '/ui_icon/close_black_24dp.svg'
 
@@ -8,18 +11,23 @@
   let gone = true
 
   onMount(async () => {
+    if (isAndroid) { keepBackable() }
     setTimeout(() => { gone = false }, 0)
   })
 
   export function close() {
     if (gone) { return }
     gone = true
-    setTimeout(() => { dispatch('close') }, 200)
+    setTimeout(() => {
+      dispatch('close')
+      if (isAndroid) { history.back() }
+    }, 200)
   }
 
   function openAbout() {
     if (gone) { return }
     gone = true
+    setTimeout(() => { dispatch('close') }, 200)
     dispatch('openAbout')
   }
 </script>

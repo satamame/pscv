@@ -1,10 +1,10 @@
-export type PanelCloseFunc = {
+export type BackFunc = {
   toc: (() => void) | undefined,
   menu: (() => void) | undefined,
   about: (() => void) | undefined,
 }
 
-// Be ready to hook next back
+/** Be ready to hook next back */
 export function keepBackable() {
   if (!history.state || !history.state.hookBack) {
     history.pushState({ hookBack: true }, '')
@@ -12,18 +12,19 @@ export function keepBackable() {
 }
 
 /** Prepare back button handler */
-export function initBackHandler(getCloseFunc: () => PanelCloseFunc): void {
-  // When back button pressed, close appropriate panel
+export function initBackHandler(getBackFunc: () => BackFunc): void {
+  // When back button pressed, call appropriate function
   window.addEventListener('popstate', function (event) {
-    if (getCloseFunc().toc) {
+    const backFunc = getBackFunc()
+    if (backFunc.toc) {
       keepBackable()
-      getCloseFunc().toc()
-    } else if (getCloseFunc().menu) {
+      backFunc.toc()
+    } else if (backFunc.menu) {
       keepBackable()
-      getCloseFunc().menu()
-    } else if (getCloseFunc().about) {
+      backFunc.menu()
+    } else if (backFunc.about) {
       keepBackable()
-      getCloseFunc().about()
+      backFunc.about()
     }
   })
 }
