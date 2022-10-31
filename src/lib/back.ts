@@ -6,13 +6,18 @@ export type BackFunc = {
 
 /** Be ready to hook next back */
 export function keepBackable() {
-  if (!history.state || !history.state.hookBack) {
-    history.pushState({ hookBack: true }, '')
+  if (!history.state?.backHook) {
+    history.pushState({ backHook: true }, '')
   }
 }
 
 /** Prepare back button handler */
 export function initBackHandler(getBackFunc: () => BackFunc): void {
+  // Clear backHook history just in case
+  if (history.state?.backHook) {
+    history.back()
+  }
+
   // When back button pressed, call appropriate function
   window.addEventListener('popstate', function (event) {
     const backFunc = getBackFunc()
