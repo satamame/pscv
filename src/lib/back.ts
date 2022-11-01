@@ -13,11 +13,6 @@ export function keepBackable() {
 
 /** Prepare back button handler */
 export function initBackHandler(getBackFunc: () => BackFunc): void {
-  // Clear backHook history just in case
-  if (history.state?.backHook) {
-    history.back()
-  }
-
   // When back button pressed, call appropriate function
   window.addEventListener('popstate', function (event) {
     const backFunc = getBackFunc()
@@ -32,4 +27,8 @@ export function initBackHandler(getBackFunc: () => BackFunc): void {
       backFunc.about()
     }
   })
+  // Clear backHook history just in case
+  if (history.state?.backHook) {
+    history.back()
+  }
 }
