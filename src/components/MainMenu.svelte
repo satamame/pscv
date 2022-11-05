@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte'
   import { isAndroid } from '../lib/ua'
-  import { keepBackable } from '../lib/back'
+  import { keepBackable, back } from '../lib/back'
 
   import Overlay from "./Overlay.svelte"
   import closeIcon from '/ui_icon/close_black_24dp.svg'
@@ -20,7 +20,7 @@
     gone = true
     setTimeout(() => {
       dispatch('close')
-      if (isAndroid) { history.back() }
+      if (isAndroid) { back() }
     }, 200)
   }
 

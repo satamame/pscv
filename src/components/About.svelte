@@ -3,7 +3,7 @@
   import { APP_VERSION } from '../lib/const'
   import { appUpdateFunc } from '../lib/store'
   import { isAndroid } from '../lib/ua'
-  import { keepBackable } from '../lib/back'
+  import { keepBackable, back } from '../lib/back'
 
   import closeIcon from '/ui_icon/close_black_24dp.svg'
 
@@ -21,7 +21,7 @@
     gone = true
     setTimeout(() => {
       dispatch('close')
-      if (isAndroid) { history.back() }
+      if (isAndroid) { back() }
     }, 200)
   }
 </script>
