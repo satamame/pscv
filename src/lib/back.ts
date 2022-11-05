@@ -1,3 +1,9 @@
+import { log } from './store'
+let logString: string
+log.subscribe((value) => {
+  logString = value
+})
+
 export type BackFunc = {
   toc: (() => void) | undefined,
   menu: (() => void) | undefined,
@@ -6,6 +12,7 @@ export type BackFunc = {
 
 /** Be ready to hook next back */
 export function keepBackable() {
+  log.set(logString + `keepBackable called. (${history.length}, ${JSON.stringify(history.state)})<br>`)
   if (!history.state?.backHook) {
     history.pushState({ backHook: true }, '')
   }
@@ -13,6 +20,7 @@ export function keepBackable() {
 
 /** Clear back hook history */
 export function back() {
+  log.set(logString + `back called. (${history.length}, ${JSON.stringify(history.state)})<br>`)
   if (history.state?.backHook) {
     history.back()
   }
@@ -22,6 +30,7 @@ export function back() {
 export function initBackHandler(getBackFunc: () => BackFunc): void {
   // When back button pressed, call appropriate function
   window.addEventListener('popstate', function (event) {
+    log.set(logString + `popstate handler called. (${history.length}, ${JSON.stringify(history.state)})<br>`)
     const backFunc = getBackFunc()
     if (backFunc.toc) {
       backFunc.toc()

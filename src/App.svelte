@@ -12,6 +12,8 @@
   import About from './components/About.svelte'
   import ReloadPrompt from "./components/ReloadPrompt.svelte"
 
+  import { log } from './lib/store'
+  
   let main
   let toc
   let menu
@@ -54,6 +56,7 @@
 
 <main bind:this="{main}" >
   <div>{APP_VERSION}</div>
+  <div>{@html $log}</div>
   <LoremIpsum blockCount="{4}" />
 </main>
 
