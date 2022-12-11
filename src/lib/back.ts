@@ -1,6 +1,7 @@
 export type BackFunc = {
   toc: (() => void) | undefined,
   menu: (() => void) | undefined,
+  data: (() => void) | undefined,
   about: (() => void) | undefined,
 }
 
@@ -27,6 +28,8 @@ export function initBackHandler(getBackFunc: () => BackFunc): void {
       backFunc.toc()
     } else if (backFunc.menu) {
       backFunc.menu()
+    } else if (backFunc.data) {
+      backFunc.data()
     } else if (backFunc.about) {
       backFunc.about()
     }

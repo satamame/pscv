@@ -5,20 +5,23 @@
   import type { BackFunc } from './lib/back'
   import { initBackHandler } from './lib/back'
 
-  import Header from "./components/Header.svelte"
-  import Toc from "./components/Toc.svelte"
-  import MainMenu from "./components/MainMenu.svelte"
+  import Header from './components/Header.svelte'
+  import Toc from './components/Toc.svelte'
+  import MainMenu from './components/MainMenu.svelte'
   import LoremIpsum from './components/LoremIpsum.svelte'
+  import Data from './components/Data.svelte'
   import About from './components/About.svelte'
-  import ReloadPrompt from "./components/ReloadPrompt.svelte"
+  import ReloadPrompt from './components/ReloadPrompt.svelte'
 
   let main
   let toc
   let menu
+  let data
   let about
 
   let tocIsOpen = false
   let menuIsOpen = false
+  let dataIsOpen = false
   let aboutIsOpen = false
   let reloadIsOpen = true
 
@@ -46,6 +49,7 @@
       return {
         toc: toc?.close,
         menu: menu?.close,
+        data: data?.close,
         about: about?.close,
       }
     })
@@ -73,7 +77,15 @@
   <MainMenu
     bind:this="{menu}"
     on:close="{() => { menuIsOpen = false }}"
+    on:openData="{() => { dataIsOpen = true }}"
     on:openAbout="{() => { aboutIsOpen = true }}"
+  />
+{/if}
+
+{#if dataIsOpen}
+  <Data
+    bind:this="{data}"
+    on:close="{() => { dataIsOpen = false }}"
   />
 {/if}
 

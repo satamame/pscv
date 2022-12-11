@@ -30,8 +30,6 @@
   }
   header h1 {
     color: white;
-    font-size: 24px;
-    line-height: 24px;
     margin: 14px 52px 10PX;
     white-space: nowrap;
     overflow: hidden;

@@ -70,7 +70,6 @@
     margin-bottom: 12px;
   }
   .pwa-toast button {
-    font-size: medium;
     outline: none;
     margin-right: 12px;
     padding: 4px 10px;

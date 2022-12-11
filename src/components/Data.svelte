@@ -1,7 +1,5 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte'
-  import { APP_VERSION, COPY_RIGHT } from '../lib/const'
-  import { appUpdateFunc } from '../lib/store'
   import { isAndroid } from '../lib/ua'
   import { keepBackable, back } from '../lib/back'
 
@@ -27,19 +25,17 @@
 </script>
 
 <div class="panel" class:gone>
-  <h1>台本ビューアについて</h1>
+  <h1>台本データ</h1>
   <button class="icon-button close-button">
     <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
   </button>
 
+  <h2>サンプル</h2>
   <div class="container">
-    <p>バージョン<br>{APP_VERSION}</p>
-    {#if $appUpdateFunc}
-      <button on:click|once="{() => $appUpdateFunc(true)}">
-        今すぐ台本ビューアを更新する
-      </button>
-    {/if}
-    <p>{@html COPY_RIGHT}</p>
+    <select>
+      <option>台本ビューアの使い方</option>
+      <option>マダムと謎のいいがかり</option>
+    </select>
   </div>
 </div>
 
@@ -64,7 +60,6 @@
     right: 16px;
   }
   .container {
-    text-align: center;
-    margin: 24px 16px 14px;
+    margin: 10px 16px;
   }
 </style>

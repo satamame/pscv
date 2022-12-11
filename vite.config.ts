@@ -33,6 +33,7 @@ const pwaOptions = {
     theme_color: '#916028',
     lang: 'ja',
   },
+  includeAssets: ['ui_icon/*.svg', 'sample/*.json'],
   devOptions: {
     enabled: true,
   },

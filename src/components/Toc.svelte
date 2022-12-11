@@ -63,11 +63,6 @@
   .overlay.gone {
     opacity: 0;
   }
-  h1 {
-    margin: 14px 16px 10px;
-    font-size: 24px;
-    line-height: 24px;
-  }
   .close-button {
     position: absolute;
     top: 10px;

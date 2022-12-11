@@ -3,8 +3,10 @@
   import { isAndroid } from '../lib/ua'
   import { keepBackable, back } from '../lib/back'
 
-  import Overlay from "./Overlay.svelte"
+  import Overlay from './Overlay.svelte'
   import closeIcon from '/ui_icon/close_black_24dp.svg'
+  import infoIcon from '/ui_icon/info_black_24dp.svg'
+  import booksIcon from '/ui_icon/library_books_black_24dp.svg'
 
   const dispatch = createEventDispatcher()
 
@@ -22,6 +24,13 @@
       dispatch('close')
       if (isAndroid) { back() }
     }, 200)
+  }
+
+  function openData() {
+    if (gone) { return }
+    gone = true
+    setTimeout(() => { dispatch('close') }, 200)
+    dispatch('openData')
   }
 
   function openAbout() {
@@ -44,8 +53,8 @@
 
   <ul>
     <li>表示</li>
-    <li>台本データ</li>
-    <li on:click="{openAbout}">バージョン情報</li>
+    <li on:click="{openData}"><img alt="データ" src="{booksIcon}" /><span>台本データ</span></li>
+    <li on:click="{openAbout}"><img alt="情報" src="{infoIcon}" /><span>バージョン情報</span></li>
   </ul>
 </div>
 
@@ -71,11 +80,6 @@
   .overlay.gone {
     opacity: 0;
   }
-  h1 {
-    margin: 14px 16px 10px;
-    font-size: 24px;
-    line-height: 24px;
-  }
   .close-button {
     position: absolute;
     top: 10px;
@@ -90,5 +94,12 @@
     border-top: 1px solid #555;
     padding: 8px;
     cursor: pointer;
+  }
+  li img {
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+  li span {
+    vertical-align: middle;
   }
 </style>
