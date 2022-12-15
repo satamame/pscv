@@ -42,4 +42,21 @@ export class PSc {
     const psc = new PSc(data.title, data.author, data.chars, data.lines);
     return psc;
   }
+
+  static async fromUrl(url: string): Promise<PSc | void> {
+    const res = await fetch(url)
+    if (res.ok) {
+      const data = await res.json()
+      try {
+        const psc = new PSc(
+          data.psc.title, data.psc.author, data.psc.chars, data.psc.lines
+        )
+        return psc
+      } catch (error) {
+        throw new Error('読み込めませんでした。')
+      }
+    } else {
+      throw new Error('読み込めませんでした。')
+    }
+  }
 }

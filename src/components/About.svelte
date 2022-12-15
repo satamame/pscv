@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
   import { APP_VERSION, COPY_RIGHT } from '../lib/const'
+  import { createEventDispatcher, onMount } from 'svelte'
   import { appUpdateFunc } from '../lib/store'
   import { isAndroid } from '../lib/ua'
   import { keepBackable, back } from '../lib/back'

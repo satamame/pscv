@@ -1,18 +1,20 @@
 <script lang="ts">
-  import { HEADER_COLOR } from '../lib/const'
+  import { HEADER_COLOR, HEADER_HEIGHT } from '../lib/const'
   import { createEventDispatcher } from 'svelte'
   import tocIcon from '/ui_icon/toc_black_24dp.svg'
   import menuIcon from '/ui_icon/menu_open_black_24dp.svg'
 
   const dispatch = createEventDispatcher()
+
+  export let title: string
 </script>
 
-<header style="background-color: {HEADER_COLOR};">
+<header style="background-color: {HEADER_COLOR}; height: {HEADER_HEIGHT}px;">
   <button class="icon-button left-button" on:click="{() => dispatch('openToc')}" >
     <img alt="目次" src="{tocIcon}" />
   </button>
 
-  <h1>タイトル</h1>
+  <h1>{title}</h1>
 
   <button class="icon-button right-button" on:click="{() => dispatch('openMainMenu')}" >
     <img alt="メニュー" src="{menuIcon}" />
@@ -25,7 +27,6 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 48px;
     text-align: center;
   }
   header h1 {

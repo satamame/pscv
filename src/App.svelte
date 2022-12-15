@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { APP_VERSION } from './lib/const'
+  import { APP_VERSION, HEADER_HEIGHT } from './lib/const'
   import { isAndroid } from './lib/ua'
-
   import type { BackFunc } from './lib/back'
   import { initBackHandler } from './lib/back'
+  import type { PSc } from './lib/psc'
 
+  import Viewer from './components/Viewer.svelte'
   import Header from './components/Header.svelte'
   import Toc from './components/Toc.svelte'
   import MainMenu from './components/MainMenu.svelte'
@@ -14,6 +15,7 @@
   import ReloadPrompt from './components/ReloadPrompt.svelte'
 
   let main
+  let viewer
   let toc
   let menu
   let data
@@ -25,6 +27,9 @@
   let aboutIsOpen = false
   let reloadIsOpen = true
 
+  let psc: PSc | undefined
+  $: title = psc?.title ?? '台本ビューア'
+
   $: isModal = tocIsOpen || menuIsOpen
 
   // Scroll lock/unlock
@@ -33,10 +38,10 @@
     if (isModal) {
       const scrollTop = root.scrollTop
       root.style.position = 'fixed'
-      main.style.top = `${48 - scrollTop}px`
+      main.style.top = `${HEADER_HEIGHT - scrollTop}px`
     } else {
-      const scrollTop = 48 - main.offsetTop
-      main.style.top = '48px'
+      const scrollTop = HEADER_HEIGHT - main.offsetTop
+      main.style.top = `${HEADER_HEIGHT}px`
       root.style.position = 'static'
       root.scrollTop = scrollTop
     }
@@ -56,12 +61,15 @@
   }
 </script>
 
-<main bind:this="{main}" >
-  <div>{APP_VERSION}</div>
-  <LoremIpsum blockCount="{4}" />
+<main bind:this="{main}" style="top: {HEADER_HEIGHT}px">
+  <Viewer
+    bind:this="{viewer}"
+    bind:psc
+  />
 </main>
 
 <Header
+  bind:title
   on:openToc="{() => { tocIsOpen = true }}"
   on:openMainMenu="{() => { menuIsOpen = true }}"
 />
@@ -86,6 +94,7 @@
   <Data
     bind:this="{data}"
     on:close="{() => { dataIsOpen = false }}"
+    on:showPSc="{(e) => { psc = e.detail.psc}}"
   />
 {/if}
 
@@ -103,7 +112,6 @@
 <style>
   main {
     position: absolute;
-    top: 48px;
     left: 0;
     right: 0;
     padding: 8px 12px 12px 18px;
