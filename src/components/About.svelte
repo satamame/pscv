@@ -39,7 +39,7 @@
         今すぐ台本ビューアを更新する
       </button>
     {/if}
-    <p>{@html COPY_RIGHT}</p>
+    <p>{COPY_RIGHT}</p>
   </div>
 </div>
 

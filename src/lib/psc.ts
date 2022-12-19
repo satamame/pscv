@@ -14,7 +14,7 @@ export const PSC_LINE_TYPE = {
   CHARACTER_CONTINUED: 12,   // Following lines of Character
   DIRECTION_CONTINUED: 13,   // Following lines of Direction
   DIALOGUE_CONTINUED: 14,    // Following lines of Dialogue
-  COMMENT_CONTINUED: 15,     // Foloowing lines of Comment
+  COMMENT_CONTINUED: 15,     // Following lines of Comment
 } as const
 
 export type PScLineType = typeof PSC_LINE_TYPE[keyof typeof PSC_LINE_TYPE]
@@ -23,8 +23,8 @@ export type PScLineType = typeof PSC_LINE_TYPE[keyof typeof PSC_LINE_TYPE]
 export class PScLine {
   constructor (
     public type: PScLineType,
-    public name: string,
-    public text: string,
+    public name?: string,
+    public text?: string,
   ) {}
 }
 
@@ -37,19 +37,17 @@ export class PSc {
     public lines: PScLine[],
   ) {}
 
-  static fromJson(json: string): PSc {
-    const data = JSON.parse(json);
-    const psc = new PSc(data.title, data.author, data.chars, data.lines);
-    return psc;
-  }
-
-  static async fromUrl(url: string): Promise<PSc | void> {
+  /** URL からデータを取得して PSc オブジェクトを返す */
+  static async fromUrl(url: string): Promise<PSc> {
     const res = await fetch(url)
     if (res.ok) {
       const data = await res.json()
+      // fetch で取得したデータは { psc: PSc } または PSc の形を想定する
+      const pscData: PSc = data.psc ? data.psc : data
       try {
+        // インスタンス化して返す
         const psc = new PSc(
-          data.psc.title, data.psc.author, data.psc.chars, data.psc.lines
+          pscData.title, pscData.author, pscData.chars, pscData.lines
         )
         return psc
       } catch (error) {

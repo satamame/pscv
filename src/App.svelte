@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { APP_VERSION, HEADER_HEIGHT } from './lib/const'
+  import { HEADER_HEIGHT } from './lib/const'
   import { isAndroid } from './lib/ua'
   import type { BackFunc } from './lib/back'
   import { initBackHandler } from './lib/back'
@@ -9,7 +9,6 @@
   import Header from './components/Header.svelte'
   import Toc from './components/Toc.svelte'
   import MainMenu from './components/MainMenu.svelte'
-  import LoremIpsum from './components/LoremIpsum.svelte'
   import Data from './components/Data.svelte'
   import About from './components/About.svelte'
   import ReloadPrompt from './components/ReloadPrompt.svelte'
@@ -94,7 +93,7 @@
   <Data
     bind:this="{data}"
     on:close="{() => { dataIsOpen = false }}"
-    on:showPSc="{(e) => { psc = e.detail.psc}}"
+    on:showPSc="{(e) => { psc = e.detail.psc }}"
   />
 {/if}
 
