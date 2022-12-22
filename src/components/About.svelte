@@ -1,10 +1,11 @@
 <script lang="ts">
   import { APP_VERSION, COPY_RIGHT } from '../lib/const'
+  import { isAndroid } from '../lib/env'
+  import { keepBackable, back } from '../lib/back'
   import { createEventDispatcher, onMount } from 'svelte'
   import { appUpdateFunc } from '../lib/store'
-  import { isAndroid } from '../lib/ua'
-  import { keepBackable, back } from '../lib/back'
 
+  // 画像ファイルを参照
   import closeIcon from '/ui_icon/close_black_24dp.svg'
 
   const dispatch = createEventDispatcher()

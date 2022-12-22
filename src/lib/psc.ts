@@ -45,9 +45,15 @@ export class PSc {
       // fetch で取得したデータは { psc: PSc } または PSc の形を想定する
       const pscData: PSc = data.psc ? data.psc : data
       try {
+        // lines の各要素を PScLine オブジェクトにする
+        const lines = pscData.lines.map((line) => {
+          const type = PSC_LINE_TYPE[line.type]
+          return new PScLine(type, line.name, line.text)
+        })
+
         // インスタンス化して返す
         const psc = new PSc(
-          pscData.title, pscData.author, pscData.chars, pscData.lines
+          pscData.title, pscData.author, pscData.chars, lines
         )
         return psc
       } catch (error) {
@@ -56,5 +62,25 @@ export class PSc {
     } else {
       throw new Error('読み込めませんでした。')
     }
+  }
+
+  /** 目次項目 (登場人物見出しと柱の行) を抽出する */
+  getTocItems(): { text: string, index: number }[] {
+    const headers = this.lines.map((line, index) => {
+      console.log(line.type)
+      if (
+        line.type === PSC_LINE_TYPE.CHARSHEADLINE ||
+        line.type === PSC_LINE_TYPE.H1 ||
+        line.type === PSC_LINE_TYPE.H2 ||
+        line.type === PSC_LINE_TYPE.H3
+      ) {
+        return { text: line.text, index: index }
+      }
+    })
+    const tocItems = headers.filter((line) => {
+      return !!line
+    })
+    console.log({ tocItems })
+    return tocItems
   }
 }

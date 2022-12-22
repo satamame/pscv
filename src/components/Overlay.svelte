@@ -2,6 +2,7 @@
   /**
    * Overlay component for modal interface
    */
+  // コンポーネントプロパティ
   export let color = 'black'
   export let opacity = 0.25
 </script>

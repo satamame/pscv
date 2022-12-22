@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { fade } from 'svelte/transition'
-  import { createEventDispatcher } from 'svelte'
   import { appUpdateFunc } from '../lib/store'
+  import { createEventDispatcher } from 'svelte'
+  import { fade } from 'svelte/transition'
   import { useRegisterSW } from 'virtual:pwa-register/svelte'
 
   const dispatch = createEventDispatcher()

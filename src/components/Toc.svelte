@@ -1,13 +1,20 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
-  import { isAndroid } from '../lib/ua'
+  import { isAndroid } from '../lib/env'
   import { keepBackable, back } from '../lib/back'
+  import { createEventDispatcher, onMount } from 'svelte'
 
+  import type { PSc } from '../lib/psc'
+
+  // 子コンポーネント
   import Overlay from "./Overlay.svelte"
-  import LoremIpsum from './LoremIpsum.svelte'
+
+  // 画像ファイルを参照
   import closeIcon from '/ui_icon/close_black_24dp.svg'
 
   const dispatch = createEventDispatcher()
+
+  // コンポーネントプロパティ
+  export let psc: PSc | undefined
 
   let gone = true
 
@@ -24,6 +31,8 @@
       if (isAndroid) { back() }
     }, 200)
   }
+
+  $: tocItems = psc.getTocItems()
 </script>
 
 <div class="overlay" class:gone>
@@ -36,9 +45,11 @@
     <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
   </button>
 
-  <div style="padding: 2px 16px 14px;">
-    <LoremIpsum lineLength="{20}" lineCount="{10}" blockCount="{2}" />
-  </div>
+  <ul>
+    {#each tocItems as item}
+      <li>{item.index} {item.text}</li>
+    {/each}
+  </ul>
 </div>
 
 <style>

@@ -1,10 +1,12 @@
 <script lang="ts">
   import { SAMPLES } from '../lib/const'
-  import { createEventDispatcher, onMount } from 'svelte'
-  import { isAndroid } from '../lib/ua'
+  import { isAndroid } from '../lib/env'
   import { keepBackable, back } from '../lib/back'
+  import { createEventDispatcher, onMount } from 'svelte'
+
   import { PSc } from '../lib/psc'
 
+  // 画像ファイルを参照
   import closeIcon from '/ui_icon/close_black_24dp.svg'
 
   const dispatch = createEventDispatcher()

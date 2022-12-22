@@ -1,4 +1,5 @@
 <script lang="ts">
+  // コンポーネントプロパティ
   export let lineLength = 40  // Characters per line
   export let lineCount = 20   // Count of lines per div
   export let blockCount = 1   // Count of div

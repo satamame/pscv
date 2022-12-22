@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { PSc } from '../lib/psc'
 
+  // コンポーネントプロパティ
   export let psc: PSc | undefined
 </script>
 

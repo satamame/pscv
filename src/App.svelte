@@ -1,10 +1,12 @@
 <script lang="ts">
   import { HEADER_HEIGHT } from './lib/const'
-  import { isAndroid } from './lib/ua'
+  import { isAndroid, isPwa } from './lib/env'
   import type { BackFunc } from './lib/back'
   import { initBackHandler } from './lib/back'
+
   import type { PSc } from './lib/psc'
 
+  // 子コンポーネント
   import Viewer from './components/Viewer.svelte'
   import Header from './components/Header.svelte'
   import Toc from './components/Toc.svelte'
@@ -28,7 +30,6 @@
 
   let psc: PSc | undefined
   $: title = psc?.title ?? '台本ビューア'
-
   $: isModal = tocIsOpen || menuIsOpen
 
   // Scroll lock/unlock
@@ -76,6 +77,7 @@
 {#if tocIsOpen}
   <Toc
     bind:this="{toc}"
+    bind:psc
     on:close="{() => { tocIsOpen = false }}"
   />
 {/if}
@@ -104,8 +106,10 @@
   />
 {/if}
 
-{#if reloadIsOpen}
-  <ReloadPrompt on:close="{() => { reloadIsOpen = false }}" />
+{#if isPwa && reloadIsOpen}
+  <ReloadPrompt
+    on:close="{() => { reloadIsOpen = false }}"
+  />
 {/if}
 
 <style>

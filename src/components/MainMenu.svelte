@@ -1,9 +1,12 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
-  import { isAndroid } from '../lib/ua'
+  import { isAndroid } from '../lib/env'
   import { keepBackable, back } from '../lib/back'
+  import { createEventDispatcher, onMount } from 'svelte'
 
+  // 子コンポーネント
   import Overlay from './Overlay.svelte'
+
+  // 画像ファイルを参照
   import closeIcon from '/ui_icon/close_black_24dp.svg'
   import infoIcon from '/ui_icon/info_black_24dp.svg'
   import booksIcon from '/ui_icon/library_books_black_24dp.svg'

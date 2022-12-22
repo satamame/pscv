@@ -27,7 +27,7 @@ const pwaOptions = {
         purpose: 'any maskable'
       }
     ],
-    start_url: 'index.html',
+    start_url: 'index.html?pwa=true',
     display: 'standalone',        // default (unnecessary)
     background_color: '#BD913F',
     theme_color: '#916028',

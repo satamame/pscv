@@ -1,11 +1,14 @@
 <script lang="ts">
   import { HEADER_COLOR, HEADER_HEIGHT } from '../lib/const'
   import { createEventDispatcher } from 'svelte'
+
+  // 画像ファイルを参照
   import tocIcon from '/ui_icon/toc_black_24dp.svg'
   import menuIcon from '/ui_icon/menu_open_black_24dp.svg'
 
   const dispatch = createEventDispatcher()
 
+  // コンポーネントプロパティ
   export let title: string
 </script>
 
