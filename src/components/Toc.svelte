@@ -14,7 +14,7 @@
   const dispatch = createEventDispatcher()
 
   // コンポーネントプロパティ
-  export let psc: PSc | undefined
+  export let psc: PSc
 
   let gone = true
 
@@ -33,6 +33,10 @@
   }
 
   $: tocItems = psc.getTocItems()
+
+  function goTo(index: number) {
+    alert(index)
+  }
 </script>
 
 <div class="overlay" class:gone>
@@ -47,7 +51,7 @@
 
   <ul>
     {#each tocItems as item}
-      <li>{item.index} {item.text}</li>
+      <li on:click="{() => { goTo(item.index) }}">{item.text}</li>
     {/each}
   </ul>
 </div>
@@ -78,5 +82,15 @@
     position: absolute;
     top: 10px;
     right: 16px;
+  }
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  li {
+    border-top: 1px solid #555;
+    padding: 8px 12px;
+    cursor: pointer;
   }
 </style>

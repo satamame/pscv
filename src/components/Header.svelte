@@ -2,6 +2,8 @@
   import { HEADER_COLOR, HEADER_HEIGHT } from '../lib/const'
   import { createEventDispatcher } from 'svelte'
 
+  import type { PSc } from '../lib/psc'
+
   // 画像ファイルを参照
   import tocIcon from '/ui_icon/toc_black_24dp.svg'
   import menuIcon from '/ui_icon/menu_open_black_24dp.svg'
@@ -10,16 +12,17 @@
 
   // コンポーネントプロパティ
   export let title: string
+  export let psc: PSc | undefined
 </script>
 
 <header style="background-color: {HEADER_COLOR}; height: {HEADER_HEIGHT}px;">
-  <button class="icon-button left-button" on:click="{() => dispatch('openToc')}" >
+  <button class="icon-button left-button" on:click="{() => dispatch('openToc')}" disabled="{!psc}">
     <img alt="目次" src="{tocIcon}" />
   </button>
 
   <h1>{title}</h1>
 
-  <button class="icon-button right-button" on:click="{() => dispatch('openMainMenu')}" >
+  <button class="icon-button right-button" on:click="{() => dispatch('openMainMenu')}">
     <img alt="メニュー" src="{menuIcon}" />
   </button>
 </header>

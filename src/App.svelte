@@ -70,11 +70,12 @@
 
 <Header
   bind:title
+  bind:psc
   on:openToc="{() => { tocIsOpen = true }}"
   on:openMainMenu="{() => { menuIsOpen = true }}"
 />
 
-{#if tocIsOpen}
+{#if psc && tocIsOpen}
   <Toc
     bind:this="{toc}"
     bind:psc

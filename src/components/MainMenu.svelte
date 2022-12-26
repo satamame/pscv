@@ -95,12 +95,12 @@
   }
   li {
     border-top: 1px solid #555;
-    padding: 8px;
+    padding: 8px 12px;
     cursor: pointer;
   }
   li img {
     vertical-align: middle;
-    margin-right: 4px;
+    margin-right: 6px;
   }
   li span {
     vertical-align: middle;
