@@ -45,6 +45,11 @@ button:active, a:active, img:active, li:active {
   opacity: 0.5;
 }
 
+button:disabled {
+  opacity: 1;
+  color: lightgray;
+}
+
 .icon-button {
   width: 28px;
   height: 28px;

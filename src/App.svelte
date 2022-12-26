@@ -1,6 +1,6 @@
 <script lang="ts">
+  import { isPwa, isAndroid } from './lib/env'
   import { HEADER_HEIGHT } from './lib/const'
-  import { isAndroid, isPwa } from './lib/env'
   import type { BackFunc } from './lib/back'
   import { initBackHandler } from './lib/back'
 

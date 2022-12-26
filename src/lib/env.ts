@@ -1,6 +1,6 @@
+// Android で実行しているかの判定
 const ua = navigator.userAgent.toLowerCase()
 export const isAndroid = ua.indexOf("android") >= 0
 
-const url = new URL(window.location.href)
-const params = url.searchParams
-export const isPwa = params.get('pwa') === 'true'
+// PWA として実行しているかの判定
+export const isPwa = window.matchMedia('(display-mode: standalone)').matches

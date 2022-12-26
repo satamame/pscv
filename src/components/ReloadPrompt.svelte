@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { appUpdateFunc } from '../lib/store'
   import { createEventDispatcher } from 'svelte'
   import { fade } from 'svelte/transition'
+  import { appUpdateFunc } from '../lib/store'
   import { useRegisterSW } from 'virtual:pwa-register/svelte'
 
   const dispatch = createEventDispatcher()
 
   let gone = false
+  let updating = false
 
   const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW({
     onRegisteredSW(url, swr) {
@@ -22,6 +23,12 @@
     gone = true
     if ($needRefresh) { appUpdateFunc.set(updateServiceWorker) }
     setTimeout(() => { dispatch('close') }, 100)
+  }
+
+  // Service Worker を更新する
+  async function updateNow() {
+    updating = true
+    updateServiceWorker(true)
   }
 
   $: toast = !gone && ($offlineReady || $needRefresh)
@@ -41,9 +48,17 @@
       {/if}
     </div>
     {#if $needRefresh}
-      <button on:click|once="{() => updateServiceWorker(true)}">
-        更新する
-      </button>
+      {#if updating}
+        <!-- ブラウザ側で更新した場合など、更新後のリロードが起きない場合がある。 -->
+        <!-- そのため一度ボタンを押したらこっそりリロードボタンに置き換える。 -->
+        <button on:click="{() => { location.reload() }}">
+          更新する
+        </button>
+      {:else}
+        <button on:click|once="{updateNow}">
+          更新する
+        </button>
+      {/if}
     {/if}
     <button on:click="{close}">
       閉じる

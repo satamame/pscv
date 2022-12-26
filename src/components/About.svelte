@@ -1,6 +1,6 @@
 <script lang="ts">
+  import { isPwa, isAndroid } from '../lib/env'
   import { APP_VERSION, COPY_RIGHT } from '../lib/const'
-  import { isAndroid } from '../lib/env'
   import { keepBackable, back } from '../lib/back'
   import { createEventDispatcher, onMount } from 'svelte'
   import { appUpdateFunc } from '../lib/store'
@@ -11,6 +11,7 @@
   const dispatch = createEventDispatcher()
 
   let gone = true
+  let updating = false
 
   onMount(async () => {
     if (isAndroid) { keepBackable() }
@@ -25,6 +26,12 @@
       if (isAndroid) { back() }
     }, 200)
   }
+
+  // Service Worker を更新する
+  async function updateNow() {
+    updating = true
+    $appUpdateFunc(true)
+  }
 </script>
 
 <div class="panel" class:gone>
@@ -36,9 +43,25 @@
   <div class="container">
     <p>バージョン<br>{APP_VERSION}</p>
     {#if $appUpdateFunc}
-      <button on:click|once="{() => $appUpdateFunc(true)}">
-        今すぐ台本ビューアを更新する
-      </button>
+      {#if updating}
+        <!-- ブラウザ側で更新した場合など、更新後のリロードが起きない場合がある。 -->
+        <!-- そのため一度ボタンを押したらこっそりリロードボタンに置き換える。 -->
+        <button on:click="{() => { location.reload() }}">
+          今すぐ台本ビューアを更新する
+        </button>
+      {:else}
+        <button on:click|once="{updateNow}">
+          今すぐ台本ビューアを更新する
+        </button>
+      {/if}
+    {/if}
+    {#if !isPwa}
+      <div style="text-align: left;">
+        <p>
+          最新バージョンを使うには、このページを PWA としてインストールしてください。<br />
+          ブラウザで最新バージョンにするには、キャッシュをクリアして再読込みする必要があります。
+        </p>
+      </div>
     {/if}
     <p>{COPY_RIGHT}</p>
   </div>
