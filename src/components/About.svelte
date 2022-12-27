@@ -54,6 +54,11 @@
           今すぐ台本ビューアを更新する
         </button>
       {/if}
+      <div style="text-align: left;">
+        <p>
+          更新が途中で止まった場合は、一度アプリを終了して起動しなおしてください。
+        </p>
+      </div>
     {/if}
     {#if !isPwa}
       <div style="text-align: left;">
