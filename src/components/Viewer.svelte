@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { HEADER_HEIGHT } from '../lib/const'
+
   import type { PSc } from '../lib/psc'
   import { PSC_LINE_TYPE } from '../lib/psc'
 
@@ -16,9 +18,21 @@
 
   // コンポーネントプロパティ
   export let psc: PSc | undefined
+
+  let container
+
+  /** スクロールロック時、親要素に対してスクロールした位置にする */
+  export function lockScroll(offsetY: number): void {
+    container.style.top = `${HEADER_HEIGHT - offsetY}px`
+  }
+
+  /** スクロールロック解除 */
+  export function unlockScroll(): void {
+    container.style.top = `${HEADER_HEIGHT}px`
+  }
 </script>
 
-<div>
+<div bind:this="{container}" class="container" style="top: {HEADER_HEIGHT}px">
   {#if psc}
     {#each psc.lines as line }
       {#if line.type == PSC_LINE_TYPE.TITLE}
@@ -47,3 +61,12 @@
     {/each}
   {/if}
 </div>
+
+<style>
+  .container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    padding: 8px 12px 12px 18px;
+  }
+</style>

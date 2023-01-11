@@ -33,15 +33,17 @@
   $: isModal = tocIsOpen || menuIsOpen || dataIsOpen || aboutIsOpen
 
   // Scroll lock/unlock
-  $: if (main) {
+  $: if (viewer) {
     const root = document.documentElement
     if (isModal) {
+      // モーダル中はスクロールをロックする
       const scrollTop = root.scrollTop
       root.style.position = 'fixed'
-      main.style.top = `${HEADER_HEIGHT - scrollTop}px`
+      viewer.lockScroll(scrollTop)
     } else {
-      const scrollTop = HEADER_HEIGHT - main.offsetTop
-      main.style.top = `${HEADER_HEIGHT}px`
+      // スクロールロック解除
+      const scrollTop = HEADER_HEIGHT - viewer.offsetTop
+      viewer.unlockScroll()
       root.style.position = 'static'
       root.scrollTop = scrollTop
     }
@@ -61,12 +63,10 @@
   }
 </script>
 
-<main bind:this="{main}" style="top: {HEADER_HEIGHT}px">
-  <Viewer
-    bind:this="{viewer}"
-    bind:psc
-  />
-</main>
+<Viewer
+  bind:this="{viewer}"
+  bind:psc
+/>
 
 <Header
   bind:title
@@ -112,12 +112,3 @@
     on:close="{() => { reloadIsOpen = false }}"
   />
 {/if}
-
-<style>
-  main {
-    position: absolute;
-    left: 0;
-    right: 0;
-    padding: 8px 12px 12px 18px;
-  }
-</style>
