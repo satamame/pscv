@@ -30,7 +30,7 @@
 
   let psc: PSc | undefined
   $: title = psc?.title ?? '台本ビューア'
-  $: isModal = tocIsOpen || menuIsOpen
+  $: isModal = tocIsOpen || menuIsOpen || dataIsOpen || aboutIsOpen
 
   // Scroll lock/unlock
   $: if (main) {
