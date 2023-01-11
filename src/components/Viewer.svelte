@@ -18,21 +18,17 @@
 
   // コンポーネントプロパティ
   export let psc: PSc | undefined
+  export let top = HEADER_HEIGHT
 
   let container
 
-  /** スクロールロック時、親要素に対してスクロールした位置にする */
-  export function lockScroll(offsetY: number): void {
-    container.style.top = `${HEADER_HEIGHT - offsetY}px`
-  }
-
-  /** スクロールロック解除 */
-  export function unlockScroll(): void {
-    container.style.top = `${HEADER_HEIGHT}px`
+  // スクロール位置を top の値に合わせる
+  $: if (container) {
+    container.style.top = `${top}px`
   }
 </script>
 
-<div bind:this="{container}" class="container" style="top: {HEADER_HEIGHT}px">
+<div bind:this="{container}" class="container">
   {#if psc}
     {#each psc.lines as line }
       {#if line.type == PSC_LINE_TYPE.TITLE}

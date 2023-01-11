@@ -15,18 +15,20 @@
   import About from './components/About.svelte'
   import ReloadPrompt from './components/ReloadPrompt.svelte'
 
-  let main
   let viewer
   let toc
   let menu
   let data
   let about
 
+  // パネル開閉状態
   let tocIsOpen = false
   let menuIsOpen = false
   let dataIsOpen = false
   let aboutIsOpen = false
   let reloadIsOpen = true
+
+  let viewerTop = HEADER_HEIGHT
 
   let psc: PSc | undefined
   $: title = psc?.title ?? '台本ビューア'
@@ -34,18 +36,10 @@
 
   // Scroll lock/unlock
   $: if (viewer) {
-    const root = document.documentElement
     if (isModal) {
-      // モーダル中はスクロールをロックする
-      const scrollTop = root.scrollTop
-      root.style.position = 'fixed'
-      viewer.lockScroll(scrollTop)
+      lockScroll()
     } else {
-      // スクロールロック解除
-      const scrollTop = HEADER_HEIGHT - viewer.offsetTop
-      viewer.unlockScroll()
-      root.style.position = 'static'
-      root.scrollTop = scrollTop
+      unlockScroll()
     }
   }
 
@@ -61,11 +55,27 @@
       }
     })
   }
+
+  function lockScroll(): void {
+    const root = document.documentElement
+    const scrollTop = root.scrollTop
+    root.style.position = 'fixed'
+    viewerTop = HEADER_HEIGHT - scrollTop
+  }
+
+  function unlockScroll(): void {
+    const root = document.documentElement
+    const scrollTop = HEADER_HEIGHT - viewerTop
+    viewerTop = HEADER_HEIGHT
+    root.style.position = 'static'
+    root.scrollTop = scrollTop
+  }
 </script>
 
 <Viewer
   bind:this="{viewer}"
   bind:psc
+  bind:top="{viewerTop}"
 />
 
 <Header
