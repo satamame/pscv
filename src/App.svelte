@@ -56,6 +56,7 @@
     })
   }
 
+  /** スクロールロックする */
   function lockScroll(): void {
     const root = document.documentElement
     const scrollTop = root.scrollTop
@@ -63,12 +64,23 @@
     viewerTop = HEADER_HEIGHT - scrollTop
   }
 
+  /** スクロールロックを解除する */
   function unlockScroll(): void {
     const root = document.documentElement
     const scrollTop = HEADER_HEIGHT - viewerTop
     viewerTop = HEADER_HEIGHT
     root.style.position = 'static'
-    root.scrollTop = scrollTop
+    // setTimeout しないとスクロール位置がずれるようなのでする
+    setTimeout(() => {
+      root.scrollTop = scrollTop
+    }, 0)
+  }
+
+  /** index 番目の見出し行にスクロールする */
+  function goToHeadline(index: number): void {
+    // スクロールロック中にしか呼ばれないので viewerTop を変える
+    // スクロールロックが解除されるとこれを元に root がスクロールする
+    viewerTop = HEADER_HEIGHT - viewer.getHeadlineOffsetY(index)
   }
 </script>
 
@@ -90,6 +102,7 @@
     bind:this="{toc}"
     bind:psc
     on:close="{() => { tocIsOpen = false }}"
+    on:goToHeadline="{(e) => { goToHeadline(e.detail.index) }}"
   />
 {/if}
 

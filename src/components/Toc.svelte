@@ -32,10 +32,16 @@
     }, 200)
   }
 
-  $: tocItems = psc.getTocItems()
-
-  function goTo(index: number) {
-    alert(index)
+  /** index 番目の見出し行にスクロールする */
+  function goToHeadline(index: number) {
+    dispatch('goToHeadline', { index })
+    // Android の場合は履歴を遡りながらスクロールする必要がある
+    // close() 後に履歴を遡るとスクロールがリセットされてしまう
+    if (isAndroid) {
+      back()
+    } else {
+      close()
+    }
   }
 </script>
 
@@ -50,8 +56,8 @@
   </button>
 
   <ul>
-    {#each tocItems as item}
-      <li on:click="{() => { goTo(item.index) }}">{item.text}</li>
+    {#each psc.headlines as item, index}
+      <li on:click="{() => { goToHeadline(index) }}">{item.text}</li>
     {/each}
   </ul>
 </div>

@@ -22,9 +22,31 @@
 
   let container
 
-  // スクロール位置を top の値に合わせる
+  // コンポーネントの外から Y 座標を操作するためのリアクティブ宣言
   $: if (container) {
     container.style.top = `${top}px`
+  }
+
+  /** 行の Y 座標を返す */
+  export function getLineOffsetY(index: number): number {
+    if (index == 0) {
+      return 0
+    }
+
+    let target: HTMLElement = container.children[index]
+    // 子要素 (p とか) があれば、そっちを使う
+    if (target.childElementCount > 0) {
+      target = target.children[0] as HTMLElement
+    }
+    const targetStyle = window.getComputedStyle(target)
+    const marginTop = targetStyle.getPropertyValue('margin-top')
+    const offsetY = target.offsetTop - parseFloat(marginTop)
+    return offsetY
+  }
+
+  /** 見出し行の Y 座標を返す */
+  export function getHeadlineOffsetY(index: number): number {
+    return getLineOffsetY(psc.headlines[index].lineIndex)
   }
 </script>
 

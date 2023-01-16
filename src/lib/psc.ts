@@ -30,12 +30,16 @@ export class PScLine {
 
 /** Play Script object */
 export class PSc {
+  // headlines は見出し項目の情報 (テキストと行番号) の配列
+  public readonly headlines: { text: string, lineIndex: number }[]
   constructor (
     public title: string,
     public author: string,
     public chars: string[],
     public lines: PScLine[],
-  ) {}
+  ) {
+    this.headlines = this.makeHeadlines()
+  }
 
   /** URL からデータを取得して PSc オブジェクトを返す */
   static async fromUrl(url: string): Promise<PSc> {
@@ -64,23 +68,23 @@ export class PSc {
     }
   }
 
-  /** 目次項目 (登場人物見出しと柱の行) を抽出する */
-  getTocItems(): { text: string, index: number }[] {
-    const headers = this.lines.map((line, index) => {
-      console.log(line.type)
+  /** 見出し項目を作る */
+  private makeHeadlines(): { text: string, lineIndex: number }[] {
+    // 見出し行以外を undefined とした配列を得る
+    const headlines = this.lines.map((line, index) => {
       if (
+        line.type === PSC_LINE_TYPE.TITLE ||
         line.type === PSC_LINE_TYPE.CHARSHEADLINE ||
         line.type === PSC_LINE_TYPE.H1 ||
         line.type === PSC_LINE_TYPE.H2 ||
         line.type === PSC_LINE_TYPE.H3
       ) {
-        return { text: line.text, index: index }
+        return { text: line.text, lineIndex: index }
       }
     })
-    const tocItems = headers.filter((line) => {
+    // undefined を削除して返す
+    return headlines.filter((line) => {
       return !!line
     })
-    console.log({ tocItems })
-    return tocItems
   }
 }
