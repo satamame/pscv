@@ -19,12 +19,16 @@
   // コンポーネントプロパティ
   export let psc: PSc | undefined
   export let top = HEADER_HEIGHT
+  export let opacity = 1
 
-  let container
+  let container: HTMLDivElement
 
-  // コンポーネントの外から Y 座標を操作するためのリアクティブ宣言
+  // コンポーネントの外から Y 座標や opacity を操作できるようにする
   $: if (container) {
     container.style.top = `${top}px`
+  }
+  $: if (container) {
+    container.style.opacity = opacity.toString()
   }
 
   /** 行の Y 座標を返す */
@@ -33,11 +37,8 @@
       return 0
     }
 
-    let target: HTMLElement = container.children[index]
-    // 子要素 (p とか) があれば、そっちを使う
-    if (target.childElementCount > 0) {
-      target = target.children[0] as HTMLElement
-    }
+    // 行には必ず <p> 等があるので children[0] を対象とする
+    const target = container.children[index].children[0] as HTMLElement
     const targetStyle = window.getComputedStyle(target)
     const marginTop = targetStyle.getPropertyValue('margin-top')
     const offsetY = target.offsetTop - parseFloat(marginTop)

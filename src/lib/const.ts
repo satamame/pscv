@@ -1,4 +1,4 @@
-export const APP_VERSION = '0.1.0-alpha.133'
+export const APP_VERSION = '0.1.0-alpha.134'
 export const HEADER_COLOR = '#EEB63D'
 export const HEADER_HEIGHT = 48
 export const COPY_RIGHT = '©2022 satamame'

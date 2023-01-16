@@ -15,11 +15,11 @@
   import About from './components/About.svelte'
   import ReloadPrompt from './components/ReloadPrompt.svelte'
 
-  let viewer
-  let toc
-  let menu
-  let data
-  let about
+  let viewer: Viewer
+  let toc: Toc
+  let menu: MainMenu
+  let data: Data
+  let about: About
 
   // パネル開閉状態
   let tocIsOpen = false
@@ -29,6 +29,13 @@
   let reloadIsOpen = true
 
   let viewerTop = HEADER_HEIGHT
+  let viewerOpacity = 1
+
+  // スクロールロックを解除する時の動作の設定
+  let scrollUnlockBehavior: {
+    callback: () => void,
+    hideFlicker?: boolean,
+  } | null = null
 
   let psc: PSc | undefined
   $: title = psc?.title ?? '台本ビューア'
@@ -68,19 +75,34 @@
   function unlockScroll(): void {
     const root = document.documentElement
     const scrollTop = HEADER_HEIGHT - viewerTop
+    if (scrollUnlockBehavior?.hideFlicker) {
+      viewerOpacity = 0
+    }
     viewerTop = HEADER_HEIGHT
     root.style.position = 'static'
-    // setTimeout しないとスクロール位置がずれるようなのでする
+    root.scrollTop = scrollTop
+
     setTimeout(() => {
-      root.scrollTop = scrollTop
+      viewerOpacity = 1
+      // コールバックがあれば実行して削除する
+      if (scrollUnlockBehavior) {
+        scrollUnlockBehavior.callback()
+        scrollUnlockBehavior = null
+      }
     }, 0)
   }
 
-  /** index 番目の見出し行にスクロールする */
+  /** スクロールロック解除後、指定の見出し行にスクロールする */
   function goToHeadline(index: number): void {
-    // スクロールロック中にしか呼ばれないので viewerTop を変える
-    // スクロールロックが解除されるとこれを元に root がスクロールする
-    viewerTop = HEADER_HEIGHT - viewer.getHeadlineOffsetY(index)
+    scrollUnlockBehavior = {
+      callback: () => {
+        const root = document.documentElement
+        const offsetY = viewer.getHeadlineOffsetY(index)
+        root.scrollTop = offsetY
+      },
+      // iOS はむしろ一瞬消えるのが目立つので Android のみ hide する
+      hideFlicker: isAndroid,
+    }
   }
 </script>
 
@@ -88,6 +110,7 @@
   bind:this="{viewer}"
   bind:psc
   bind:top="{viewerTop}"
+  bind:opacity="{viewerOpacity}"
 />
 
 <Header
