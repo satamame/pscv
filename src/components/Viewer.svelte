@@ -19,7 +19,7 @@
   // コンポーネントプロパティ
   export let psc: PSc | undefined
   export let top = HEADER_HEIGHT
-  export let opacity = 1
+  // export let opacity = 1
 
   let container: HTMLDivElement
 
@@ -27,9 +27,9 @@
   $: if (container) {
     container.style.top = `${top}px`
   }
-  $: if (container) {
-    container.style.opacity = opacity.toString()
-  }
+  // $: if (container) {
+  //   container.style.opacity = opacity.toString()
+  // }
 
   /** 行の Y 座標を返す */
   export function getLineOffsetY(index: number): number {

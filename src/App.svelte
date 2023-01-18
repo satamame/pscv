@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { isPwa, isAndroid } from './lib/env'
+  import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
+
+  import { isPwa, isAndroid, isIOS } from './lib/env'
   import { HEADER_HEIGHT } from './lib/const'
   import type { BackFunc } from './lib/back'
   import { initBackHandler } from './lib/back'
@@ -29,7 +31,7 @@
   let reloadIsOpen = true
 
   let viewerTop = HEADER_HEIGHT
-  let viewerOpacity = 1
+  // let viewerOpacity = 1
 
   // スクロールロックを解除する時の動作の設定
   let scrollUnlockBehavior: {
@@ -65,31 +67,46 @@
 
   /** スクロールロックする */
   function lockScroll(): void {
-    const root = document.documentElement
-    const scrollTop = root.scrollTop
-    root.style.position = 'fixed'
-    viewerTop = HEADER_HEIGHT - scrollTop
+    // iOS の場合は style を書き換える方法を使う
+    if (isIOS) {
+      const root = document.documentElement
+      const scrollTop = root.scrollTop
+      root.style.position = 'fixed'
+      viewerTop = HEADER_HEIGHT - scrollTop
+    }
+  }
+  // iOS 以外では body-scroll-lock を使う
+  $: if (!isIOS) {
+    if (toc) { disableBodyScroll(toc) }
+    if (menu) { disableBodyScroll(menu) }
+    if (data) { disableBodyScroll(data) }
+    if (about) { disableBodyScroll(about) }
   }
 
   /** スクロールロックを解除する */
   function unlockScroll(): void {
-    const root = document.documentElement
-    const scrollTop = HEADER_HEIGHT - viewerTop
-    if (scrollUnlockBehavior?.hideFlicker) {
-      viewerOpacity = 0
+    if (isIOS) {
+      // iOS の場合は style を書き換える方法を使う
+      const root = document.documentElement
+      const scrollTop = HEADER_HEIGHT - viewerTop
+      // if (scrollUnlockBehavior?.hideFlicker) {
+      //   viewerOpacity = 0
+      // }
+      viewerTop = HEADER_HEIGHT
+      root.style.position = 'static'
+      root.scrollTop = scrollTop
+    } else {
+      // iOS 以外では body-scroll-lock を使う
+      clearAllBodyScrollLocks()
     }
-    viewerTop = HEADER_HEIGHT
-    root.style.position = 'static'
-    root.scrollTop = scrollTop
-
-    setTimeout(() => {
-      viewerOpacity = 1
-      // コールバックがあれば実行して削除する
-      if (scrollUnlockBehavior) {
-        scrollUnlockBehavior.callback()
-        scrollUnlockBehavior = null
-      }
-    }, 0)
+    // setTimeout(() => {
+    //   viewerOpacity = 1
+    //   // コールバックがあれば実行して削除する
+    //   if (scrollUnlockBehavior) {
+    //     scrollUnlockBehavior.callback()
+    //     scrollUnlockBehavior = null
+    //   }
+    // }, 0)
   }
 
   /** スクロールロック解除後、指定の見出し行にスクロールする */
@@ -110,8 +127,8 @@
   bind:this="{viewer}"
   bind:psc
   bind:top="{viewerTop}"
-  bind:opacity="{viewerOpacity}"
 />
+<!-- bind:opacity="{viewerOpacity}" -->
 
 <Header
   bind:title
