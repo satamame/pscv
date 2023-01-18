@@ -31,7 +31,6 @@
   let reloadIsOpen = true
 
   let viewerTop = HEADER_HEIGHT
-  // let viewerOpacity = 1
 
   // スクロールロックを解除した直後に実行するコールバック
   let scrollUnlockDoneCb: (() => void) | null = null
@@ -39,15 +38,6 @@
   let psc: PSc | undefined
   $: title = psc?.title ?? '台本ビューア'
   $: isModal = tocIsOpen || menuIsOpen || dataIsOpen || aboutIsOpen
-
-  // Scroll lock/unlock
-  $: if (viewer) {
-    if (isModal) {
-      lockScroll()
-    } else {
-      unlockScroll()
-    }
-  }
 
   // Initialize Android's back button handler
   if (isAndroid) {
@@ -60,6 +50,15 @@
         about: about?.close,
       }
     })
+  }
+
+  // モーダル状態が変わった時の処理
+  $: if (viewer) {
+    if (isModal) {
+      lockScroll()
+    } else {
+      unlockScroll()
+    }
   }
 
   /** スクロールロックする */
@@ -86,9 +85,6 @@
       // iOS の場合は style を書き換える方法を使う
       const root = document.documentElement
       const scrollTop = HEADER_HEIGHT - viewerTop
-      // if (scrollUnlockBehavior?.hideFlicker) {
-      //   viewerOpacity = 0
-      // }
       viewerTop = HEADER_HEIGHT
       root.style.position = 'static'
       root.scrollTop = scrollTop
@@ -96,30 +92,21 @@
       // iOS 以外では body-scroll-lock を使う
       clearAllBodyScrollLocks()
     }
+    // コールバックがあれば実行する
     if (scrollUnlockDoneCb) {
-      scrollUnlockDoneCb()
-      scrollUnlockDoneCb = null
+      setTimeout(() => {
+        scrollUnlockDoneCb()
+        scrollUnlockDoneCb = null
+      }, 0)
     }
-
-    // setTimeout(() => {
-    //   viewerOpacity = 1
-    //   // コールバックがあれば実行して削除する
-    //   if (scrollUnlockBehavior) {
-    //     scrollUnlockBehavior.callback()
-    //     scrollUnlockBehavior = null
-    //   }
-    // }, 0)
   }
 
-  /** スクロールロック解除後、指定の見出し行にスクロールする */
+  /** スクロールロック解除後に見出し行に移動するという設定をする */
   function goToHeadline(index: number): void {
     scrollUnlockDoneCb = () => {
-        const root = document.documentElement
-        const offsetY = viewer.getHeadlineOffsetY(index)
-        root.scrollTop = offsetY
-
-      // iOS はむしろ一瞬消えるのが目立つので Android のみ hide する
-      // hideFlicker: isAndroid,
+      const root = document.documentElement
+      const offsetY = viewer.getHeadlineOffsetY(index)
+      root.scrollTop = offsetY
     }
   }
 </script>
@@ -129,7 +116,6 @@
   bind:psc
   bind:top="{viewerTop}"
 />
-<!-- bind:opacity="{viewerOpacity}" -->
 
 <Header
   bind:title

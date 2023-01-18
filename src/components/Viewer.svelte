@@ -19,25 +19,20 @@
   // コンポーネントプロパティ
   export let psc: PSc | undefined
   export let top = HEADER_HEIGHT
-  // export let opacity = 1
 
   let container: HTMLDivElement
 
-  // コンポーネントの外から Y 座標や opacity を操作できるようにする
+  // コンポーネントの外から Y 座標を操作できるようにする
   $: if (container) {
     container.style.top = `${top}px`
   }
-  // $: if (container) {
-  //   container.style.opacity = opacity.toString()
-  // }
 
   /** 行の Y 座標を返す */
   export function getLineOffsetY(index: number): number {
     if (index == 0) {
       return 0
     }
-
-    // 行には必ず <p> 等があるので children[0] を対象とする
+    // 行には必ず <p> があるので children[0] を対象とする
     const target = container.children[index].children[0] as HTMLElement
     const targetStyle = window.getComputedStyle(target)
     const marginTop = targetStyle.getPropertyValue('margin-top')
