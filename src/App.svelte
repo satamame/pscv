@@ -33,11 +33,8 @@
   let viewerTop = HEADER_HEIGHT
   // let viewerOpacity = 1
 
-  // スクロールロックを解除する時の動作の設定
-  let scrollUnlockBehavior: {
-    callback: () => void,
-    hideFlicker?: boolean,
-  } | null = null
+  // スクロールロックを解除した直後に実行するコールバック
+  let scrollUnlockDoneCb: (() => void) | null = null
 
   let psc: PSc | undefined
   $: title = psc?.title ?? '台本ビューア'
@@ -99,6 +96,11 @@
       // iOS 以外では body-scroll-lock を使う
       clearAllBodyScrollLocks()
     }
+    if (scrollUnlockDoneCb) {
+      scrollUnlockDoneCb()
+      scrollUnlockDoneCb = null
+    }
+
     // setTimeout(() => {
     //   viewerOpacity = 1
     //   // コールバックがあれば実行して削除する
@@ -111,14 +113,13 @@
 
   /** スクロールロック解除後、指定の見出し行にスクロールする */
   function goToHeadline(index: number): void {
-    scrollUnlockBehavior = {
-      callback: () => {
+    scrollUnlockDoneCb = () => {
         const root = document.documentElement
         const offsetY = viewer.getHeadlineOffsetY(index)
         root.scrollTop = offsetY
-      },
+
       // iOS はむしろ一瞬消えるのが目立つので Android のみ hide する
-      hideFlicker: isAndroid,
+      // hideFlicker: isAndroid,
     }
   }
 </script>
