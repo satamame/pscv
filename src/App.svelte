@@ -17,6 +17,7 @@
   import About from './components/About.svelte'
   import ReloadPrompt from './components/ReloadPrompt.svelte'
 
+  // コンポーネントのインスタンス
   let viewer: Viewer
   let toc: Toc
   let menu: MainMenu
@@ -31,13 +32,10 @@
   let reloadIsOpen = true
 
   let viewerTop = HEADER_HEIGHT
+  let psc: PSc | undefined
 
   // スクロールロックを解除した直後に実行するコールバック
   let scrollUnlockDoneCb: (() => void) | null = null
-
-  let psc: PSc | undefined
-  $: title = psc?.title ?? '台本ビューア'
-  $: isModal = tocIsOpen || menuIsOpen || dataIsOpen || aboutIsOpen
 
   // Initialize Android's back button handler
   if (isAndroid) {
@@ -51,6 +49,9 @@
       }
     })
   }
+
+  $: title = psc?.title ?? '台本ビューア'
+  $: isModal = tocIsOpen || menuIsOpen || dataIsOpen || aboutIsOpen
 
   // モーダル状態が変わった時の処理
   $: if (viewer) {
@@ -73,10 +74,15 @@
   }
   // iOS 以外では body-scroll-lock を使う
   $: if (!isIOS) {
-    if (toc) { disableBodyScroll(toc) }
-    if (menu) { disableBodyScroll(menu) }
-    if (data) { disableBodyScroll(data) }
-    if (about) { disableBodyScroll(about) }
+    if (toc) {
+      disableBodyScroll(toc)
+    } else if (menu) {
+      disableBodyScroll(menu)
+    } else if (data) {
+      disableBodyScroll(data)
+    } else if (about) {
+      disableBodyScroll(about)
+    }
   }
 
   /** スクロールロックを解除する */
