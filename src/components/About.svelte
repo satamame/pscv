@@ -11,7 +11,6 @@
   const dispatch = createEventDispatcher()
 
   let gone = true
-  let updating = false
 
   onMount(async () => {
     if (isAndroid) { keepBackable() }
@@ -26,12 +25,6 @@
       if (isAndroid) { back() }
     }, 200)
   }
-
-  // Service Worker を更新する
-  async function updateNow() {
-    updating = true
-    $appUpdateFunc(true)
-  }
 </script>
 
 <div class="panel" class:gone>
@@ -43,17 +36,9 @@
   <div class="container">
     <p>バージョン<br>{APP_VERSION}</p>
     {#if $appUpdateFunc}
-      {#if updating}
-        <!-- ブラウザ側で更新した場合など、更新後のリロードが起きない場合がある。 -->
-        <!-- そのため一度ボタンを押したらこっそりリロードボタンに置き換える。 -->
-        <button on:click="{() => { location.reload() }}">
-          今すぐ台本ビューアを更新する
-        </button>
-      {:else}
-        <button on:click|once="{updateNow}">
-          今すぐ台本ビューアを更新する
-        </button>
-      {/if}
+      <button on:click|once="{() => $appUpdateFunc(true)}">
+        今すぐ台本ビューアを更新する
+      </button>
       <div style="text-align: left;">
         <p>
           更新が途中で止まった場合は、一度アプリを終了して起動しなおしてください。
