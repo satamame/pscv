@@ -18,6 +18,7 @@ export const PSC_LINE_TYPE = {
 } as const
 
 export type PScLineType = typeof PSC_LINE_TYPE[keyof typeof PSC_LINE_TYPE]
+export type Headline = { text: string, lineIndex: number }
 
 /** Object of each line in PSc */
 export class PScLine {
@@ -31,7 +32,7 @@ export class PScLine {
 /** Play Script object */
 export class PSc {
   // headlines は見出し項目の情報 (テキストと行番号) の配列
-  public readonly headlines: { text: string, lineIndex: number }[]
+  public readonly headlines: Headline[]
   constructor (
     public title: string,
     public author: string,
@@ -69,7 +70,7 @@ export class PSc {
   }
 
   /** 見出し項目を作る */
-  private makeHeadlines(): { text: string, lineIndex: number }[] {
+  private makeHeadlines(): Headline[] {
     // 見出し行以外を undefined とした配列を得る
     const headlines = this.lines.map((line, index) => {
       if (
@@ -86,5 +87,31 @@ export class PSc {
     return headlines.filter((line) => {
       return !!line
     })
+  }
+
+  /** 行番号からその行が属している見出しの番号を返す */
+  public headlineForline(index: number): number {
+    let min = 0
+    let max = this.headlines.length - 1
+    // 最後の見出し以降なら最後の見出し番号を返す
+    if (this.headlines[max].lineIndex <= index) {
+      return max
+    }
+    // バイナリサーチ
+    let mid: number
+    while (true) {
+      mid = Math.floor((min + max) / 2)
+      if (mid == min) {
+        break
+      }
+      const midIndex = this.headlines[mid].lineIndex
+      const nextIndex = this.headlines[mid + 1].lineIndex
+      if (midIndex <= index) {
+        min = mid
+      } else if (nextIndex > index) {
+        max = mid
+      }
+    }
+    return mid
   }
 }

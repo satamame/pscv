@@ -15,6 +15,7 @@
 
   // コンポーネントプロパティ
   export let psc: PSc
+  export let current: number
 
   let gone = true
 
@@ -57,7 +58,12 @@
 
   <ul>
     {#each psc.headlines as item, index}
-      <li on:click="{() => { goToHeadline(index) }}">{item.text}</li>
+      <li
+        class:current="{ index == current }"
+        on:click="{() => { goToHeadline(index) }}"
+      >
+        {item.text}
+      </li>
     {/each}
   </ul>
 </div>
@@ -98,5 +104,8 @@
     border-top: 1px solid #555;
     padding: 8px 12px;
     cursor: pointer;
+  }
+  .current {
+    font-weight: bold;
   }
 </style>

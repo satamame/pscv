@@ -31,11 +31,13 @@
   let aboutIsOpen = false
   let reloadIsOpen = true
 
+  const rootElement = document.documentElement
   let viewerTop = HEADER_HEIGHT
   let psc: PSc | undefined
+  let currentTocIndex = 0
 
   // スクロールロックを解除した直後に実行するコールバック
-  let scrollUnlockDoneCb: (() => void) | null = null
+  let onScrollUnlock: (() => void) | null = null
 
   // Initialize Android's back button handler
   if (isAndroid) {
@@ -66,9 +68,8 @@
   function lockScroll(): void {
     // iOS の場合は style を書き換える方法を使う
     if (isIOS) {
-      const root = document.documentElement
-      const scrollTop = root.scrollTop
-      root.style.position = 'fixed'
+      const scrollTop = rootElement.scrollTop
+      rootElement.style.position = 'fixed'
       viewerTop = HEADER_HEIGHT - scrollTop
     }
   }
@@ -89,32 +90,43 @@
   function unlockScroll(): void {
     if (isIOS) {
       // iOS の場合は style を書き換える方法を使う
-      const root = document.documentElement
       const scrollTop = HEADER_HEIGHT - viewerTop
       viewerTop = HEADER_HEIGHT
-      root.style.position = 'static'
-      root.scrollTop = scrollTop
+      rootElement.style.position = 'static'
+      rootElement.scrollTop = scrollTop
     } else {
       // iOS 以外では body-scroll-lock を使う
       clearAllBodyScrollLocks()
     }
     // コールバックがあれば実行する
-    if (scrollUnlockDoneCb) {
+    if (onScrollUnlock) {
       setTimeout(() => {
-        scrollUnlockDoneCb()
-        scrollUnlockDoneCb = null
+        onScrollUnlock()
+        onScrollUnlock = null
       }, 0)
     }
   }
 
   /** スクロールロック解除後に見出し行に移動するという設定をする */
   function goToHeadline(index: number): void {
-    scrollUnlockDoneCb = () => {
-      const root = document.documentElement
-      const offsetY = viewer.getHeadlineOffsetY(index)
-      root.scrollTop = offsetY
+    onScrollUnlock = () => {
+      const y = viewer.getHeadlineY(index)
+      rootElement.scrollTop = y
     }
   }
+
+  /** スクロール位置の見出しを判定してから目次を開く */
+  function openToc(): void {
+    const currentLineIndex = viewer.getLineIndexAtY(rootElement.scrollTop)
+    currentTocIndex = psc.headlineForline(currentLineIndex)
+    tocIsOpen = true
+  }
+
+  /* DEBUG */
+  // window.addEventListener('scroll', (e) => {
+  //   console.log('**** scrolling...')
+  //   viewer.getLineIndexAtY(rootElement.scrollTop)
+  // })
 </script>
 
 <Viewer
@@ -126,7 +138,7 @@
 <Header
   bind:title
   bind:psc
-  on:openToc="{() => { tocIsOpen = true }}"
+  on:openToc="{openToc}"
   on:openMainMenu="{() => { menuIsOpen = true }}"
 />
 
@@ -134,6 +146,7 @@
   <Toc
     bind:this="{toc}"
     bind:psc
+    bind:current="{currentTocIndex}"
     on:close="{() => { tocIsOpen = false }}"
     on:goToHeadline="{(e) => { goToHeadline(e.detail.index) }}"
   />

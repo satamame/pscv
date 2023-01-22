@@ -28,21 +28,54 @@
   }
 
   /** 行の Y 座標を返す */
-  export function getLineOffsetY(index: number): number {
+  export function getLineY(index: number): number {
     if (index == 0) {
       return 0
     }
     // 行には必ず <p> があるので children[0] を対象とする
     const target = container.children[index].children[0] as HTMLElement
-    const targetStyle = window.getComputedStyle(target)
-    const marginTop = targetStyle.getPropertyValue('margin-top')
-    const offsetY = target.offsetTop - parseFloat(marginTop)
-    return offsetY
+    const marginTop = window.getComputedStyle(target).marginTop
+    const y = target.offsetTop - parseFloat(marginTop)
+    return y
   }
 
   /** 見出し行の Y 座標を返す */
-  export function getHeadlineOffsetY(index: number): number {
-    return getLineOffsetY(psc.headlines[index].lineIndex)
+  export function getHeadlineY(index: number): number {
+    return getLineY(psc.headlines[index].lineIndex)
+  }
+
+  /* DEBUG */
+  // let topIndex = 0
+
+  /** 指定した Y 座標以下にある最初の行の番号を返す */
+  export function getLineIndexAtY(y: number): number {
+    let min = 0
+    let max = psc.lines.length - 1
+    let mid: number
+    while (true) {
+      mid = Math.floor((min + max) / 2)
+      if (mid == min) {
+        break
+      }
+      const prevLineY = getLineY(mid - 1)
+      const midLineY = getLineY(mid)
+      if (prevLineY < y) {
+        min = mid
+      } else if (midLineY >= y) {
+        max = mid
+      }
+    }
+
+    /* DEBUG */
+    // console.log(`**** Line index at ${y}: ${mid}`)
+    // if (topIndex != mid) {
+    //   (container.children[topIndex] as HTMLDivElement).style.backgroundColor = 'transparent';
+    //   topIndex = mid;
+    //   (container.children[topIndex] as HTMLDivElement).style.backgroundColor = 'red';
+    //   console.log(`**** Headline No.: ${psc.headlineForline(topIndex)}`)
+    // }
+
+    return mid
   }
 </script>
 
