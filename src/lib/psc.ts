@@ -90,7 +90,7 @@ export class PSc {
   }
 
   /** 行番号からその行が属している見出しの番号を返す */
-  public headlineForline(index: number): number {
+  public headlineForLine(index: number): number {
     let min = 0
     let max = this.headlines.length - 1
     // 最後の見出し以降なら最後の見出し番号を返す

@@ -37,7 +37,7 @@
   let currentTocIndex = 0
 
   // スクロールロックを解除した直後に実行するコールバック
-  let onScrollUnlock: (() => void) | null = null
+  let onUnlockScroll: (() => void) | null = null
 
   // Initialize Android's back button handler
   if (isAndroid) {
@@ -99,17 +99,17 @@
       clearAllBodyScrollLocks()
     }
     // コールバックがあれば実行する
-    if (onScrollUnlock) {
+    if (onUnlockScroll) {
       setTimeout(() => {
-        onScrollUnlock()
-        onScrollUnlock = null
+        onUnlockScroll()
+        onUnlockScroll = null
       }, 0)
     }
   }
 
   /** スクロールロック解除後に見出し行に移動するという設定をする */
   function goToHeadline(index: number): void {
-    onScrollUnlock = () => {
+    onUnlockScroll = () => {
       const y = viewer.getHeadlineY(index)
       rootElement.scrollTop = y
     }
@@ -118,7 +118,7 @@
   /** スクロール位置の見出しを判定してから目次を開く */
   function openToc(): void {
     const currentLineIndex = viewer.getLineIndexAtY(rootElement.scrollTop)
-    currentTocIndex = psc.headlineForline(currentLineIndex)
+    currentTocIndex = psc.headlineForLine(currentLineIndex)
     tocIsOpen = true
   }
 

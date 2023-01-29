@@ -72,7 +72,7 @@
     //   (container.children[topIndex] as HTMLDivElement).style.backgroundColor = 'transparent';
     //   topIndex = mid;
     //   (container.children[topIndex] as HTMLDivElement).style.backgroundColor = 'red';
-    //   console.log(`**** Headline No.: ${psc.headlineForline(topIndex)}`)
+    //   console.log(`**** Headline No.: ${psc.headlineForLine(topIndex)}`)
     // }
 
     return mid
