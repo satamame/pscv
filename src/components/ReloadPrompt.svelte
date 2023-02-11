@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
   import { fade } from 'svelte/transition'
+  import { isPwa } from '../lib/env'
   import { appUpdateFunc } from '../lib/store'
   import { useRegisterSW } from 'virtual:pwa-register/svelte'
 
@@ -24,7 +25,8 @@
     setTimeout(() => { dispatch('close') }, 100)
   }
 
-  $: toast = !gone && ($offlineReady || $needRefresh)
+  // ブラウザ実行ではトーストを表示しない
+  $: toast = isPwa && !gone && ($offlineReady || $needRefresh)
 </script>
 
 {#if toast}

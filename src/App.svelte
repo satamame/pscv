@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isPwa, isAndroid } from './lib/env'
+  import { isAndroid } from './lib/env'
   import { HEADER_HEIGHT } from './lib/const'
   import type { BackFunc } from './lib/back'
   import { initBackHandler } from './lib/back'
@@ -107,7 +107,7 @@
   />
 {/if}
 
-{#if isPwa && reloadIsOpen}
+{#if reloadIsOpen}
   <ReloadPrompt
     on:close="{() => { reloadIsOpen = false }}"
   />
