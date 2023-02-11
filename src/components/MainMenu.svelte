@@ -1,7 +1,8 @@
 <script lang="ts">
+  import { createEventDispatcher, onMount } from 'svelte'
+
   import { isAndroid } from '../lib/env'
   import { keepBackable, back } from '../lib/back'
-  import { createEventDispatcher, onMount } from 'svelte'
 
   // 子コンポーネント
   import Overlay from './Overlay.svelte'

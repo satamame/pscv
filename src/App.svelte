@@ -1,11 +1,10 @@
 <script lang="ts">
   import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
 
-  import { isPwa, isAndroid, isIOS } from './lib/env'
+  import { isAndroid, isIOS } from './lib/env'
   import { HEADER_HEIGHT } from './lib/const'
   import type { BackFunc } from './lib/back'
   import { initBackHandler } from './lib/back'
-
   import type { PSc } from './lib/psc'
 
   // 子コンポーネント
@@ -176,7 +175,7 @@
   />
 {/if}
 
-{#if isPwa && reloadIsOpen}
+{#if reloadIsOpen}
   <ReloadPrompt
     on:close="{() => { reloadIsOpen = false }}"
   />

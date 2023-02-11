@@ -1,6 +1,5 @@
 <script lang="ts">
   import { HEADER_HEIGHT } from '../lib/const'
-
   import type { PSc } from '../lib/psc'
   import { PSC_LINE_TYPE } from '../lib/psc'
 

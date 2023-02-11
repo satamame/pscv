@@ -1,8 +1,9 @@
 <script lang="ts">
+  import { createEventDispatcher, onMount } from 'svelte'
+
   import { isPwa, isAndroid } from '../lib/env'
   import { APP_VERSION, COPY_RIGHT } from '../lib/const'
   import { keepBackable, back } from '../lib/back'
-  import { createEventDispatcher, onMount } from 'svelte'
   import { appUpdateFunc } from '../lib/store'
 
   // 画像ファイルを参照

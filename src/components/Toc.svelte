@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { isAndroid } from '../lib/env'
-  import { keepBackable, back } from '../lib/back'
   import { createEventDispatcher, onMount } from 'svelte'
 
+  import { isAndroid } from '../lib/env'
+  import { keepBackable, back } from '../lib/back'
   import type { PSc } from '../lib/psc'
 
   // 子コンポーネント

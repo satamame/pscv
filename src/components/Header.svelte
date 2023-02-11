@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { HEADER_COLOR, HEADER_HEIGHT } from '../lib/const'
   import { createEventDispatcher } from 'svelte'
 
+  import { HEADER_COLOR, HEADER_HEIGHT } from '../lib/const'
   import type { PSc } from '../lib/psc'
 
   // 画像ファイルを参照
