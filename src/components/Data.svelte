@@ -30,7 +30,7 @@
   })
 
   export function close() {
-    // Back ボタンが押された場合を考慮して、追加パネルがあれば閉じる
+    // back 処理から呼ばれた場合を考え、追加パネルがあれば閉じる
     if (dataAdd) {
       dataAdd.close()
       if (isAndroid) { keepBackable() }
@@ -39,7 +39,6 @@
 
     if (gone) { return }
     gone = true
-
     setTimeout(() => {
       dispatch('close')
       if (isAndroid) { back() }
