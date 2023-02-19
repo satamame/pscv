@@ -7,7 +7,17 @@
   import { PSc } from '../lib/psc'
 
   // 画像ファイルを参照
+  import addIcon from '/ui_icon/add_black_24dp.svg'
   import closeIcon from '/ui_icon/close_black_24dp.svg'
+
+  // 子コンポーネント
+  import DataAdd from './DataAdd.svelte'
+
+  // コンポーネントのインスタンス
+  let dataAdd: DataAdd
+
+  // パネル開閉状態
+  let addIsOpen = false
 
   const dispatch = createEventDispatcher()
 
@@ -20,8 +30,16 @@
   })
 
   export function close() {
+    // Back ボタンが押された場合を考慮して、追加パネルがあれば閉じる
+    if (dataAdd) {
+      dataAdd.close()
+      if (isAndroid) { keepBackable() }
+      return
+    }
+
     if (gone) { return }
     gone = true
+
     setTimeout(() => {
       dispatch('close')
       if (isAndroid) { back() }
@@ -44,6 +62,9 @@
 </script>
 
 <div class="panel" class:gone>
+  <button class="icon-button add-button">
+    <img alt="追加" src="{addIcon}" on:click="{() => { addIsOpen = true }}" />
+  </button>
   <h1>台本データ</h1>
   <button class="icon-button close-button">
     <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
@@ -60,6 +81,13 @@
   </div>
 </div>
 
+{#if addIsOpen}
+  <DataAdd
+    bind:this="{dataAdd}"
+    on:close="{() => { addIsOpen = false }}"
+  />
+{/if}
+
 <style>
   .panel {
     position: fixed;
@@ -74,6 +102,15 @@
   .panel.gone {
     transform: translateY(270px);
     opacity: 0;
+  }
+  h1 {
+    margin: 14px 52px 10PX;
+    text-align: center;
+  }
+  .add-button {
+    position: absolute;
+    top: 10px;
+    left: 16px;
   }
   .close-button {
     position: absolute;
