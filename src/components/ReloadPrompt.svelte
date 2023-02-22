@@ -6,9 +6,13 @@
   import { isPwa } from '../lib/env'
   import { appUpdateFunc } from '../lib/store'
 
+  // 子コンポーネント
+  import Spinner from './Spinner.svelte'
+
   const dispatch = createEventDispatcher()
 
   let gone = false
+  let isLoading = false
 
   const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW({
     onRegisteredSW(url, swr) {
@@ -24,6 +28,11 @@
     gone = true
     if ($needRefresh) { appUpdateFunc.set(updateServiceWorker) }
     setTimeout(() => { dispatch('close') }, 100)
+  }
+
+  function update() {
+    isLoading = true
+    updateServiceWorker(true)
   }
 
   // ブラウザ実行時はトーストを表示しない
@@ -44,7 +53,7 @@
       {/if}
     </div>
     {#if $needRefresh}
-      <button on:click|once="{() => updateServiceWorker(true)}">
+      <button on:click|once="{update}">
         更新する
       </button>
     {/if}
@@ -52,6 +61,10 @@
       閉じる
     </button>
   </div>
+{/if}
+
+{#if isLoading}
+  <Spinner />
 {/if}
 
 <style>

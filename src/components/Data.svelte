@@ -22,7 +22,6 @@
   const dispatch = createEventDispatcher()
 
   let gone = true
-  let sampleSelect = SAMPLES[0]
 
   onMount(async () => {
     if (isAndroid) { keepBackable() }
@@ -37,6 +36,11 @@
       return
     }
 
+    // 上にパネルが載っていなければ自身を閉じる
+    closeSelf()
+  }
+
+  function closeSelf() {
     if (gone) { return }
     gone = true
     setTimeout(() => {
@@ -45,18 +49,9 @@
     }, 200)
   }
 
-  async function showSample() {
-    try {
-      const psc = await PSc.fromUrl(sampleSelect.path)
-      if (psc) {
-        dispatch('showPSc', { psc })
-        close()
-      } else {
-        throw new Error('読み込めませんでした。')
-      }
-    } catch (error) {
-      alert(error.message)
-    }
+  async function addPSc(psc: PSc) {
+    dispatch('showPSc', { psc })
+    closeSelf()
   }
 </script>
 
@@ -70,13 +65,7 @@
   </button>
 
   <div class="container">
-    <h2>サンプル</h2>
-    <select bind:value="{sampleSelect}">
-      {#each SAMPLES as sample }
-        <option value="{sample}">{sample.title}</option>
-      {/each}
-    </select>
-    <button on:click="{showSample}">表示</button>
+
   </div>
 </div>
 
@@ -84,6 +73,7 @@
   <DataAdd
     bind:this="{dataAdd}"
     on:close="{() => { addIsOpen = false }}"
+    on:addPSc="{(e) => { addPSc(e.detail.psc) }}"
   />
 {/if}
 
@@ -118,8 +108,5 @@
   }
   .container {
     margin: 24px 16px 14px;
-  }
-  .container h2 {
-    margin-left: 0;
   }
 </style>

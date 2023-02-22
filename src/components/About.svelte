@@ -9,9 +9,13 @@
   // 画像ファイルを参照
   import closeIcon from '/ui_icon/close_black_24dp.svg'
 
+  // 子コンポーネント
+  import Spinner from './Spinner.svelte'
+
   const dispatch = createEventDispatcher()
 
   let gone = true
+  let isLoading = false
 
   onMount(async () => {
     if (isAndroid) { keepBackable() }
@@ -19,12 +23,24 @@
   })
 
   export function close() {
+    if (isLoading) {
+      // ローディング中に Back ボタンが押された場合
+      // 良く分からないが、こうするのが良いみたい
+      location.reload()
+      return
+    }
+
     if (gone) { return }
     gone = true
     setTimeout(() => {
       dispatch('close')
       if (isAndroid) { back() }
     }, 200)
+  }
+
+  function update() {
+    isLoading = true
+    $appUpdateFunc(true)
   }
 </script>
 
@@ -37,7 +53,7 @@
   <div class="container">
     <p>バージョン<br>{APP_VERSION}</p>
     {#if $appUpdateFunc}
-      <button on:click|once="{() => $appUpdateFunc(true)}">
+      <button on:click|once="{update}">
         今すぐ台本ビューアを更新する
       </button>
       <div style="text-align: left;">
@@ -57,6 +73,10 @@
     <p>{COPY_RIGHT}</p>
   </div>
 </div>
+
+{#if isLoading}
+  <Spinner />
+{/if}
 
 <style>
   .panel {

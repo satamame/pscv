@@ -2,9 +2,11 @@
   import { createEventDispatcher, onMount } from 'svelte'
 
   import { HEADER_HEIGHT, SAMPLES } from '../lib/const'
+  import { PSc } from '../lib/psc'
 
   // 子コンポーネント
   import Overlay from './Overlay.svelte'
+  import Spinner from './Spinner.svelte'
 
   // 要素のインスタンス
   let panel: HTMLDivElement
@@ -18,6 +20,8 @@
   let files: FileList | null = null
   let disabled = false
   let maxHeight = window.innerHeight - HEADER_HEIGHT - 10
+  let pscFetched: PSc | null = null
+  let isLoading = false
 
   // srcType を切り替えた時のリアクティブ処理
   $: if (srcType == 'sample') {
@@ -42,7 +46,7 @@
 
   export function close() {
     // Back ボタンで閉じる場合の処理は親が受け持つ
-    if (gone) { return }
+    if (gone || isLoading) { return }
     gone = true
     window.removeEventListener('resize', adjustHeight)
     setTimeout(() => {
@@ -51,8 +55,27 @@
   }
 
   /** 台本の追加処理 */
-  function add() {
-    // TODO: 実装
+  async function add() {
+    isLoading = true
+    try {
+      if (srcType == 'sample') {
+        pscFetched = await PSc.fromUrl(sampleSelected.path)
+      } else if (srcType == 'url') {
+        pscFetched = await PSc.fromUrl(url)
+      } else {
+
+      }
+      if (pscFetched) {
+        isLoading = false
+        dispatch('addPSc', { psc: pscFetched })
+        close()
+      } else {
+        throw Error()
+      }
+    } catch(error) {
+      alert('読み込めませんでした。')
+      isLoading = false
+    }
   }
 </script>
 
@@ -89,11 +112,11 @@
         </label>
       {:else if srcType == "url"}
         <label>URL を入力してください。
-          <input bind:value="{url}" />
+          <input type="text" bind:value="{url}" />
         </label>
       {:else}
         <label>ファイルを選んでください。
-          <input bind:files type="file" accept="text/json" />
+          <input type="file" bind:files accept="text/json" />
         </label>
       {/if}
     </div>
@@ -103,6 +126,10 @@
     </div>
   </div>
 </div>
+
+{#if isLoading}
+  <Spinner />
+{/if}
 
 <style>
   .panel {
