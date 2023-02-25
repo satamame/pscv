@@ -85,7 +85,7 @@
         await db.addScript(psc.title, json)
 
         isLoading = false
-        dispatch('showPSc', { psc })
+        // dispatch('showPSc', { psc })
         close()
       } else {
         throw Error('読込めませんでした。')

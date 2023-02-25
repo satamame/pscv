@@ -1,9 +1,11 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte'
+  import { liveQuery } from "dexie";
 
-  import { SAMPLES } from '../lib/const'
   import { isAndroid } from '../lib/env'
+  import { HEADER_HEIGHT } from '../lib/const'
   import { keepBackable, back } from '../lib/back'
+  import { db } from '../lib/db'
   import { PSc } from '../lib/psc'
 
   // 画像ファイルを参照
@@ -12,6 +14,7 @@
 
   // 子コンポーネント
   import DataAdd from './DataAdd.svelte'
+  import LoremIpsum from './LoremIpsum.svelte'
 
   // コンポーネントのインスタンス
   let dataAdd: DataAdd
@@ -22,6 +25,9 @@
   const dispatch = createEventDispatcher()
 
   let gone = true
+  let scIndexes = liveQuery(
+    () => db.scriptIndex.orderBy('sortKey').toArray()
+  )
 
   onMount(async () => {
     if (isAndroid) { keepBackable() }
@@ -49,7 +55,9 @@
     }, 200)
   }
 
-  async function showPSc(psc: PSc) {
+  async function showPSc(scriptId: number) {
+    const scData = await db.scriptData.get(scriptId)
+    const psc = PSc.fromJson(scData.pscJson)
     dispatch('showPSc', { psc })
     closeSelf()
   }
@@ -64,8 +72,15 @@
     <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
   </button>
 
-  <div class="container">
-
+  <div class="container" style="top: {HEADER_HEIGHT}px;">
+    {#if $scIndexes}
+      {#each $scIndexes as scIndex}
+        <div style="width: 100%" on:click="{() => { showPSc(scIndex.scriptId) }}">
+          {scIndex.sortKey} {scIndex.name}
+        </div>
+      {/each}
+    {/if}
+    <LoremIpsum blockCount="{2}" />
   </div>
 </div>
 
@@ -107,6 +122,10 @@
     right: 16px;
   }
   .container {
-    margin: 24px 16px 14px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
   }
 </style>
