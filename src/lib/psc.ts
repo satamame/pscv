@@ -42,6 +42,31 @@ export class PSc {
     this.headlines = this.makeHeadlines()
   }
 
+  /** JSON 文字列から PSc オブジェクトを作って返す */
+  static fromJson(json: string): PSc {
+    try {
+      // { psc: PSc } の形だった場合は PSc 部分を取り出す
+      let pscData = JSON.parse(json)
+      if (pscData.psc) {
+        pscData = pscData.psc
+      }
+
+      // lines の各要素を PScLine クラスのインスタンスにする
+      const lines = pscData.lines.map((line: PScLine) => {
+        const type = PSC_LINE_TYPE[line.type]
+        return new PScLine(type, line.name, line.text)
+      })
+
+      // PSc クラスのインスタンスを作って返す
+      const psc = new PSc(
+        pscData.title, pscData.author, pscData.chars, lines
+      )
+      return psc
+    } catch (error) {
+      throw new Error('台本データが不正です。')
+    }
+  }
+
   /** URL からデータを取得して PSc オブジェクトを返す */
   static async fromUrl(url: string): Promise<PSc> {
     const res = await fetch(url)

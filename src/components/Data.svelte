@@ -49,7 +49,7 @@
     }, 200)
   }
 
-  async function addPSc(psc: PSc) {
+  async function showPSc(psc: PSc) {
     dispatch('showPSc', { psc })
     closeSelf()
   }
@@ -73,7 +73,7 @@
   <DataAdd
     bind:this="{dataAdd}"
     on:close="{() => { addIsOpen = false }}"
-    on:addPSc="{(e) => { addPSc(e.detail.psc) }}"
+    on:showPSc="{(e) => { showPSc(e.detail.psc) }}"
   />
 {/if}
 

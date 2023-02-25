@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte'
 
+  import { db } from '../lib/db'
   import { HEADER_HEIGHT, SAMPLES } from '../lib/const'
   import { PSc } from '../lib/psc'
 
@@ -20,21 +21,21 @@
   let files: FileList | null = null
   let disabled = false
   let maxHeight = window.innerHeight - HEADER_HEIGHT - 10
-  let pscFetched: PSc | null = null
   let isLoading = false
 
   // srcType を切り替えた時のリアクティブ処理
   $: if (srcType == 'sample') {
-    disabled = !sampleSelected
+    disabled = !sampleSelected || isLoading
     files = null
   } else if (srcType == 'url') {
-    disabled = !url
+    const urlRe = /^https?:\/\/(.+\.)+.+\/.+/
+    disabled = !urlRe.test(url) || isLoading
     files = null
   } else {
-    disabled = !(files?.length)
+    disabled = !(files?.length) || isLoading
   }
 
-  /** ウィンドウサイズに合わせて高さを調整する */
+  /** ウィンドウサイズに合わせてパネルの高さを調整する */
   function adjustHeight() {
     maxHeight = window.innerHeight - HEADER_HEIGHT - 10
   }
@@ -54,27 +55,44 @@
     }, 200)
   }
 
+  /** URL から文字列を取得する */
+  async function textFromUrl(url: string): Promise<string> {
+    const res = await fetch(url)
+    if (res.ok) {
+      return await res.text()
+    } else {
+      throw new Error('読込めませんでした。')
+    }
+  }
+
   /** 台本の追加処理 */
   async function add() {
     isLoading = true
+    // データを取得する
     try {
+      let json: string
       if (srcType == 'sample') {
-        pscFetched = await PSc.fromUrl(sampleSelected.path)
+        json = await textFromUrl(sampleSelected.path)
       } else if (srcType == 'url') {
-        pscFetched = await PSc.fromUrl(url)
+        json = await textFromUrl(url)
       } else {
 
       }
-      if (pscFetched) {
+      if (json) {
+        // インスタンス生成
+        const psc = PSc.fromJson(json)
+        // DB にデータを追加する
+        await db.addScript(psc.title, json)
+
         isLoading = false
-        dispatch('addPSc', { psc: pscFetched })
+        dispatch('showPSc', { psc })
         close()
       } else {
-        throw Error()
+        throw Error('読込めませんでした。')
       }
     } catch(error) {
-      alert('読み込めませんでした。')
       isLoading = false
+      alert(error.message)
     }
   }
 </script>
@@ -121,7 +139,7 @@
       {/if}
     </div>
     <div class="buttonArea">
-      <button on:click="{close}">キャンセル</button>
+      <button on:click="{close}" disabled="{isLoading}">キャンセル</button>
       <button on:click="{add}" disabled="{disabled}">読込む</button>
     </div>
   </div>
