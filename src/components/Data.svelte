@@ -13,8 +13,8 @@
   import closeIcon from '/ui_icon/close_black_24dp.svg'
 
   // 子コンポーネント
+  import DataCell from './DataCell.svelte'
   import DataAdd from './DataAdd.svelte'
-  import LoremIpsum from './LoremIpsum.svelte'
 
   // コンポーネントのインスタンス
   let dataAdd: DataAdd
@@ -25,6 +25,8 @@
   const dispatch = createEventDispatcher()
 
   let gone = true
+
+  // リストに DB の内容が自動的に反映されるようにする
   let scIndexes = liveQuery(
     () => db.scriptIndex.orderBy('sortKey').toArray()
   )
@@ -55,32 +57,38 @@
     }, 200)
   }
 
+  /** 選択した台本を表示する */
   async function showPSc(scriptId: number) {
+    // DB から JSON を取って PSc のインスタンスにして親に渡す
     const scData = await db.scriptData.get(scriptId)
     const psc = PSc.fromJson(scData.pscJson)
     dispatch('showPSc', { psc })
+
+    // 自身を閉じる
     closeSelf()
   }
 </script>
 
 <div class="panel" class:gone>
-  <button class="icon-button add-button">
-    <img alt="追加" src="{addIcon}" on:click="{() => { addIsOpen = true }}" />
-  </button>
-  <h1>台本データ</h1>
-  <button class="icon-button close-button">
-    <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
-  </button>
+  <div class="header">
+    <button class="icon-button add-button">
+      <img alt="追加" src="{addIcon}" on:click="{() => { addIsOpen = true }}" />
+    </button>
+    <h1>台本データ</h1>
+    <button class="icon-button close-button">
+      <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
+    </button>
+  </div>
 
   <div class="container" style="top: {HEADER_HEIGHT}px;">
     {#if $scIndexes}
       {#each $scIndexes as scIndex}
-        <div style="width: 100%" on:click="{() => { showPSc(scIndex.scriptId) }}">
-          {scIndex.sortKey} {scIndex.name}
-        </div>
+        <DataCell
+          scIndex="{scIndex}"
+          on:showPSc="{() => { showPSc(scIndex.scriptId) }}"
+        />
       {/each}
     {/if}
-    <LoremIpsum blockCount="{2}" />
   </div>
 </div>
 
@@ -106,6 +114,9 @@
   .panel.gone {
     transform: translateY(270px);
     opacity: 0;
+  }
+  .header {
+    border-bottom: 1px solid #555;
   }
   h1 {
     margin: 14px 52px 10PX;
