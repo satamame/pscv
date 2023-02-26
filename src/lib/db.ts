@@ -15,6 +15,8 @@ export interface ScriptIndex {
 export interface ScriptData {
   id?: number
   pscJson: string
+  srcType: string
+  url: string
   userData: UserData
 }
 
@@ -33,12 +35,13 @@ export class PscvDB extends Dexie {
   }
 
   /** 台本データを DB に追加する */
-  public async addScript(name: string, json: string): Promise<number> {
+  public async addScript(
+    name: string, pscJson: string, srcType: string, url: string
+  ): Promise<number> {
     return this.transaction('rw', this.scriptIndex, this.scriptData, async () => {
       // データ追加
       const scriptId = await this.scriptData.add({
-        pscJson: json,
-        userData: {}
+        pscJson, srcType, url, userData: {}
       }) as number
 
       // インデックス更新

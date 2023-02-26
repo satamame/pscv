@@ -27,7 +27,7 @@
   $: if (srcType == 'sample') {
     disabled = !sampleSelected || isLoading
     files = null
-  } else if (srcType == 'url') {
+  } else if (srcType == 'net') {
     const urlRe = /^https?:\/\/(.+\.)+.+\/.+/
     disabled = !urlRe.test(url) || isLoading
     files = null
@@ -70,22 +70,26 @@
     isLoading = true
     // データを取得する
     try {
-      let json: string
+      let pscJson: string
+      let srcUrl = ''
+
       if (srcType == 'sample') {
-        json = await textFromUrl(sampleSelected.path)
-      } else if (srcType == 'url') {
-        json = await textFromUrl(url)
+        srcUrl = sampleSelected.path
+        pscJson = await textFromUrl(srcUrl)
+      } else if (srcType == 'net') {
+        srcUrl = url
+        pscJson = await textFromUrl(srcUrl)
       } else {
 
       }
-      if (json) {
+
+      if (pscJson) {
         // インスタンス生成
-        const psc = PSc.fromJson(json)
+        const psc = PSc.fromJson(pscJson)
         // DB にデータを追加する
-        await db.addScript(psc.title, json)
+        await db.addScript(psc.title, pscJson, srcType, srcUrl)
 
         isLoading = false
-        // dispatch('showPSc', { psc })
         close()
       } else {
         throw Error('読込めませんでした。')
@@ -114,7 +118,7 @@
       <label>どこから読込みますか？
         <select bind:value="{srcType}">
           <option value="sample">サンプルから</option>
-          <option value="url">ネットから</option>
+          <option value="net">ネットから</option>
           <option value="file">ファイルから</option>
         </select>
       </label>
@@ -128,7 +132,7 @@
             {/each}
           </select>
         </label>
-      {:else if srcType == "url"}
+      {:else if srcType == "net"}
         <label>URL を入力してください。
           <input type="text" bind:value="{url}" />
         </label>
