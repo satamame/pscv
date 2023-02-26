@@ -12,7 +12,7 @@
   import Header from './components/Header.svelte'
   import Toc from './components/Toc.svelte'
   import MainMenu from './components/MainMenu.svelte'
-  import Data from './components/Data.svelte'
+  import DataList from './components/DataList.svelte'
   import About from './components/About.svelte'
   import ReloadPrompt from './components/ReloadPrompt.svelte'
 
@@ -20,7 +20,7 @@
   let viewer: Viewer
   let toc: Toc
   let menu: MainMenu
-  let data: Data
+  let data: DataList
   let about: About
 
   // パネル開閉状態
@@ -161,7 +161,7 @@
 {/if}
 
 {#if dataIsOpen}
-  <Data
+  <DataList
     bind:this="{data}"
     on:close="{() => { dataIsOpen = false }}"
     on:showPSc="{(e) => { psc = e.detail.psc }}"
