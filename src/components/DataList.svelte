@@ -15,16 +15,20 @@
   // 子コンポーネント
   import DataCell from './DataCell.svelte'
   import DataAdd from './DataAdd.svelte'
-
-  // コンポーネントのインスタンス
-  let dataAdd: DataAdd
-
-  // パネル開閉状態
-  let addIsOpen = false
+  import DataInfo from './DataInfo.svelte'
 
   const dispatch = createEventDispatcher()
 
+  // コンポーネントのインスタンス
+  let dataAdd: DataAdd
+  let dataInfo: DataInfo
+
+  // パネル開閉状態
+  let addIsOpen = false
+  let infoIsOpen = false
+
   let gone = true
+  let infoScIndexId: number
 
   // リストに DB の内容が自動的に反映されるようにする
   let scIndexes = liveQuery(
@@ -40,6 +44,11 @@
     // back 処理から呼ばれた場合を考え、追加パネルがあれば閉じる
     if (dataAdd) {
       dataAdd.close()
+      if (isAndroid) { keepBackable() }
+      return
+    }
+    if (dataInfo) {
+      dataInfo.close()
       if (isAndroid) { keepBackable() }
       return
     }
@@ -67,6 +76,11 @@
     // 自身を閉じる
     closeSelf()
   }
+
+  function showInfo(scIndexId: number) {
+    infoScIndexId = scIndexId
+    infoIsOpen = true
+  }
 </script>
 
 <div class="panel" class:gone>
@@ -85,7 +99,8 @@
       {#each $scIndexes as scIndex}
         <DataCell
           scIndex="{scIndex}"
-          on:showPSc="{() => { showPSc(scIndex.scriptId) }}"
+          on:showPSc="{() => showPSc(scIndex.scriptId)}"
+          on:showInfo="{() => showInfo(scIndex.id)}"
         />
       {/each}
     {/if}
@@ -96,7 +111,15 @@
   <DataAdd
     bind:this="{dataAdd}"
     on:close="{() => { addIsOpen = false }}"
-    on:showPSc="{(e) => { showPSc(e.detail.psc) }}"
+    on:showPSc="{e => showPSc(e.detail.psc)}"
+  />
+{/if}
+
+{#if infoIsOpen}
+  <DataInfo
+    bind:this="{dataInfo}"
+    bind:scIndexId="{infoScIndexId}"
+    on:close="{() => { infoIsOpen = false }}"
   />
 {/if}
 
@@ -121,6 +144,9 @@
   h1 {
     margin: 14px 52px 10PX;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .add-button {
     position: absolute;

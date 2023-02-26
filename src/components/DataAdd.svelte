@@ -143,8 +143,12 @@
       {/if}
     </div>
     <div class="buttonArea">
-      <button on:click="{close}" disabled="{isLoading}">キャンセル</button>
-      <button on:click="{add}" disabled="{disabled}">読込む</button>
+      <button
+        class="cancel-button"
+        disabled="{isLoading}"
+        on:click="{close}"
+      >キャンセル</button>
+      <button disabled="{disabled}" on:click="{add}">読込む</button>
     </div>
   </div>
 </div>
@@ -194,5 +198,8 @@
   .buttonArea > button {
     min-width: 108px;
     margin: 8px 4px;
+  }
+  .cancel-button {
+    background-color: darkcyan;
   }
 </style>

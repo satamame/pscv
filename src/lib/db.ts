@@ -29,7 +29,7 @@ export class PscvDB extends Dexie {
     super('pscvDB')
 
     this.version(1).stores({
-      scriptIndex: '++id, sortKey',
+      scriptIndex: '++id, sortKey, &scriptId',
       scriptData: '++id',
     })
   }
@@ -53,6 +53,17 @@ export class PscvDB extends Dexie {
 
       // 新規 ID を返す
       return scriptId
+    })
+  }
+
+  /** 台本データを DB から削除する */
+  public async deleteScript(scriptId: number): Promise<void> {
+    return this.transaction('rw', this.scriptIndex, this.scriptData, async () => {
+      // データ削除
+      await this.scriptData.delete(scriptId)
+      // インデックス削除
+      const scIndex = await this.scriptIndex.get({ scriptId })
+      await this.scriptIndex.delete(scIndex.id)
     })
   }
 }
