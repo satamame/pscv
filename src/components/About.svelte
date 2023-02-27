@@ -10,7 +10,7 @@
   import closeIcon from '/ui_icon/close_black_24dp.svg'
 
   // 子コンポーネント
-  import Spinner from './Spinner.svelte'
+  import Spinner from './UI/Spinner.svelte'
 
   const dispatch = createEventDispatcher()
 

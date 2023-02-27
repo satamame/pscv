@@ -6,8 +6,8 @@
   import { PSc } from '../lib/psc'
 
   // 子コンポーネント
-  import Overlay from './Overlay.svelte'
-  import Spinner from './Spinner.svelte'
+  import Overlay from './UI/Overlay.svelte'
+  import Spinner from './UI/Spinner.svelte'
 
   // 要素のインスタンス
   let panel: HTMLDivElement

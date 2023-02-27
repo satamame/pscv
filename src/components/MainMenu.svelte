@@ -5,7 +5,7 @@
   import { keepBackable, back } from '../lib/back'
 
   // 子コンポーネント
-  import Overlay from './Overlay.svelte'
+  import Overlay from './UI/Overlay.svelte'
 
   // 画像ファイルを参照
   import closeIcon from '/ui_icon/close_black_24dp.svg'

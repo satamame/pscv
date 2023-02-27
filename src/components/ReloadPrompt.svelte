@@ -7,7 +7,7 @@
   import { appUpdateFunc } from '../lib/store'
 
   // 子コンポーネント
-  import Spinner from './Spinner.svelte'
+  import Spinner from './UI/Spinner.svelte'
 
   const dispatch = createEventDispatcher()
 
