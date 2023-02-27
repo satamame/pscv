@@ -8,6 +8,7 @@
   // 子コンポーネント
   import Overlay from './UI/Overlay.svelte'
   import Spinner from './UI/Spinner.svelte'
+  import FileSelect from './UI/FileSelect.svelte'
 
   // 要素のインスタンス
   let panel: HTMLDivElement
@@ -121,7 +122,7 @@
   <div class="container">
     <h2>台本の追加</h2>
     <div>
-      <label>どこから読込みますか？
+      <label>どこから読込みますか？<br>
         <select bind:value="{srcType}">
           <option value="sample">サンプルから</option>
           <option value="net">ネットから</option>
@@ -132,7 +133,7 @@
 
     <div>
       {#if srcType == "sample"}
-        <label>サンプルを選んでください。
+        <label>サンプルを選んでください。<br>
           <select bind:value="{sampleSelected}">
             {#each SAMPLES as sample }
               <option value="{sample}">{sample.title}</option>
@@ -140,13 +141,11 @@
           </select>
         </label>
       {:else if srcType == "net"}
-        <label>URL を入力してください。
+        <label>URL を入力してください。<br>
           <input type="text" bind:value="{url}" />
         </label>
       {:else}
-        <label>ファイルを選んでください。
-          <input type="file" bind:files accept="text/json" />
-        </label>
+        <FileSelect bind:files accept=".json" />
       {/if}
     </div>
 
@@ -199,7 +198,7 @@
   select, input {
     margin: 8px auto;
   }
-  .buttonArea {
+  .container .buttonArea {
     margin-top: 40px;
     text-align: center;
   }

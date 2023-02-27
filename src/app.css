@@ -42,11 +42,10 @@ input[type="text"] {
 }
 
 select, input {
-  color: black;
   border: 1px solid #555;
   border-radius: 5px;
   background-color: #F8F8F8;
-  padding: 4px 4px;
+  padding: 4px;
 }
 
 button {
