@@ -69,3 +69,9 @@ export class PscvDB extends Dexie {
 }
 
 export const db = new PscvDB()
+
+/** 台本データからタイトルを取得する */
+export function getScTitle(scData: ScriptData): string {
+  const scObj = JSON.parse(scData.pscJson)
+  return scObj.title ?? ''
+}

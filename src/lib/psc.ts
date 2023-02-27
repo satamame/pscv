@@ -45,21 +45,17 @@ export class PSc {
   /** JSON 文字列から PSc オブジェクトを作って返す */
   static fromJson(json: string): PSc {
     try {
-      // { psc: PSc } の形だった場合は PSc 部分を取り出す
-      let pscData = JSON.parse(json)
-      if (pscData.psc) {
-        pscData = pscData.psc
-      }
+      const pscObj = JSON.parse(json)
 
       // lines の各要素を PScLine クラスのインスタンスにする
-      const lines = pscData.lines.map((line: PScLine) => {
+      const lines = pscObj.lines.map((line: PScLine) => {
         const type = PSC_LINE_TYPE[line.type]
         return new PScLine(type, line.name, line.text)
       })
 
       // PSc クラスのインスタンスを作って返す
       const psc = new PSc(
-        pscData.title, pscData.author, pscData.chars, lines
+        pscObj.title, pscObj.author, pscObj.chars, lines
       )
       return psc
     } catch (error) {

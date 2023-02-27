@@ -56,10 +56,16 @@
   }
 
   /** URL から文字列を取得する */
-  async function textFromUrl(url: string): Promise<string> {
+  async function pscJsonFromUrl(url: string): Promise<string> {
     const res = await fetch(url)
     if (res.ok) {
-      return await res.text()
+      let pscObj = await res.json()
+
+      // { psc: PSc } の形だった場合は PSc 部分を取り出す
+      if (pscObj.psc) {
+        pscObj = pscObj.psc
+      }
+      return JSON.stringify(pscObj)
     } else {
       throw new Error('読込めませんでした。')
     }
@@ -75,10 +81,10 @@
 
       if (srcType == 'sample') {
         srcUrl = sampleSelected.path
-        pscJson = await textFromUrl(srcUrl)
+        pscJson = await pscJsonFromUrl(srcUrl)
       } else if (srcType == 'net') {
         srcUrl = url
-        pscJson = await textFromUrl(srcUrl)
+        pscJson = await pscJsonFromUrl(srcUrl)
       } else {
 
       }
@@ -123,6 +129,7 @@
         </select>
       </label>
     </div>
+
     <div>
       {#if srcType == "sample"}
         <label>サンプルを選んでください。
@@ -142,6 +149,7 @@
         </label>
       {/if}
     </div>
+
     <div class="buttonArea">
       <button
         class="cancel-button"
@@ -179,7 +187,7 @@
     opacity: 0;
   }
   .container {
-    margin: 16px 16px 14px;
+    margin: 14px;
   }
   .container h2 {
     margin-left: 0;
@@ -198,8 +206,5 @@
   .buttonArea > button {
     min-width: 108px;
     margin: 8px 4px;
-  }
-  .cancel-button {
-    background-color: darkcyan;
   }
 </style>

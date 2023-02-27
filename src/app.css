@@ -56,6 +56,12 @@ button {
   border-radius: 6px;
   padding: 4px 12px;
 }
+.cancel-button {
+  background-color: darkcyan;
+}
+.delete-button {
+  background-color: brown;
+}
 
 /* ボタンのラベルを上下中央にする */
 button:before {

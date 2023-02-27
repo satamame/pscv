@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte'
 
-  import { db } from '../lib/db'
+  import { db, getScTitle } from '../lib/db'
   import type { ScriptIndex, ScriptData } from '../lib/db'
   import { HEADER_HEIGHT, SAMPLES } from '../lib/const'
   import { PSc } from '../lib/psc'
@@ -11,6 +11,7 @@
   import Spinner from './Spinner.svelte'
 
   // 画像ファイルを参照
+  import closeIcon from '/ui_icon/close_black_24dp.svg'
   import editIcon from '/ui_icon/edit_black_24dp.svg'
 
   const dispatch = createEventDispatcher()
@@ -50,7 +51,7 @@
   }
 
   async function deleteScript() {
-    const approved = confirm('削除します。')
+    const approved = confirm('台本を削除します。')
     if (!approved) { return }
 
     await db.deleteScript(scData.id)
@@ -72,15 +73,23 @@
 >
   <div class="container">
     <h2>台本の詳細</h2>
+    <button class="icon-button close-button">
+      <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
+    </button>
+
     {#if scIndex && scData}
       <table>
         <tr><td>表示名</td><td>{scIndex.name}</td>
           <td><img alt="編集" src="{editIcon}" /></td>
         </tr>
-        <tr><td>ソース</td><td colspan="2">{scData.srcType}</td></tr>
+        <tr><td>台本</td><td colspan="2">{getScTitle(scData)}</td></tr>
+        <tr><td>ソース</td><td>{scData.srcType}</td>
+          <td><img alt="編集" src="{editIcon}" /></td>
+        </tr>
         <tr><td>URL</td><td colspan="2">{scData.url}</td></tr>
       </table>
     {/if}
+
     <div class="buttonArea">
       <p><button>再読込み (上書き)</button></p>
       <p><button class="delete-button" on:click="{deleteScript}">削除</button></p>
@@ -110,27 +119,35 @@
     opacity: 0;
   }
   .container {
-    margin: 16px 16px 14px;
+    margin: 14px;
   }
-  .container h2 {
+  h2 {
     margin-left: 0;
     margin-bottom: 24px;
   }
-  .container table {
+  .close-button {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+  }
+  table {
     width: 100%;
     font-size: 0.9em;
     /* border-spacing: 1em 0.2em */
   }
-  .container table tr td:first-child {
+  table tr td {
+    vertical-align: top;
+  }
+  table tr td:first-child {
     width: 4em;
   }
-  .container table tr td:nth-child(3) {
-    width: 1em;
+  table tr td:nth-child(2) {
+    overflow-wrap: anywhere;
+  }
+  table tr td:nth-child(3) {
+    width: 24px;
   }
   .buttonArea {
     margin-top: 40px;
-  }
-  .delete-button {
-    background-color: brown;
   }
 </style>
