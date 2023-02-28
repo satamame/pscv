@@ -56,7 +56,7 @@
     }, 200)
   }
 
-  /** URL から文字列を取得する */
+  /** URL から JSON 文字列を取得する */
   async function pscJsonFromUrl(url: string): Promise<string> {
     const res = await fetch(url)
     if (res.ok) {
@@ -72,22 +72,67 @@
     }
   }
 
-  /** 台本の追加処理 */
-  async function add() {
+  /** ファイルから台本を追加する */
+  async function addFromFile(): Promise<void> {
     isLoading = true
-    // データを取得する
+    const fr = new FileReader()
+
+    // ファイルを読込んだ後のハンドラをセット
+    fr.addEventListener('load', async (e) => {
+      try {
+        // 読み込んだファイル (JSON) からオブジェクトを作る
+        let pscObj = JSON.parse(e.target.result as string)
+
+        // { psc: PSc } の形だった場合は PSc 部分を取り出す
+        if (pscObj.psc) {
+          pscObj = pscObj.psc
+        }
+        const pscJson = JSON.stringify(pscObj)
+
+        // インスタンス生成
+        const psc = PSc.fromJson(pscJson)
+        // DB にデータを追加する
+        await db.addScript(psc.title, pscJson, srcType, files[0].name)
+
+        isLoading = false
+        close()
+      } catch (error) {
+        isLoading = false
+        alert('読込めませんでした。')
+      }
+    })
+
+    // 読込みに失敗した時のハンドラをセット
+    fr.addEventListener('error', () => {
+      isLoading = false
+      alert('読込めませんでした。');
+    });
+
+    // 読込みを開始する
+    fr.readAsText(files[0]);
+  }
+
+  /** 台本の追加処理 */
+  async function add(): Promise<void> {
+    // ファイルからの場合は別の関数で処理する
+    if (srcType == 'file') {
+      await addFromFile()
+      return
+    }
+
+    isLoading = true
+
     try {
       let pscJson: string
       let srcUrl = ''
 
+      // データを取得する
       if (srcType == 'sample') {
         srcUrl = sampleSelected.path
         pscJson = await pscJsonFromUrl(srcUrl)
-      } else if (srcType == 'net') {
+      } else {
         srcUrl = url
         pscJson = await pscJsonFromUrl(srcUrl)
-      } else {
-
       }
 
       if (pscJson) {
@@ -101,7 +146,7 @@
       } else {
         throw Error('読込めませんでした。')
       }
-    } catch(error) {
+    } catch (error) {
       isLoading = false
       alert(error.message)
     }

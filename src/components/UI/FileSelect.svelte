@@ -27,9 +27,7 @@
     user-select: none;
     border: 1px solid #555;
     border-radius: 5px;
-    /* background-color: #F8F8F8; */
-    padding: 2px 8px;
-    margin-right: 6px;
+    padding: 6px 8px;
   }
   input {
     display: none;

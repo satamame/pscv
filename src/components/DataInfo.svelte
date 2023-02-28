@@ -72,7 +72,7 @@
   style:max-height="{maxHeight}px"
 >
   <div class="container">
-    <h2>台本の詳細</h2>
+    <h2>台本の情報</h2>
     <button class="icon-button close-button">
       <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
     </button>
@@ -86,7 +86,10 @@
         <tr><td>ソース</td><td>{scData.srcType}</td>
           <td><img alt="編集" src="{editIcon}" /></td>
         </tr>
-        <tr><td>URL</td><td colspan="2">{scData.url}</td></tr>
+        <tr>
+          <td>{#if scData.srcType != 'file'}URL{/if}</td>
+          <td colspan="2">{scData.url}</td>
+        </tr>
       </table>
     {/if}
 
@@ -133,7 +136,6 @@
   table {
     width: 100%;
     font-size: 0.9em;
-    /* border-spacing: 1em 0.2em */
   }
   table tr td {
     vertical-align: top;
@@ -146,6 +148,7 @@
   }
   table tr td:nth-child(3) {
     width: 24px;
+    padding: 0;
   }
   .buttonArea {
     margin-top: 40px;
