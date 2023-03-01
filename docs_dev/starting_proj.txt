@@ -1,0 +1,21 @@
+> yarn create vite pscv --template svelte-ts
+
+プロジェクトフォルダが出来るので cd で入る (または中身をここに移動)
+
+パッケージをインストールする
+> yarn
+Svelte + TypeScript の環境が完成
+
+> yarn dev
+
+開発サーバが起動する
+
+tsconfig.json の compilerOptions の下に以下を設定する
+"forceConsistentCasingInFileNames": false
+コンポーネントのファイル名を PascalCase にしてもエラーが出なくなる
+
+vite-plugin-pwa をインストールする
+> yarn add vite-plugin-pwa -D
+
+Svelte 用の virtual module を使うために workbox-window をインストールする
+> yarn add workbox-window -D

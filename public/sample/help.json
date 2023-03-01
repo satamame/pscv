@@ -1,0 +1,57 @@
+{
+  "class": "PSc",
+  "title": "台本ビューア",
+  "author": "",
+  "chars": [],
+  "lines": [
+    {
+      "class": "PScLine",
+      "type": "H1",
+      "text": "ヘルプ"
+    },
+    {
+      "class": "PScLine",
+      "type": "DIALOGUE",
+      "name": "台本データの準備",
+      "text": "台本データは JSON 形式です。Fountain (日本式) から pscapi を使って作るのが良いです。"
+    },
+    {
+      "class": "PScLine",
+      "type": "DIRECTION",
+      "text": "https://github.com/satamame/pscapi"
+    },
+    {
+      "class": "PScLine",
+      "type": "DIALOGUE",
+      "name": "台本データの管理",
+      "text": "設定の「台本を読み込む」のセクションで管理します。\n新しく追加する場合は「URL から取得する」を押して URL を入力するか、「ファイルを読み込む」を押してファイルを選択します。\n切り替える場合はプルダウンメニューで選択して「表示」を押します。\n削除する場合はプルダウンメニューで選択して「削除」を押します。"
+    },
+    {
+      "class": "PScLine",
+      "type": "DIALOGUE",
+      "name": "サンプルを読み込む",
+      "text": "設定の「台本を読み込む」のセクションで「URL から取得する」を押して、以下の URL を入力します。"
+    },
+    {
+      "class": "PScLine",
+      "type": "DIRECTION",
+      "text": "psc/sample.json"
+    },
+    {
+      "class": "PScLine",
+      "type": "DIALOGUE",
+      "name": "このヘルプを再度表示する",
+      "text": "設定の「台本を読み込む」のセクションで「URL から取得する」を押して、以下の URL を入力します。"
+    },
+    {
+      "class": "PScLine",
+      "type": "DIRECTION",
+      "text": "psc/help.json"
+    },
+    {
+      "class": "PScLine",
+      "type": "ENDMARK",
+      "text": "©2022 satamame.com"
+    }
+  ]
+}

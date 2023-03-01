@@ -1,0 +1,21 @@
+<script lang="ts">
+  import type { PScLine } from '../../lib/psc'
+
+  // コンポーネントプロパティ
+  export let line: PScLine
+</script>
+
+<div>
+  <p><span>{line.text}</span></p>
+</div>
+
+<style>
+  p {
+    margin: 0.8em 0 0.4em;
+    font-size: 0.9em;
+    text-align: right;
+  }
+  span {
+    overflow-wrap: anywhere;
+  }
+</style>
