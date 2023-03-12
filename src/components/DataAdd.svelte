@@ -123,17 +123,9 @@
     isLoading = true
 
     try {
-      let pscJson: string
-      let srcUrl = ''
-
-      // データを取得する
-      if (srcType == 'sample') {
-        srcUrl = sampleSelected.path
-        pscJson = await pscJsonFromUrl(srcUrl)
-      } else {
-        srcUrl = url
-        pscJson = await pscJsonFromUrl(srcUrl)
-      }
+      // URL から JSON 文字列を取得する
+      const srcUrl = srcType == 'sample' ? sampleSelected.path : url
+      const pscJson = await pscJsonFromUrl(srcUrl)
 
       if (pscJson) {
         // インスタンス生成

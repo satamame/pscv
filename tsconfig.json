@@ -15,8 +15,7 @@
     "allowJs": true,
     "checkJs": true,
     "isolatedModules": true,
-    "forceConsistentCasingInFileNames": false,
-    "sourceMap": true
+    "forceConsistentCasingInFileNames": false
   },
   "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
   "references": [{ "path": "./tsconfig.node.json" }]

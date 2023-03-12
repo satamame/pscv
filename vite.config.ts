@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import { VitePWA } from 'vite-plugin-pwa'
-import preprocess from 'svelte-preprocess'
 
 const pwaOptions = {
   strategies: 'generateSW' as 'generateSW', // default (unnecessary)
@@ -40,20 +39,11 @@ const pwaOptions = {
   },
 }
 
-const svelteOptions = {
-  compilerOptions: {
-    enableSourcemap: true,
-  },
-  preprocess: preprocess({
-    sourceMap: true,
-  }),
-}
-
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/pscv/',
   plugins: [
-    svelte(svelteOptions),
+    svelte(),
     VitePWA(pwaOptions),
   ],
 })
