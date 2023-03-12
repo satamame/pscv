@@ -50,14 +50,16 @@
     }, 200)
   }
 
+  /** 表示中の台本を削除してパネルを閉じる */
   async function deleteScript() {
     const approved = confirm('台本を削除します。')
     if (!approved) { return }
 
+    isLoading = true
     await db.deleteScript(scData.id)
+    isLoading = false
     close()
   }
-
 </script>
 
 <div class="overlay" class:gone>
@@ -73,7 +75,7 @@
 >
   <div class="container">
     <h2>台本の情報</h2>
-    <button class="icon-button close-button">
+    <button class="icon-button close-button" disabled="{isLoading}">
       <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
     </button>
 
@@ -99,6 +101,10 @@
     </div>
   </div>
 </div>
+
+{#if isLoading}
+  <Spinner />
+{/if}
 
 <style>
   .panel {
