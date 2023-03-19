@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte'
-  import { liveQuery } from "dexie";
+  import { liveQuery } from 'dexie'
 
   import { isAndroid } from '../lib/env'
   import { HEADER_HEIGHT } from '../lib/const'

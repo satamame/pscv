@@ -52,7 +52,7 @@
 
   /** 表示中の台本を削除してパネルを閉じる */
   async function deleteScript() {
-    const approved = confirm('台本を削除します。')
+    const approved = confirm(`「${scIndex.name}」を削除します。`)
     if (!approved) { return }
 
     isLoading = true

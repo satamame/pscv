@@ -21,7 +21,7 @@ export interface ScriptData {
 }
 
 /** スキーマの定義 */
-export class PscvDB extends Dexie {
+class PscvDB extends Dexie {
   scriptIndex!: Table<ScriptIndex>
   scriptData!: Table<ScriptData>
 
@@ -39,12 +39,12 @@ export class PscvDB extends Dexie {
     name: string, pscJson: string, srcType: string, url: string
   ): Promise<number> {
     return this.transaction('rw', this.scriptIndex, this.scriptData, async () => {
-      // データ追加
+      // 台本データ追加
       const scriptId = await this.scriptData.add({
         pscJson, srcType, url, userData: {}
       }) as number
 
-      // インデックス更新
+      // 台本インデックス更新
       let newSortKey = 2
       await this.scriptIndex.orderBy('sortKey').modify(scIndex => {
         scIndex.sortKey = newSortKey++
@@ -59,9 +59,9 @@ export class PscvDB extends Dexie {
   /** 台本データを DB から削除する */
   public async deleteScript(scriptId: number): Promise<void> {
     return this.transaction('rw', this.scriptIndex, this.scriptData, async () => {
-      // データ削除
+      // 台本データ削除
       await this.scriptData.delete(scriptId)
-      // インデックス削除
+      // 台本インデックス削除
       const scIndex = await this.scriptIndex.get({ scriptId })
       await this.scriptIndex.delete(scIndex.id)
     })
