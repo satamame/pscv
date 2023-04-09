@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte'
   import { liveQuery } from 'dexie'
+  import { dndzone } from 'svelte-dnd-action'
 
   import { isAndroid } from '../lib/env'
   import { HEADER_HEIGHT } from '../lib/const'
@@ -34,6 +35,7 @@
   let scIndexes = liveQuery(
     () => db.scriptIndex.orderBy('sortKey').toArray()
   )
+  $: items = $scIndexes
 
   onMount(async () => {
     if (isAndroid) { keepBackable() }
@@ -81,6 +83,17 @@
     infoScIndexId = scIndexId
     infoIsOpen = true
   }
+
+  /** Drag & Drop */
+  const flipDurationMs = 300;
+  const handleDndConsider = evt => {
+    items = evt.detail.items;
+  }
+  const handleDndFinalize = evt => {
+    items = evt.detail.items;
+    const scriptIds = items.map(item => item.scriptId)
+    db.sortByScriptIds(scriptIds)
+  }
 </script>
 
 <div class="panel" class:gone>
@@ -94,17 +107,23 @@
     </button>
   </div>
 
-  <div class="container" style="top: {HEADER_HEIGHT}px;">
-    {#if $scIndexes}
-      {#each $scIndexes as scIndex}
+  {#if items}
+    <div
+      class="container"
+      style="top: {HEADER_HEIGHT}px;"
+      use:dndzone="{{ items, flipDurationMs }}"
+      on:consider="{handleDndConsider}"
+      on:finalize="{handleDndFinalize}"
+    >
+      {#each items as item(item.id)}
         <DataCell
-          scIndex="{scIndex}"
-          on:showPSc="{() => showPSc(scIndex.scriptId)}"
-          on:showInfo="{() => showInfo(scIndex.id)}"
+          scIndex="{item}"
+          on:showPSc="{() => showPSc(item.scriptId)}"
+          on:showInfo="{() => showInfo(item.id)}"
         />
       {/each}
-    {/if}
-  </div>
+    </div>
+  {/if}
 </div>
 
 {#if addIsOpen}

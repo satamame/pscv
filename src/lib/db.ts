@@ -66,6 +66,17 @@ class PscvDB extends Dexie {
       await this.scriptIndex.delete(scIndex.id)
     })
   }
+
+  /** 台本インデックスを並べ替える */
+  public async sortByScriptIds(scriptIds: number[]): Promise<void> {
+    return this.transaction('rw', this.scriptIndex, async () => {
+      scriptIds.forEach((scriptId, index) => {
+        this.scriptIndex.get({scriptId}).then(record => {
+          this.scriptIndex.update(record.id, {sortKey: index + 1})
+        })
+      })
+    })
+  }
 }
 
 export const db = new PscvDB()

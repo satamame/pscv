@@ -12,7 +12,7 @@
 
   // コンポーネントプロパティ
   export let title: string
-  export let psc: PSc | undefined
+  export let psc: PSc | undefined = undefined
 </script>
 
 <header style="background-color: {HEADER_COLOR}; height: {HEADER_HEIGHT}px;">

@@ -16,7 +16,7 @@
   import Comment from './PScLine/Comment.svelte'
 
   // コンポーネントプロパティ
-  export let psc: PSc | undefined
+  export let psc: PSc | undefined = undefined
   export let top = HEADER_HEIGHT
 
   let container: HTMLDivElement
