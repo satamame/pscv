@@ -13,17 +13,19 @@
   export let scIndex: ScriptIndex
 </script>
 
-<div class="cell" on:click="{() => dispatch('showPSc')}">
-  <div class="icon">
-    <img alt="本" src="{bookIcon}" />
+<div>
+  <div class="cell" on:click="{() => dispatch('showPSc')}">
+    <div class="icon">
+      <img alt="本" src="{bookIcon}" />
+    </div>
+    <div class="label">{scIndex.name}</div>
+    <button
+      class="icon-button info-button"
+      on:click|stopPropagation="{() => dispatch('showInfo')}"
+    >
+      <img alt="情報" src="{infoIcon}" />
+    </button>
   </div>
-  <div class="label">{scIndex.name}</div>
-  <button
-    class="icon-button info-button"
-    on:click|stopPropagation="{() => dispatch('showInfo')}"
-  >
-    <img alt="情報" src="{infoIcon}" />
-  </button>
 </div>
 
 <style>

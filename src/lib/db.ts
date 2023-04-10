@@ -68,12 +68,10 @@ class PscvDB extends Dexie {
   }
 
   /** 台本インデックスを並べ替える */
-  public async sortByScriptIds(scriptIds: number[]): Promise<void> {
+  public async sortByIds(ids: number[]): Promise<void> {
     return this.transaction('rw', this.scriptIndex, async () => {
-      scriptIds.forEach((scriptId, index) => {
-        this.scriptIndex.get({scriptId}).then(record => {
-          this.scriptIndex.update(record.id, {sortKey: index + 1})
-        })
+      ids.forEach((id, index) => {
+        this.scriptIndex.update(id, {sortKey: index + 1})
       })
     })
   }

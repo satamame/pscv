@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte'
+  import {flip} from "svelte/animate"
   import { liveQuery } from 'dexie'
   import { dndzone } from 'svelte-dnd-action'
 
@@ -85,14 +86,19 @@
   }
 
   /** Drag & Drop */
-  const flipDurationMs = 300;
+  const flipDurationMs = 200
+  const dropTargetStyle = { 'background-color': '#eeeeee' }
+  const transformDraggedElement = (draggedEl: HTMLDivElement, data, index) => {
+    (draggedEl.children[0] as HTMLDivElement).style.border = '1px solid #555';
+    (draggedEl.children[0] as HTMLDivElement).style.backgroundColor = 'white'
+  }
+
   const handleDndConsider = evt => {
-    items = evt.detail.items;
+    items = evt.detail.items
   }
   const handleDndFinalize = evt => {
-    items = evt.detail.items;
-    const scriptIds = items.map(item => item.scriptId)
-    db.sortByScriptIds(scriptIds)
+    const ids = evt.detail.items.map(item => item.id)
+    db.sortByIds(ids)
   }
 </script>
 
@@ -110,17 +116,19 @@
   {#if items}
     <div
       class="container"
-      style="top: {HEADER_HEIGHT}px;"
-      use:dndzone="{{ items, flipDurationMs }}"
+      style="top: {HEADER_HEIGHT + 1}px;"
+      use:dndzone="{{ items, flipDurationMs, dropTargetStyle, transformDraggedElement }}"
       on:consider="{handleDndConsider}"
       on:finalize="{handleDndFinalize}"
     >
       {#each items as item(item.id)}
-        <DataCell
-          scIndex="{item}"
-          on:showPSc="{() => showPSc(item.scriptId)}"
-          on:showInfo="{() => showInfo(item.id)}"
-        />
+        <div animate:flip="{{ duration: flipDurationMs }}">
+          <DataCell
+            scIndex="{item}"
+            on:showPSc="{() => showPSc(item.scriptId)}"
+            on:showInfo="{() => showInfo(item.id)}"
+          />
+        </div>
       {/each}
     </div>
   {/if}
