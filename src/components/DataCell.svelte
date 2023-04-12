@@ -6,6 +6,7 @@
   // 画像ファイルを参照
   import bookIcon from '/ui_icon/article_black_24dp.svg'
   import infoIcon from '/ui_icon/info_outline_black_24dp.svg'
+  import dragHandle from '/ui_icon/drag_handle_black_24dp.svg'
 
   const dispatch = createEventDispatcher()
 
@@ -13,18 +14,23 @@
   export let scIndex: ScriptIndex
 </script>
 
-<div>
-  <div class="cell" on:click="{() => dispatch('showPSc')}">
-    <div class="icon">
-      <img alt="本" src="{bookIcon}" />
-    </div>
-    <div class="label">{scIndex.name}</div>
-    <button
-      class="icon-button info-button"
-      on:click|stopPropagation="{() => dispatch('showInfo')}"
-    >
-      <img alt="情報" src="{infoIcon}" />
-    </button>
+<div class="cell" on:click="{() => dispatch('showPSc')}">
+  <div class="icon">
+    <img alt="本" src="{bookIcon}" />
+  </div>
+  <div class="label">{scIndex.name}</div>
+  <button
+    class="icon-button info-button"
+    on:click|stopPropagation="{() => dispatch('showInfo')}"
+  >
+    <img alt="情報" src="{infoIcon}" />
+  </button>
+  <div
+    class="icon-button drag-handle"
+    on:mousedown="{() => dispatch('startDrag')}"
+    on:touchstart="{() => dispatch('startDrag')}"
+  >
+    <img alt="ドラッグ" src="{dragHandle}" />
   </div>
 </div>
 
@@ -33,7 +39,7 @@
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 8px 12px;
+    padding: 8px;
     border-bottom: 1px solid #555;
     user-select: none;
   }
@@ -46,7 +52,7 @@
   }
   .cell .label {
     vertical-align: middle;
-    margin-right: 34px;
+    margin-right: 62px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -56,6 +62,10 @@
   }
   .info-button {
     position: absolute;
-    right: 12px;
+    right: 40px;
+  }
+  .drag-handle {
+    position: absolute;
+    right: 8px;
   }
 </style>

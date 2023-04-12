@@ -86,19 +86,33 @@
   }
 
   /** Drag & Drop */
+  let dragDisabled = true;
+
   const flipDurationMs = 200
   const dropTargetStyle = { 'background-color': '#eeeeee' }
   const transformDraggedElement = (draggedEl: HTMLDivElement, data, index) => {
-    (draggedEl.children[0] as HTMLDivElement).style.border = '1px solid #555';
-    (draggedEl.children[0] as HTMLDivElement).style.backgroundColor = 'white'
+    if (draggedEl?.children) {
+      const innerDiv = draggedEl.children[0] as HTMLDivElement
+      innerDiv.style.border = '1px solid #555';
+      innerDiv.style.backgroundColor = 'white'
+    }
   }
 
   const handleDndConsider = evt => {
     items = evt.detail.items
   }
   const handleDndFinalize = evt => {
-    const ids = evt.detail.items.map(item => item.id)
+    items = evt.detail.items
+    const ids = items.map(item => item.id)
     db.sortByIds(ids)
+
+    // Ensure dragging is stopped on drag finish via pointer (mouse, touch)
+    dragDisabled = true
+  }
+  function startDrag(e) {
+    // preventing default to prevent lag on touch devices (because of the browser checking for screen scrolling)
+    e.preventDefault()
+    dragDisabled = false
   }
 </script>
 
@@ -117,16 +131,18 @@
     <div
       class="container"
       style="top: {HEADER_HEIGHT + 1}px;"
-      use:dndzone="{{ items, flipDurationMs, dropTargetStyle, transformDraggedElement }}"
+      use:dndzone="{{ items, dragDisabled, flipDurationMs, dropTargetStyle, transformDraggedElement }}"
       on:consider="{handleDndConsider}"
       on:finalize="{handleDndFinalize}"
     >
       {#each items as item(item.id)}
-        <div animate:flip="{{ duration: flipDurationMs }}">
+        <div>
+        <!-- <div animate:flip="{{ duration: flipDurationMs }}"> -->
           <DataCell
             scIndex="{item}"
             on:showPSc="{() => showPSc(item.scriptId)}"
             on:showInfo="{() => showInfo(item.id)}"
+            on:startDrag="{startDrag}"
           />
         </div>
       {/each}
