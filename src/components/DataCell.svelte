@@ -12,6 +12,7 @@
 
   // コンポーネントプロパティ
   export let scIndex: ScriptIndex
+  export let isShadow: boolean = false // ドラッグ先のシャドウとして表示
 </script>
 
 <div class="cell" on:click="{() => dispatch('showPSc')}">
@@ -32,11 +33,15 @@
   >
     <img alt="ドラッグ" src="{dragHandle}" />
   </div>
+  {#if isShadow}
+    <div class="overlay" />
+  {/if}
 </div>
 
 <style>
   .cell {
     display: flex;
+    position: relative;
     align-items: center;
     width: 100%;
     padding: 8px;
@@ -67,5 +72,11 @@
   .drag-handle {
     position: absolute;
     right: 8px;
+  }
+  .overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: lightgray;
+    opacity: 0.75;
   }
 </style>

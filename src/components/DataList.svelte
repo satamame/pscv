@@ -2,7 +2,7 @@
   import { createEventDispatcher, onMount } from 'svelte'
   import {flip} from "svelte/animate"
   import { liveQuery } from 'dexie'
-  import { dndzone } from 'svelte-dnd-action'
+  import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from 'svelte-dnd-action'
 
   import { isAndroid } from '../lib/env'
   import { HEADER_HEIGHT } from '../lib/const'
@@ -91,11 +91,10 @@
   const flipDurationMs = 200
   const dropTargetStyle = { 'background-color': '#eeeeee' }
   const transformDraggedElement = (draggedEl: HTMLDivElement, data, index) => {
-    if (draggedEl?.children) {
-      const innerDiv = draggedEl.children[0] as HTMLDivElement
-      innerDiv.style.border = '1px solid #555';
-      innerDiv.style.backgroundColor = 'white'
-    }
+    const innerDiv = draggedEl.children[0] as HTMLDivElement
+    innerDiv.style.border = '1px solid #555'
+    innerDiv.style.backgroundColor = 'white'
+    innerDiv.style.opacity = '0.75'
   }
 
   const handleDndConsider = evt => {
@@ -137,13 +136,21 @@
     >
       {#each items as item(item.id)}
         <div>
-        <!-- <div animate:flip="{{ duration: flipDurationMs }}"> -->
-          <DataCell
-            scIndex="{item}"
-            on:showPSc="{() => showPSc(item.scriptId)}"
-            on:showInfo="{() => showInfo(item.id)}"
-            on:startDrag="{startDrag}"
-          />
+          {#if item[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
+            <div class="shadow-item">
+              <DataCell
+                scIndex="{item}"
+                isShadow="{true}"
+              />
+            </div>
+          {:else}
+            <DataCell
+              scIndex="{item}"
+              on:showPSc="{() => showPSc(item.scriptId)}"
+              on:showInfo="{() => showInfo(item.id)}"
+              on:startDrag="{startDrag}"
+            />
+          {/if}
         </div>
       {/each}
     </div>
@@ -207,5 +214,8 @@
     right: 0;
     bottom: 0;
     overflow: auto;
+  }
+  .shadow-item {
+    visibility: visible;
   }
 </style>
