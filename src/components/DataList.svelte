@@ -1,8 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte'
-  import {flip} from "svelte/animate"
   import { liveQuery } from 'dexie'
-  import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from 'svelte-dnd-action'
 
   import { isAndroid } from '../lib/env'
   import { HEADER_HEIGHT } from '../lib/const'
@@ -18,6 +16,7 @@
   import DataCell from './DataCell.svelte'
   import DataAdd from './DataAdd.svelte'
   import DataInfo from './DataInfo.svelte'
+  import DndList from './UI/DndList.svelte'
 
   const dispatch = createEventDispatcher()
 
@@ -85,33 +84,9 @@
     infoIsOpen = true
   }
 
-  /** Drag & Drop */
-  let dragDisabled = true;
-
-  const flipDurationMs = 200
-  const dropTargetStyle = { 'background-color': '#eeeeee' }
-  const transformDraggedElement = (draggedEl: HTMLDivElement, data, index) => {
-    const innerDiv = draggedEl.children[0] as HTMLDivElement
-    innerDiv.style.border = '1px solid #555'
-    innerDiv.style.backgroundColor = 'white'
-    innerDiv.style.opacity = '0.75'
-  }
-
-  const handleDndConsider = evt => {
-    items = evt.detail.items
-  }
-  const handleDndFinalize = evt => {
-    items = evt.detail.items
+  function listSorted() {
     const ids = items.map(item => item.id)
     db.sortByIds(ids)
-
-    // Ensure dragging is stopped on drag finish via pointer (mouse, touch)
-    dragDisabled = true
-  }
-  function startDrag(e) {
-    // preventing default to prevent lag on touch devices (because of the browser checking for screen scrolling)
-    e.preventDefault()
-    dragDisabled = false
   }
 </script>
 
@@ -126,35 +101,26 @@
     </button>
   </div>
 
-  {#if items}
-    <div
-      class="container"
-      style="top: {HEADER_HEIGHT + 1}px;"
-      use:dndzone="{{ items, dragDisabled, flipDurationMs, dropTargetStyle, transformDraggedElement }}"
-      on:consider="{handleDndConsider}"
-      on:finalize="{handleDndFinalize}"
-    >
-      {#each items as item(item.id)}
-        <div>
-          {#if item[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
-            <div class="shadow-item">
-              <DataCell
-                scIndex="{item}"
-                isShadow="{true}"
-              />
-            </div>
-          {:else}
-            <DataCell
-              scIndex="{item}"
-              on:showPSc="{() => showPSc(item.scriptId)}"
-              on:showInfo="{() => showInfo(item.id)}"
-              on:startDrag="{startDrag}"
-            />
-          {/if}
-        </div>
-      {/each}
-    </div>
-  {/if}
+  <div
+    class="container"
+    style="top: {HEADER_HEIGHT + 1}px;"
+  >
+    {#if items}
+      <DndList
+        bind:items="{items}"
+        let:item="{scIndexItem}"
+        let:cellId
+        on:sorted="{listSorted}"
+      >
+        <DataCell
+          item="{scIndexItem}"
+          cellId="{cellId}"
+          on:showPSc="{e => showPSc(e.detail.scId)}"
+          on:showInfo="{e => showInfo(e.detail.id)}"
+        />
+      </DndList>
+    {/if}
+  </div>
 </div>
 
 {#if addIsOpen}
@@ -214,8 +180,5 @@
     right: 0;
     bottom: 0;
     overflow: auto;
-  }
-  .shadow-item {
-    visibility: visible;
   }
 </style>
