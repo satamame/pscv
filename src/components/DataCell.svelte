@@ -1,8 +1,8 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
 
-  import type { DndCellItem } from './UI/DndList.svelte'
   import type { ScriptIndex } from '../lib/db'
+  import type { DndCellItem } from './UI/DndList.svelte'
 
   // 画像ファイルを参照
   import bookIcon from '/ui_icon/article_black_24dp.svg'
@@ -21,7 +21,7 @@
 <div
   id="{cellId}"
   class="cell bottom-line"
-  on:click="{() => dispatch('showPSc', { scId: scIndex.scriptId })}"
+  on:click="{() => dispatch('showPSc', { scriptId: scIndex.scriptId })}"
 >
   <div class="icon">
     <img alt="本" src="{bookIcon}" />
@@ -33,12 +33,8 @@
   >
     <img alt="情報" src="{infoIcon}" />
   </button>
-  <div
-    class="icon-button drag-handle"
-    on:mousedown="{() => dispatch('startDrag')}"
-    on:touchstart="{() => dispatch('startDrag')}"
-  >
-    <img id="dragHandle" src="{dragHandle}" alt="drag" />
+  <div id="dragHandle" class="icon-button drag-handle">
+    <img src="{dragHandle}" alt="drag" />
   </div>
 </div>
 

@@ -144,7 +144,8 @@
     // ゴーストの作成
     ghostEl = targetCell.cloneNode(true) as HTMLDivElement
     ghostEl.id = 'ghost'
-    ghostEl.style.border = 'solid 1px darkgray'
+    ghostEl.style.borderBottom = 'solid 1px darkgray'
+    ghostEl.style.borderTop = 'solid 1px darkgray'
     ghostEl.style.opacity = '0.5'
     scrollBox.appendChild(ghostEl)
     ghostEl.style.position = 'absolute'
@@ -243,6 +244,9 @@
    * ドラッグ終了時のイベントハンドラ
    */
   function endDragging(event: PointerEvent) {
+    // ドラッグ中しか呼ばれない想定だが念のためフラグをチェックする
+    if (!isDragging) return false
+
     event.preventDefault()
 
     // 自動スクロールを止める
@@ -279,7 +283,7 @@
   }
 
   /**
-   * scrollBox のスクロールの可否を設定する
+   * scrollBox のスクロールの可否を判定・設定する
    */
   function updateScrollBar() {
     // いったん bottom-line クラスを削除する
@@ -321,17 +325,16 @@
 
       // ドラッグハンドルにイベントリスナーを追加する
       handle.addEventListener('pointerdown', startDragging, { passive: false })
+      // Safari でドラッグ終了時にクリックハンドラを呼ばれないようにする
+      handle.addEventListener('click', e => { e.stopPropagation() })
     })
 
-    // スクロールの可否を設定する
+    // スクロールの可否を判定・設定する
     updateScrollBar()
-    window.addEventListener('resize', updateScrollBar)
-  })
-
-  onDestroy(() => {
-    window.removeEventListener('resize', updateScrollBar)
   })
 </script>
+
+<svelte:window on:resize="{updateScrollBar}" />
 
 <div class="scroll-box" bind:this="{scrollBox}">
   <div bind:this="{cellsRow}">
@@ -365,4 +368,6 @@
   - item の型は DndCellItem を継承していること。
   - cellId を受け取って要素の id の値とすること。
   - last-child 以外は border-bottom が 1px であること。
+  - ただし bottom-line クラスなら last-child であっても 1px であること。
+  - id="dragHandle" であるドラッグハンドル用の要素があること。
 -->

@@ -115,7 +115,7 @@
         <DataCell
           item="{scIndexItem}"
           cellId="{cellId}"
-          on:showPSc="{e => showPSc(e.detail.scId)}"
+          on:showPSc="{e => showPSc(e.detail.scriptId)}"
           on:showInfo="{e => showInfo(e.detail.id)}"
         />
       </DndList>
