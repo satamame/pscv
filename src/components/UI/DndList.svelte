@@ -298,6 +298,7 @@
     })
 
     // cell 全体の高さが scrollBox にぴったりかそれ以下ならスクロールしない
+    // ドラッグ時にゴーストを動かしてもスクロールバーが出ないようにするため
     if (cellsHeight <= scrollBox.clientHeight) {
       scrollBox.style.overflowY = 'hidden'
     } else {
