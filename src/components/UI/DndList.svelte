@@ -283,6 +283,29 @@
   }
 
   /**
+   * 各セルにドラッグ機能のための設定をする
+   */
+  function updateCells() {
+    items.forEach(item => {
+      // 各セルの ID は 'cell' + item.id
+      const cell: HTMLDivElement = cellsRow.querySelector(`#cell${item.id}`)
+      const handle = cell.querySelector('#dragHandle') as HTMLElement
+
+      // 独自のドラッグ処理をするためブラウザでのドラッグを無効にする
+      handle.draggable = false
+      handle.style.touchAction = 'pinch-zoom'
+
+      // ドラッグハンドルにイベントリスナーを追加する
+      handle.addEventListener('pointerdown', startDragging, { passive: false })
+      // Safari でドラッグ終了時にクリックハンドラを呼ばれないようにする
+      handle.addEventListener('click', e => { e.stopPropagation() })
+    })
+
+    // スクロールの可否を判定・設定する
+    updateScrollBar()
+  }
+
+  /**
    * scrollBox のスクロールの可否を判定・設定する
    */
   function updateScrollBar() {
@@ -315,23 +338,7 @@
 
   onMount(() => {
     // 各セルにドラッグ機能のための設定をする
-    items.forEach(item => {
-      // 各セルの ID は 'cell' + item.id
-      const cell: HTMLDivElement = cellsRow.querySelector(`#cell${item.id}`)
-      const handle = cell.querySelector('#dragHandle') as HTMLElement
-
-      // 独自のドラッグ処理をするためブラウザでのドラッグを無効にする
-      handle.draggable = false
-      handle.style.touchAction = 'pinch-zoom'
-
-      // ドラッグハンドルにイベントリスナーを追加する
-      handle.addEventListener('pointerdown', startDragging, { passive: false })
-      // Safari でドラッグ終了時にクリックハンドラを呼ばれないようにする
-      handle.addEventListener('click', e => { e.stopPropagation() })
-    })
-
-    // スクロールの可否を判定・設定する
-    updateScrollBar()
+    updateCells()
   })
 </script>
 
