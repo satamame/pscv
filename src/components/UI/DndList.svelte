@@ -23,11 +23,12 @@
   let ghostInitialY = 0
   let targetHeight = 0
   let otherHeights: number[] = []
+  let rszObsv: ResizeObserver = undefined
 
   // スクロール関連
-  const SCROLL_RATE = 20                    // 自動スクロールは 1px/20ms とする
-  let scrollItvId: NodeJS.Timer = undefined // 自動スクロールのインターバル ID
-  let pointerPageY = 0                      // pointermove イベントの座標を保持する
+  const SCROLL_RATE = 20 // 自動スクロールは 1px/20ms とする
+  let scrollItvId = 0    // 自動スクロールのインターバル ID
+  let pointerPageY = 0   // pointermove イベントの座標を保持する
 
   /**
    * scrollBox のページ上での絶対 Y 座標を取得する
@@ -54,7 +55,7 @@
     // すでに自動スクロールしていれば何もしない
     if (scrollItvId) return
 
-    scrollItvId = setInterval(() => {
+    scrollItvId = window.setInterval(() => {
       if (scrollBox.scrollTop <= 1) {
         // スクロールが上端に達しそうなら上端にして停止
         scrollBox.scrollTo(0, 0)
@@ -80,7 +81,7 @@
     // すでに自動スクロールしていれば何もしない
     if (scrollItvId) return
 
-    scrollItvId = setInterval(() => {
+    scrollItvId = window.setInterval(() => {
       let scrollBottom = scrollBox.scrollTop + scrollBox.offsetHeight
       if (scrollBottom >= cellsRow.offsetHeight - 1) {
         // スクロールが下端に達しそうなら下端にして停止
@@ -108,7 +109,7 @@
   function stopScrolling() {
     if (scrollItvId) {
       clearInterval(scrollItvId)
-      scrollItvId = undefined
+      scrollItvId = 0
     }
   }
 
@@ -313,12 +314,8 @@
     Array(...cellsRow.children).forEach((cell: HTMLDivElement) => {
       cell.classList.remove('bottom-line')
     })
-
     // この状態で cell 全体の高さを出す
-    let cellsHeight = 0
-    Array(...cellsRow.children).forEach((cell: HTMLDivElement) => {
-      cellsHeight += cell.offsetHeight
-    })
+    let cellsHeight = cellsRow.offsetHeight
 
     // cell 全体の高さが scrollBox にぴったりかそれ以下ならスクロールしない
     // ドラッグ時にゴーストを動かしてもスクロールバーが出ないようにするため
@@ -339,10 +336,19 @@
   onMount(() => {
     // 各セルにドラッグ機能のための設定をする
     updateCells()
+
+    // scrollBox または cellsRow のサイズが変わったらスクロールの可否を更新
+    rszObsv = new ResizeObserver((entries, obsv) => {
+      updateScrollBar()
+    })
+    rszObsv.observe(scrollBox)
+    rszObsv.observe(cellsRow)
+  })
+
+  onDestroy(() => {
+    rszObsv.disconnect()
   })
 </script>
-
-<svelte:window on:resize="{updateScrollBar}" />
 
 <div class="scroll-box" bind:this="{scrollBox}">
   <div bind:this="{cellsRow}">
