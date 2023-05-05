@@ -346,7 +346,7 @@
 
 <div class="scroll-box" bind:this="{scrollBox}">
   <div bind:this="{cellsRow}">
-    {#each items as item}
+    {#each items as item (item.id)}
       <slot item="{item}" cellId="cell{item.id}"></slot>
     {/each}
   </div>
