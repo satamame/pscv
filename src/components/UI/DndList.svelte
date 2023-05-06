@@ -310,12 +310,12 @@
    * scrollBox のスクロールの可否を判定・設定する
    */
   function updateScrollBar() {
-    // いったん bottom-line クラスを削除する
-    Array(...cellsRow.children).forEach((cell: HTMLDivElement) => {
-      cell.classList.remove('bottom-line')
-    })
-    // この状態で cell 全体の高さを出す
+    // bottom-line なしの状態での cell 全体の高さを求める
     let cellsHeight = cellsRow.offsetHeight
+    const lastCell = cellsRow.lastElementChild as HTMLDivElement
+    if (lastCell.classList.contains('bottom-line')) {
+      cellsHeight--
+    }
 
     // cell 全体の高さが scrollBox にぴったりかそれ以下ならスクロールしない
     // ドラッグ時にゴーストを動かしてもスクロールバーが出ないようにするため
@@ -326,11 +326,14 @@
     }
 
     // cell 全体の高さが scrollBox より低ければ bottom-line クラスを追加する
-    if (cellsHeight < scrollBox.clientHeight) {
-      Array(...cellsRow.children).forEach((cell: HTMLDivElement) => {
-          cell.classList.add('bottom-line')
-      })
-    }
+    const needsBottomLine = cellsHeight < scrollBox.clientHeight
+    Array(...cellsRow.children).forEach((cell: HTMLDivElement) => {
+      if (needsBottomLine) {
+        cell.classList.add('bottom-line')
+      } else {
+        cell.classList.remove('bottom-line')
+      }
+    })
   }
 
   onMount(() => {
