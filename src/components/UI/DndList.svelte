@@ -61,7 +61,7 @@
         scrollBox.scrollTo(0, 0)
         stopScrolling()
       } else {
-        scrollBox.scrollBy(0, -1)
+        scrollBox.scrollBy({ top: -1, behavior: 'instant' as ScrollBehavior})
       }
 
       // ゴーストとシャドウの更新
@@ -81,14 +81,17 @@
     // すでに自動スクロールしていれば何もしない
     if (scrollItvId) return
 
+    const scrollBoxHeight = scrollBox.offsetHeight
+    const cellsRowHeight = cellsRow.offsetHeight
+
     scrollItvId = window.setInterval(() => {
-      let scrollBottom = scrollBox.scrollTop + scrollBox.offsetHeight
-      if (scrollBottom >= cellsRow.offsetHeight - 1) {
+      let scrollBottom = scrollBox.scrollTop + scrollBoxHeight
+      if (scrollBottom >= cellsRowHeight - 1) {
         // スクロールが下端に達しそうなら下端にして停止
         cellsRow.scrollIntoView(false)
         stopScrolling()
       } else {
-        scrollBox.scrollBy(0, 1)
+        scrollBox.scrollBy({ top: 1, behavior: 'instant' as ScrollBehavior})
       }
 
       // ゴーストとシャドウの更新
@@ -96,7 +99,7 @@
 
       // シャドウが scrollBox の表示領域外ならスクロールして中に入れる
       const shadowBottom = shadowEl.offsetTop + shadowEl.offsetHeight
-      scrollBottom = scrollBox.scrollTop + scrollBox.offsetHeight
+      scrollBottom = scrollBox.scrollTop + scrollBoxHeight
       if (shadowBottom > scrollBottom) {
         shadowEl.scrollIntoView(false)
       }

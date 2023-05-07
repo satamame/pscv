@@ -33,7 +33,7 @@
   >
     <img alt="情報" src="{infoIcon}" />
   </button>
-  <div id="dragHandle" class="icon-button drag-handle">
+  <div id="dragHandle" class="icon drag-handle">
     <img src="{dragHandle}" alt="drag" />
   </div>
 </div>
@@ -55,21 +55,16 @@
     border-bottom-width: 1px;
   }
   .icon {
-    vertical-align: middle;
     margin-right: 6px;
   }
   .icon img {
     vertical-align: middle;
   }
-  .cell .label {
-    vertical-align: middle;
+  .label {
     margin-right: 62px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-  .cell .icon-button img {
-    vertical-align: middle;
   }
   .info-button {
     position: absolute;
