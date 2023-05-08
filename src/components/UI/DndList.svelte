@@ -126,6 +126,16 @@
     event.preventDefault()
     dispatch('disableScroll')
 
+    // カーソル変更用エリアの作成
+    const cursorArea = document.createElement('div')
+    cursorArea.id = 'cursor-area'
+    document.documentElement.appendChild(cursorArea)
+    cursorArea.style.position = 'absolute'
+    for (const prop of ['top', 'left', 'right', 'bottom']) {
+      cursorArea.style[prop] = '0'
+    }
+    cursorArea.style.cursor = 'grabbing'
+
     const handle = event.currentTarget as HTMLDivElement
     const targetCell = handle.closest('.cell') as HTMLDivElement
 
@@ -165,10 +175,9 @@
     overlay.style.opacity = '0.5'
     shadowEl.appendChild(overlay)
     overlay.style.position = 'absolute'
-    overlay.style.top = '0'
-    overlay.style.left = '0'
-    overlay.style.right = '0'
-    overlay.style.bottom = '0'
+    for (const prop of ['top', 'left', 'right', 'bottom']) {
+      overlay.style[prop] = '0'
+    }
 
     // ドラッグ中とドラッグ終了時のイベントリスナーをセットする
     document.addEventListener('pointermove', dragging, { passive: false })
@@ -283,6 +292,10 @@
     dispatch('sorted')
     dispatch('enableScroll')
 
+    // カーソル変更用エリアを削除する
+    const cursorArea = document.getElementById('cursor-area')
+    document.documentElement.removeChild(cursorArea)
+
     isDragging = false
   }
 
@@ -298,6 +311,9 @@
       // 独自のドラッグ処理をするためブラウザでのドラッグを無効にする
       handle.draggable = false
       handle.style.touchAction = 'pinch-zoom'
+
+      // ドラッグハンドルにマウスポインタのスタイルを設定する
+      handle.style.cursor = 'grab'
 
       // ドラッグハンドルにイベントリスナーを追加する
       handle.addEventListener('pointerdown', startDragging, { passive: false })
@@ -316,6 +332,7 @@
     // bottom-line なしの状態での cell 全体の高さを求める
     let cellsHeight = cellsRow.offsetHeight
     const lastCell = cellsRow.lastElementChild as HTMLDivElement
+    if (!lastCell) return
     if (lastCell.classList.contains('bottom-line')) {
       cellsHeight--
     }
