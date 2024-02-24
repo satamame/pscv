@@ -5,7 +5,8 @@
 
 version: 2
 updates:
-  - package-ecosystem: "yarn"
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
       interval: "weekly"
+    target-branch: "develop"
