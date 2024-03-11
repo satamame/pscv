@@ -92,12 +92,12 @@
 
 <div class="panel" class:gone>
   <div class="header">
-    <button class="icon-button add-button">
-      <img alt="追加" src="{addIcon}" on:click="{() => { addIsOpen = true }}" />
+    <button class="icon-button add-button" on:click="{() => { addIsOpen = true }}">
+      <img alt="追加" src="{addIcon}" />
     </button>
     <h1>台本データ</h1>
-    <button class="icon-button close-button">
-      <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
+    <button class="icon-button close-button" on:click="{close}">
+      <img alt="閉じる" src="{closeIcon}" />
     </button>
   </div>
 
