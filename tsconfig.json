@@ -16,13 +16,6 @@
     "checkJs": true,
     "isolatedModules": true,
     "forceConsistentCasingInFileNames": false,
-    /**
-     * error TS5101: Option 'importsNotUsedAsValues' is deprecated and will stop functioning in TypeScript 5.5. Specify compilerOption '"ignoreDeprecations": "5.0"' to silence this error.
-     * Use 'verbatimModuleSyntax' instead.
-     * error TS5101: Option 'preserveValueImports' is deprecated and will stop functioning in TypeScript 5.5. Specify compilerOption '"ignoreDeprecations": "5.0"' to silence this error.
-     * Use 'verbatimModuleSyntax' instead.
-    */
-    "ignoreDeprecations": "5.0"
   },
   "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
   "references": [{ "path": "./tsconfig.node.json" }]
