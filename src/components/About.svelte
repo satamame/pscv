@@ -46,8 +46,8 @@
 
 <div class="panel" class:gone>
   <h1>台本ビューアについて</h1>
-  <button class="icon-button close-button">
-    <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
+  <button class="icon-button close-button" on:click="{close}">
+    <img alt="閉じる" src="{closeIcon}" />
   </button>
 
   <div class="container">

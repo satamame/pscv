@@ -75,17 +75,26 @@
 >
   <div class="container">
     <h2>台本の情報</h2>
-    <button class="icon-button close-button" disabled="{isLoading}">
-      <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
+    <button
+      class="icon-button close-button"
+      disabled="{isLoading}"
+      on:click="{close}"
+    >
+      <img alt="閉じる" src="{closeIcon}" />
     </button>
 
     {#if scIndex && scData}
       <table>
-        <tr><td>表示名</td><td>{scIndex.name}</td>
+        <tr>
+          <td>表示名</td><td>{scIndex.name}</td>
           <td><img alt="編集" src="{editIcon}" /></td>
         </tr>
-        <tr><td>台本</td><td colspan="2">{getScTitle(scData)}</td></tr>
-        <tr><td>ソース</td><td>{scData.srcType}</td>
+        <tr>
+          <td>台本</td>
+          <td colspan="2">{getScTitle(scData)}</td>
+        </tr>
+        <tr>
+          <td>ソース</td><td>{scData.srcType}</td>
           <td><img alt="編集" src="{editIcon}" /></td>
         </tr>
         <tr>
@@ -96,8 +105,12 @@
     {/if}
 
     <div class="buttonArea">
-      <p><button>再読込み (上書き)</button></p>
-      <p><button class="delete-button" on:click="{deleteScript}">削除</button></p>
+      <p>
+        <button>再読込み (上書き)</button>
+      </p>
+      <p>
+        <button class="delete-button" on:click="{deleteScript}">削除</button>
+      </p>
     </div>
   </div>
 </div>

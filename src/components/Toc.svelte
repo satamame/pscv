@@ -58,11 +58,13 @@
 
   <ul>
     {#each psc.headlines as item, index}
-      <li
-        class:current="{ index == current }"
-        on:click="{() => { goToHeadline(index) }}"
-      >
-        {item.text}
+      <li>
+        <button
+          class:current="{ index == current }"
+          on:click="{() => { goToHeadline(index) }}"
+        >
+          {item.text}
+        </button>
       </li>
     {/each}
   </ul>
@@ -101,9 +103,18 @@
     margin: 0;
   }
   li {
-    border-top: 1px solid #555;
+    padding: 0;
+  }
+  li > button {
+    display: block;
+    width: 100%;
+    height: 100%;
     padding: 8px 12px;
-    cursor: pointer;
+    border-top: 1px solid #555;
+    border-radius: 0;
+    color: black;
+    background-color: transparent;
+    text-align: left;
   }
   .current {
     font-weight: bold;

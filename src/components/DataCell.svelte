@@ -18,10 +18,13 @@
   let scIndex = item as ScriptIndex
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
   id="{cellId}"
   class="cell bottom-line"
   on:click="{() => dispatch('showPSc', { scriptId: scIndex.scriptId })}"
+  role="button"
+  tabindex="0"
 >
   <div class="icon">
     <img alt="本" src="{bookIcon}" />
