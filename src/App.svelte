@@ -73,15 +73,16 @@
     }
   }
   // iOS 以外では body-scroll-lock を使う
+  // body-scroll-lock の disableBodyScroll の引数に合わせて型アサーションする
   $: if (!isIOS) {
     if (toc) {
-      disableBodyScroll(toc)
+      disableBodyScroll(toc as unknown as HTMLElement)
     } else if (menu) {
-      disableBodyScroll(menu)
+      disableBodyScroll(menu as unknown as HTMLElement)
     } else if (data) {
-      disableBodyScroll(data)
+      disableBodyScroll(data as unknown as HTMLElement)
     } else if (about) {
-      disableBodyScroll(about)
+      disableBodyScroll(about as unknown as HTMLElement)
     }
   }
 
@@ -100,7 +101,7 @@
     // コールバックがあれば実行する
     if (onUnlockScroll) {
       setTimeout(() => {
-        onUnlockScroll()
+        onUnlockScroll && onUnlockScroll()
         onUnlockScroll = null
       }, 0)
     }
@@ -116,6 +117,9 @@
 
   /** スクロール位置の見出しを判定してから目次を開く */
   function openToc(): void {
+    if (!psc) { // 型ガード
+      return
+    }
     const currentLineIndex = viewer.getLineIndexAtY(rootElement.scrollTop)
     currentTocIndex = psc.headlineForLine(currentLineIndex)
     tocIsOpen = true

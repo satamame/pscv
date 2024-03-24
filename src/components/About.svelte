@@ -39,8 +39,10 @@
   }
 
   function update() {
-    isLoading = true
-    $appUpdateFunc(true)
+    if ($appUpdateFunc != null) { // 型ガード
+      isLoading = true
+      $appUpdateFunc(true)
+    }
   }
 </script>
 

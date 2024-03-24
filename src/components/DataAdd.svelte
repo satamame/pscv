@@ -81,7 +81,7 @@
     fr.addEventListener('load', async (e) => {
       try {
         // 読み込んだファイル (JSON) からオブジェクトを作る
-        let pscObj = JSON.parse(e.target.result as string)
+        let pscObj = JSON.parse(fr.result as string)
 
         // { psc: PSc } の形だった場合は PSc 部分を取り出す
         if (pscObj.psc) {
@@ -92,7 +92,13 @@
         // インスタンス生成
         const psc = PSc.fromJson(pscJson)
         // DB にデータを追加する
-        await db.addScript(psc.title, pscJson, srcType, files[0].name)
+        let fileName
+        if (files && files.length > 0) {
+          fileName = files[0].name
+        } else {
+          throw Error()
+        }
+        await db.addScript(psc.title, pscJson, srcType, fileName)
 
         isLoading = false
         close()
@@ -105,11 +111,16 @@
     // 読込みに失敗した時のハンドラをセット
     fr.addEventListener('error', () => {
       isLoading = false
-      alert('読込めませんでした。');
+      alert('読込めませんでした。')
     });
 
     // 読込みを開始する
-    fr.readAsText(files[0]);
+    if (files && files.length > 0) {
+      fr.readAsText(files[0])
+    } else {
+      isLoading = false
+      alert('読込めませんでした。')
+    }
   }
 
   /** 台本の追加処理 */
@@ -136,11 +147,11 @@
         isLoading = false
         close()
       } else {
-        throw Error('読込めませんでした。')
+        throw Error()
       }
     } catch (error) {
       isLoading = false
-      alert(error.message)
+      alert('読込めませんでした。')
     }
   }
 </script>

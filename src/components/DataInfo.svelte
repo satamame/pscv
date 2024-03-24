@@ -3,6 +3,7 @@
 
   import { db, getScTitle } from '../lib/db'
   import type { ScriptIndex, ScriptData } from '../lib/db'
+  // TODO: 不要なインポートの削除
   import { HEADER_HEIGHT, SAMPLES } from '../lib/const'
   import { PSc } from '../lib/psc'
 
@@ -25,8 +26,8 @@
   let gone = true
   let maxHeight = window.innerHeight - HEADER_HEIGHT - 10
   let isLoading = false
-  let scIndex: ScriptIndex
-  let scData: ScriptData
+  let scIndex: ScriptIndex | undefined
+  let scData: ScriptData | undefined
 
   /** ウィンドウサイズに合わせてパネルの高さを調整する */
   function adjustHeight() {
@@ -34,17 +35,26 @@
   }
 
   onMount(async () => {
+    // リサイズ時に高さを調整するハンドラを設定する
     window.addEventListener('resize', adjustHeight)
+
+    // 台本インデックスを DB から取得する
     scIndex = await db.scriptIndex.get(scIndexId)
-    scData = await db.scriptData.get(scIndex.scriptId)
+    if (scIndex) { // 型ガード
+      // 台本データを DB から取得する
+      scData = await db.scriptData.get(scIndex.scriptId)
+    }
+
+    /// Back ボタンに反応するようにする
     setTimeout(() => { gone = false }, 0)
   })
 
   export function close() {
-    // Back ボタンで閉じる場合の処理は親が受け持つ
     if (gone || isLoading) { return }
     gone = true
     window.removeEventListener('resize', adjustHeight)
+
+    // close イベントを発行して親に処理してもらう
     setTimeout(() => {
       dispatch('close')
     }, 200)
@@ -52,11 +62,16 @@
 
   /** 表示中の台本を削除してパネルを閉じる */
   async function deleteScript() {
+    if (!scIndex) { // 型ガード
+      alert('すでに削除されています。')
+      return
+    }
+
     const approved = confirm(`「${scIndex.name}」を削除します。`)
     if (!approved) { return }
 
     isLoading = true
-    await db.deleteScript(scData.id)
+    await db.deleteScript(scIndex.scriptId)
     isLoading = false
     close()
   }

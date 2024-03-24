@@ -13,7 +13,7 @@
     + 'nulla pariatur. Excepteur sint occaecat cupidatat non proident, '
     + 'sunt in culpa qui officia deserunt mollit anim id est laborum. '
 
-  function makeLine(pos, len) {
+  function makeLine(pos: number, len: number): string {
     let line
     if (pos + len > loremIpsum.length) {
       line = loremIpsum.substring(pos, loremIpsum.length)

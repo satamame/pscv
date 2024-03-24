@@ -7,6 +7,7 @@
   import { keepBackable, back } from '../lib/back'
   import { db } from '../lib/db'
   import { PSc } from '../lib/psc'
+  import type { DndCellItem } from './UI/DndList.svelte'
 
   // 画像ファイルを参照
   import addIcon from '/ui_icon/add_black_24dp.svg'
@@ -35,7 +36,10 @@
   let scIndexes = liveQuery(
     () => db.scriptIndex.orderBy('sortKey').toArray()
   )
-  $: items = $scIndexes
+  // DndList の items に bind するため型を合わせておく
+  // 各要素が DataCell の item に bind されるが、
+  // DataCell の中で型アサーションするので OK
+  $: items = $scIndexes as DndCellItem[]
 
   onMount(async () => {
     if (isAndroid) { keepBackable() }
@@ -72,6 +76,10 @@
   async function showPSc(scriptId: number) {
     // DB から JSON を取って PSc のインスタンスにして親に渡す
     const scData = await db.scriptData.get(scriptId)
+    if (!scData) {
+      alert('データが無効です。')
+      return
+    }
     const psc = PSc.fromJson(scData.pscJson)
     dispatch('showPSc', { psc })
 

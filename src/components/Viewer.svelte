@@ -40,6 +40,10 @@
 
   /** 見出し行の Y 座標を返す */
   export function getHeadlineY(index: number): number {
+    if (psc === undefined) { // 型ガード
+      return 0
+    }
+
     return getLineY(psc.headlines[index].lineIndex)
   }
 
@@ -48,6 +52,11 @@
 
   /** 指定した Y 座標以下にある最初の行の番号を返す */
   export function getLineIndexAtY(y: number): number {
+    if (psc === undefined) { // 型ガード
+      return 0
+    }
+
+    // 二分探索法
     let min = 0
     let max = psc.lines.length - 1
     let mid: number
