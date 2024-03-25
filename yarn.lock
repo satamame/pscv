@@ -1625,12 +1625,10 @@ detect-indent@^6.1.0:
   resolved "https://registry.npmjs.org/detect-indent/-/detect-indent-6.1.0.tgz"
   integrity sha512-reYkTUJAZb9gUuZ2RvVCNhVHdg62RHnJ7WJl8ftMi4diZ6NWlciOzQN88pUhSELEwflJht4oQDv0F0BMlwaYtA==
 
-dexie@^3.2.6:
-  version "3.2.6"
-  resolved "https://registry.npmjs.org/dexie/-/dexie-3.2.6.tgz"
-  integrity sha512-R9VzQ27/cncQymoAeD1kfu66NUrdxcnMNXVfEoFLnQ+apVVbS4++veUcSGxft9V++zaeiLkMAREOMf8EwgR/Vw==
-  dependencies:
-    karma-safari-launcher "^1.0.0"
+dexie@^3.2.7:
+  version "3.2.7"
+  resolved "https://registry.yarnpkg.com/dexie/-/dexie-3.2.7.tgz#1346541c9c81e3bc6055a042a928837890595e3a"
+  integrity sha512-2a+BXvVhY5op+smDRLxeBAivE7YcYaneXJ1la3HOkUfX9zKkE/AJ8CNgjiXbtXepFyFmJNGSbmjOwqbT749r/w==
 
 ejs@^3.1.6:
   version "3.1.8"
@@ -2153,11 +2151,6 @@ jsonpointer@^5.0.0:
   version "5.0.1"
   resolved "https://registry.npmjs.org/jsonpointer/-/jsonpointer-5.0.1.tgz"
   integrity sha512-p/nXbhSEcu3pZRdkW1OfJhpsVtW1gd4Wa1fnQc9YLiTfAjn0312eMKimbdIQzuZl9aa9xUGaRlP9T/CJE/ditQ==
-
-karma-safari-launcher@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/karma-safari-launcher/-/karma-safari-launcher-1.0.0.tgz"
-  integrity sha512-qmypLWd6F2qrDJfAETvXDfxHvKDk+nyIjpH9xIeI3/hENr0U3nuqkxaftq73PfXZ4aOuOChA6SnLW4m4AxfRjQ==
 
 kleur@^4.1.5:
   version "4.1.5"
