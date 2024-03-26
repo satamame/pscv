@@ -31,15 +31,21 @@
 
   let gone = true
   let infoScIndexId: number
+  let items: DndCellItem[]
 
   // リストに DB の内容が自動的に反映されるようにする
   let scIndexes = liveQuery(
     () => db.scriptIndex.orderBy('sortKey').toArray()
   )
-  // DndList の items に bind するため型を合わせておく
-  // 各要素が DataCell の item に bind されるが、
-  // DataCell の中で型アサーションするので OK
-  $: items = $scIndexes as DndCellItem[]
+
+  $: {
+    // DndList の items に bind するため型を合わせておく
+    // 各要素が DataCell の item に bind されるが、
+    // DataCell の中で型アサーションするので OK
+    items = $scIndexes as DndCellItem[]
+    // DB が変更された時に items も反応するようにする
+    items = items
+  }
 
   onMount(async () => {
     if (isAndroid) { keepBackable() }

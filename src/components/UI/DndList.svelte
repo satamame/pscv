@@ -25,6 +25,13 @@
   let otherHeights: number[] = []
   let rszObsv: ResizeObserver | undefined = undefined
 
+  // items の要素数が変わったら、各セルにドラッグ機能のための設定をする
+  let itemCount = items.length
+  $: if (items.length != itemCount) {
+    itemCount = items.length
+    setTimeout(() => updateCells(), 0)
+  }
+
   // スクロール関連
   const SCROLL_RATE = 20 // 自動スクロールは 1px/20ms とする
   let scrollItvId = 0    // 自動スクロールのインターバル ID
@@ -327,6 +334,15 @@
   }
 
   /**
+   * ドラッグハンドラのクリックイベントを伝播させないための関数
+   * 無名関数にすると addEventListener するたびに追加されるので、
+   * 名前のある関数にする
+   */
+  function cancelEvent(event: Event) {
+    event.stopPropagation()
+  }
+
+  /**
    * 各セルにドラッグ機能のための設定をする
    */
   function updateCells() {
@@ -345,7 +361,7 @@
       // ドラッグハンドルにイベントリスナーを追加する
       handle.addEventListener('pointerdown', startDragging, { passive: false })
       // Safari でドラッグ終了時にクリックハンドラを呼ばれないようにする
-      handle.addEventListener('click', e => { e.stopPropagation() })
+      handle.addEventListener('click', cancelEvent)
     })
 
     // スクロールの可否を判定・設定する
