@@ -1257,10 +1257,10 @@
     svelte-hmr "^0.15.3"
     vitefu "^0.2.5"
 
-"@tsconfig/svelte@^5.0.2":
-  version "5.0.2"
-  resolved "https://registry.npmjs.org/@tsconfig/svelte/-/svelte-5.0.2.tgz"
-  integrity sha512-BRbo1fOtyVbhfLyuCWw6wAWp+U8UQle+ZXu84MYYWzYSEB28dyfnRBIE99eoG+qdAC0po6L2ScIEivcT07UaMA==
+"@tsconfig/svelte@^5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@tsconfig/svelte/-/svelte-5.0.3.tgz#8851ee2a65a1839838938ce53052a1125464be2b"
+  integrity sha512-Ms0t9K0oxioSb0lrZ5NRysx0nE/KsojYOG+db9v6wSaU/+P37vc0WRmh1QE1c8IAtTniD4yEhffGQuTKF8uaPw==
 
 "@types/body-scroll-lock@^3.1.2":
   version "3.1.2"
