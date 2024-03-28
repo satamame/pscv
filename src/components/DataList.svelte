@@ -7,7 +7,6 @@
   import { keepBackable, back } from '../lib/back'
   import { db } from '../lib/db'
   import { PSc } from '../lib/psc'
-  import type { DndCellItem } from './UI/DndList.svelte'
 
   // 画像ファイルを参照
   import addIcon from '/ui_icon/add_black_24dp.svg'
@@ -31,21 +30,12 @@
 
   let gone = true
   let infoScIndexId: number
-  let items: DndCellItem[]
 
   // リストに DB の内容が自動的に反映されるようにする
   let scIndexes = liveQuery(
     () => db.scriptIndex.orderBy('sortKey').toArray()
   )
-
-  $: {
-    // DndList の items に bind するため型を合わせておく
-    // 各要素が DataCell の item に bind されるが、
-    // DataCell の中で型アサーションするので OK
-    items = $scIndexes as DndCellItem[]
-    // DB が変更された時に items も反応するようにする
-    items = items
-  }
+  $: items = $scIndexes
 
   onMount(async () => {
     if (isAndroid) { keepBackable() }
