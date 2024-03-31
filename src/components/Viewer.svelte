@@ -18,6 +18,7 @@
   // コンポーネントプロパティ
   export let psc: PSc | undefined = undefined
   export let top = HEADER_HEIGHT
+  export let inert: boolean
 
   let container: HTMLDivElement
 
@@ -87,7 +88,7 @@
   }
 </script>
 
-<div bind:this="{container}" class="container">
+<div bind:this="{container}" inert="{inert}" class="container">
   {#if psc}
     {#each psc.lines as line }
       {#if line.type == PSC_LINE_TYPE.TITLE}
