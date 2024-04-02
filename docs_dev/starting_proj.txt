@@ -6,9 +6,6 @@
 > yarn
 Svelte + TypeScript の環境が完成
 
-> yarn dev
-とすると、開発サーバが起動する
-
 tsconfig.json の compilerOptions の下に以下を設定する
 "forceConsistentCasingInFileNames": false
 これで、コンポーネントのファイル名を PascalCase にしてもエラーが出なくなる
@@ -18,3 +15,12 @@ vite-plugin-pwa をインストールする
 
 Svelte 用の virtual module を使うために workbox-window をインストールする
 > yarn add workbox-window -D
+
+> yarn dev
+とすると、開発サーバが起動する
+
+> yarn build
+dist フォルダにビルドされる
+
+> yarn preview
+dist フォルダの内容をローカルにデプロイする
