@@ -37,6 +37,9 @@
   )
   $: items = $scIndexes
 
+  // モーダル状態
+  $: isModal = addIsOpen || infoIsOpen
+
   onMount(async () => {
     if (isAndroid) { keepBackable() }
     setTimeout(() => { gone = false }, 0)
@@ -94,7 +97,7 @@
   }
 </script>
 
-<div class="panel" class:gone>
+<div class="panel" class:gone inert="{isModal}">
   <div class="header">
     <button class="icon-button add-button" on:click="{() => { addIsOpen = true }}">
       <img alt="追加" src="{addIcon}" />

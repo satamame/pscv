@@ -13,9 +13,10 @@
   // コンポーネントプロパティ
   export let title: string
   export let psc: PSc | undefined = undefined
+  export let inert: boolean
 </script>
 
-<header style="background-color: {HEADER_COLOR}; height: {HEADER_HEIGHT}px;">
+<header style="background-color: {HEADER_COLOR}; height: {HEADER_HEIGHT}px;" inert="{inert}">
   <button class="icon-button left-button" on:click="{() => dispatch('openToc')}" disabled="{!psc}">
     <img alt="目次" src="{tocIcon}" />
   </button>

@@ -136,11 +136,13 @@
   bind:this="{viewer}"
   bind:psc
   bind:top="{viewerTop}"
+  bind:inert="{isModal}"
 />
 
 <Header
   bind:title
   bind:psc
+  bind:inert="{isModal}"
   on:openToc="{openToc}"
   on:openMainMenu="{() => { menuIsOpen = true }}"
 />
