@@ -18,12 +18,19 @@
 
   let isDragging = false
   let dragStartY = 0
-  let shadowEl: HTMLDivElement = undefined
-  let ghostEl: HTMLDivElement = undefined
+  let shadowEl: HTMLDivElement | undefined = undefined
+  let ghostEl: HTMLDivElement | undefined = undefined
   let ghostInitialY = 0
   let targetHeight = 0
   let otherHeights: number[] = []
-  let rszObsv: ResizeObserver = undefined
+  let rszObsv: ResizeObserver | undefined = undefined
+
+  // items の要素数が変わったら、各セルにドラッグ機能のための設定をする
+  let itemCount = items.length
+  $: if (items.length != itemCount) {
+    itemCount = items.length
+    setTimeout(() => updateCells(), 0)
+  }
 
   // スクロール関連
   const SCROLL_RATE = 20 // 自動スクロールは 1px/20ms とする
@@ -68,8 +75,10 @@
       updateGhostAndShadow()
 
       // シャドウが scrollBox の表示領域外ならスクロールして中に入れる
-      if (shadowEl.offsetTop < scrollBox.scrollTop) {
-        shadowEl.scrollIntoView()
+      if (shadowEl) { // 型ガード
+        if (shadowEl.offsetTop < scrollBox.scrollTop) {
+          shadowEl.scrollIntoView()
+        }
       }
     }, SCROLL_RATE)
   }
@@ -98,10 +107,12 @@
       updateGhostAndShadow()
 
       // シャドウが scrollBox の表示領域外ならスクロールして中に入れる
-      const shadowBottom = shadowEl.offsetTop + shadowEl.offsetHeight
-      scrollBottom = scrollBox.scrollTop + scrollBoxHeight
-      if (shadowBottom > scrollBottom) {
-        shadowEl.scrollIntoView(false)
+      if (shadowEl) { // 型ガード
+        const shadowBottom = shadowEl.offsetTop + shadowEl.offsetHeight
+        scrollBottom = scrollBox.scrollTop + scrollBoxHeight
+        if (shadowBottom > scrollBottom) {
+          shadowEl.scrollIntoView(false)
+        }
       }
     }, SCROLL_RATE)
   }
@@ -131,9 +142,10 @@
     cursorArea.id = 'cursor-area'
     document.documentElement.appendChild(cursorArea)
     cursorArea.style.position = 'absolute'
-    for (const prop of ['top', 'left', 'right', 'bottom']) {
-      cursorArea.style[prop] = '0'
-    }
+    cursorArea.style.top = '0'
+    cursorArea.style.right = '0'
+    cursorArea.style.bottom = '0'
+    cursorArea.style.left = '0'
     cursorArea.style.cursor = 'grabbing'
 
     const handle = event.currentTarget as HTMLDivElement
@@ -175,9 +187,10 @@
     overlay.style.opacity = '0.5'
     shadowEl.appendChild(overlay)
     overlay.style.position = 'absolute'
-    for (const prop of ['top', 'left', 'right', 'bottom']) {
-      overlay.style[prop] = '0'
-    }
+    overlay.style.top = '0'
+    overlay.style.right = '0'
+    overlay.style.bottom = '0'
+    overlay.style.left = '0'
 
     // ドラッグ中とドラッグ終了時のイベントリスナーをセットする
     document.addEventListener('pointermove', dragging, { passive: false })
@@ -189,6 +202,13 @@
    * ゴーストとシャドウを更新する
    */
   function updateGhostAndShadow() {
+    if (ghostEl === undefined) { // 型ガード
+      return
+    }
+    if (shadowEl === undefined) { // 型ガード
+      return
+    }
+
     // ゴーストの移動先を求める
     const deltaY = toListLocalY(pointerPageY) - dragStartY
     let ghostY = ghostInitialY + deltaY
@@ -232,6 +252,10 @@
 
     event.preventDefault()
 
+    if (ghostEl === undefined) { // 型ガード
+      return
+    }
+
     // 自動スクロールをいったん止める
     stopScrolling()
 
@@ -271,21 +295,29 @@
     document.removeEventListener('pointercancel', endDragging)
 
     // ゴーストの破棄
-    scrollBox.removeChild(ghostEl)
-    ghostEl = undefined
+    if (ghostEl) { // 型ガード
+      scrollBox.removeChild(ghostEl)
+      ghostEl = undefined
+    }
 
-    // シャドウのオーバーレイを削除する
-    const overlay = shadowEl.querySelector('#cell-overlay')
-    shadowEl.removeChild(overlay)
+    if (shadowEl) { // 型ガード
+      // シャドウのオーバーレイを削除する
+      const overlay = shadowEl.querySelector('#cell-overlay')
+      if (overlay) {
+        shadowEl.removeChild(overlay)
+      }
 
-    // items を並べ替える
-    const targetId = parseInt(shadowEl.id.substring(4))
-    const targetItem = items.filter(item => item.id == targetId)[0]
-    const orgPos = items.indexOf(targetItem)
-    const destPos = Array(...cellsRow.children).indexOf(shadowEl)
-    if (orgPos != destPos) {
-      items.splice(orgPos, 1)
-      items.splice(destPos, 0, targetItem)
+      // items を並べ替える
+      // セルの ID が 'cell' + item.id なので4文字目からが item の id
+      const targetId = parseInt(shadowEl.id.substring(4))
+      const targetItem = items.filter(item => item.id == targetId)[0]
+      const orgPos = items.indexOf(targetItem)
+      const destPos = Array(...cellsRow.children).indexOf(shadowEl)
+      if (orgPos != destPos) {
+        // 移動前の位置からセルを削除し、移動後の位置に挿入する
+        items.splice(orgPos, 1)
+        items.splice(destPos, 0, targetItem)
+      }
     }
 
     // sorted イベントを送出する
@@ -294,9 +326,20 @@
 
     // カーソル変更用エリアを削除する
     const cursorArea = document.getElementById('cursor-area')
-    document.documentElement.removeChild(cursorArea)
+    if (cursorArea) {
+      document.documentElement.removeChild(cursorArea)
+    }
 
     isDragging = false
+  }
+
+  /**
+   * ドラッグハンドラのクリックイベントを伝播させないための関数
+   * 無名関数にすると addEventListener するたびに追加されるので、
+   * 名前のある関数にする
+   */
+  function cancelEvent(event: Event) {
+    event.stopPropagation()
   }
 
   /**
@@ -305,7 +348,7 @@
   function updateCells() {
     items.forEach(item => {
       // 各セルの ID は 'cell' + item.id
-      const cell: HTMLDivElement = cellsRow.querySelector(`#cell${item.id}`)
+      const cell = cellsRow.querySelector(`#cell${item.id}`) as HTMLDivElement
       const handle = cell.querySelector('#dragHandle') as HTMLElement
 
       // 独自のドラッグ処理をするためブラウザでのドラッグを無効にする
@@ -318,7 +361,7 @@
       // ドラッグハンドルにイベントリスナーを追加する
       handle.addEventListener('pointerdown', startDragging, { passive: false })
       // Safari でドラッグ終了時にクリックハンドラを呼ばれないようにする
-      handle.addEventListener('click', e => { e.stopPropagation() })
+      handle.addEventListener('click', cancelEvent)
     })
 
     // スクロールの可否を判定・設定する
@@ -347,7 +390,7 @@
 
     // cell 全体の高さが scrollBox より低ければ bottom-line クラスを追加する
     const needsBottomLine = cellsHeight < scrollBox.clientHeight
-    Array(...cellsRow.children).forEach((cell: HTMLDivElement) => {
+    Array(...cellsRow.children).forEach((cell: Element) => {
       if (needsBottomLine) {
         cell.classList.add('bottom-line')
       } else {
@@ -369,7 +412,9 @@
   })
 
   onDestroy(() => {
-    rszObsv.disconnect()
+    if (rszObsv) {
+      rszObsv.disconnect()
+    }
   })
 </script>
 

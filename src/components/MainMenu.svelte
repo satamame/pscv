@@ -51,14 +51,26 @@
 
 <div class="panel" class:gone>
   <h1>メニュー</h1>
-  <button class="icon-button close-button">
-    <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
+  <button class="icon-button close-button" on:click="{close}">
+    <img alt="閉じる" src="{closeIcon}" />
   </button>
 
   <ul>
-    <li>表示</li>
-    <li on:click="{openData}"><img alt="データ" src="{booksIcon}" /><span>台本データ</span></li>
-    <li on:click="{openAbout}"><img alt="情報" src="{infoIcon}" /><span>バージョン情報</span></li>
+    <li>
+      <button>
+        表示
+      </button>
+    </li>
+    <li>
+      <button on:click="{openData}">
+        <img alt="データ" src="{booksIcon}" /><span>台本データ</span>
+      </button>
+    </li>
+    <li>
+      <button on:click="{openAbout}">
+        <img alt="情報" src="{infoIcon}" /><span>バージョン情報</span>
+      </button>
+    </li>
   </ul>
 </div>
 
@@ -95,15 +107,24 @@
     margin: 0;
   }
   li {
-    border-top: 1px solid #555;
-    padding: 8px 12px;
-    cursor: pointer;
+    padding: 0;
   }
-  li img {
+  li > button {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 8px 12px;
+    border-top: 1px solid #555;
+    border-radius: 0;
+    color: black;
+    background-color: transparent;
+    text-align: left;
+  }
+  li > button > img {
     vertical-align: middle;
     margin-right: 6px;
   }
-  li span {
+  li > button > span {
     vertical-align: middle;
   }
 </style>

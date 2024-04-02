@@ -16,12 +16,23 @@
   export let cellId: string
 
   let scIndex = item as ScriptIndex
+
+  function showPSc() {
+    dispatch('showPSc', { scriptId: scIndex.scriptId })
+  }
+
+  function showInfo() {
+    dispatch('showInfo', { id: scIndex.id })
+  }
 </script>
 
 <div
   id="{cellId}"
   class="cell bottom-line"
-  on:click="{() => dispatch('showPSc', { scriptId: scIndex.scriptId })}"
+  on:click="{showPSc}"
+  on:keydown="{e => e.key == 'Enter' && showPSc()}"
+  role="button"
+  tabindex="0"
 >
   <div class="icon">
     <img alt="本" src="{bookIcon}" />
@@ -29,7 +40,8 @@
   <div class="label">{scIndex.name}</div>
   <button
     class="icon-button info-button"
-    on:click|stopPropagation="{() => dispatch('showInfo', { id: scIndex.id })}"
+    on:click|stopPropagation="{showInfo}"
+    on:keydown|stopPropagation="{e => e.key == 'Enter' && showInfo()}"
   >
     <img alt="情報" src="{infoIcon}" />
   </button>

@@ -37,6 +37,9 @@
   )
   $: items = $scIndexes
 
+  // モーダル状態
+  $: isModal = addIsOpen || infoIsOpen
+
   onMount(async () => {
     if (isAndroid) { keepBackable() }
     setTimeout(() => { gone = false }, 0)
@@ -72,6 +75,10 @@
   async function showPSc(scriptId: number) {
     // DB から JSON を取って PSc のインスタンスにして親に渡す
     const scData = await db.scriptData.get(scriptId)
+    if (!scData) {
+      alert('データが無効です。')
+      return
+    }
     const psc = PSc.fromJson(scData.pscJson)
     dispatch('showPSc', { psc })
 
@@ -90,14 +97,14 @@
   }
 </script>
 
-<div class="panel" class:gone>
+<div class="panel" class:gone inert="{isModal}">
   <div class="header">
-    <button class="icon-button add-button">
-      <img alt="追加" src="{addIcon}" on:click="{() => { addIsOpen = true }}" />
+    <button class="icon-button add-button" on:click="{() => { addIsOpen = true }}">
+      <img alt="追加" src="{addIcon}" />
     </button>
     <h1>台本データ</h1>
-    <button class="icon-button close-button">
-      <img alt="閉じる" src="{closeIcon}" on:click="{close}" />
+    <button class="icon-button close-button" on:click="{close}">
+      <img alt="閉じる" src="{closeIcon}" />
     </button>
   </div>
 

@@ -1,6 +1,6 @@
 <script lang="ts">
   // コンポーネントプロパティ
-  export let files: FileList
+  export let files: FileList | null
   export let accept=''
 
   let filename = 'ファイルを選択'

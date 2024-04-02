@@ -1,11 +1,11 @@
 import Dexie from 'dexie'
-import type { Table } from 'dexie'
+import type { EntityTable } from 'dexie'
 
 import type { UserData } from './user-data'
 
 /** 台本インデックスのレコード */
 export interface ScriptIndex {
-  id?: number
+  id: number
   sortKey: number
   name: string
   scriptId: number
@@ -13,7 +13,7 @@ export interface ScriptIndex {
 
 /** 台本データのレコード */
 export interface ScriptData {
-  id?: number
+  id: number
   pscJson: string
   srcType: string
   url: string
@@ -22,8 +22,8 @@ export interface ScriptData {
 
 /** スキーマの定義 */
 class PscvDB extends Dexie {
-  scriptIndex!: Table<ScriptIndex>
-  scriptData!: Table<ScriptData>
+  scriptIndex!: EntityTable<ScriptIndex, 'id'>
+  scriptData!: EntityTable<ScriptData, 'id'>
 
   constructor() {
     super('pscvDB')
@@ -46,9 +46,11 @@ class PscvDB extends Dexie {
 
       // 台本インデックス更新
       let newSortKey = 2
+      // 既存の台本インデックスのソートキーを 2, 3, ... にする
       await this.scriptIndex.orderBy('sortKey').modify(scIndex => {
         scIndex.sortKey = newSortKey++
       })
+      // 新規の台本インデックスをソートキー1で追加する
       this.scriptIndex.add({ sortKey: 1, name, scriptId })
 
       // 新規 ID を返す
@@ -63,7 +65,9 @@ class PscvDB extends Dexie {
       await this.scriptData.delete(scriptId)
       // 台本インデックス削除
       const scIndex = await this.scriptIndex.get({ scriptId })
-      await this.scriptIndex.delete(scIndex.id)
+      if (scIndex !== undefined) {
+        await this.scriptIndex.delete(scIndex.id)
+      }
     })
   }
 

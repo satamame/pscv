@@ -17,6 +17,14 @@ export const PSC_LINE_TYPE = {
   COMMENT_CONTINUED: 15,     // Following lines of Comment
 } as const
 
+/** JSON からパースした行 */
+type parsedLine = {
+  class: string;
+  type: keyof typeof PSC_LINE_TYPE;
+  name?: string;
+  text?: string;
+}
+
 export type PScLineType = typeof PSC_LINE_TYPE[keyof typeof PSC_LINE_TYPE]
 export type Headline = { text: string, lineIndex: number }
 
@@ -45,17 +53,17 @@ export class PSc {
   /** JSON 文字列から PSc オブジェクトを作って返す */
   static fromJson(json: string): PSc {
     try {
-      const pscObj = JSON.parse(json)
+      const parsedObj = JSON.parse(json)
 
       // lines の各要素を PScLine クラスのインスタンスにする
-      const lines = pscObj.lines.map((line: PScLine) => {
+      const lines = parsedObj.lines.map((line: parsedLine) => {
         const type = PSC_LINE_TYPE[line.type]
         return new PScLine(type, line.name, line.text)
       })
 
       // PSc クラスのインスタンスを作って返す
       const psc = new PSc(
-        pscObj.title, pscObj.author, pscObj.chars, lines
+        parsedObj.title, parsedObj.author, parsedObj.chars, lines
       )
       return psc
     } catch (error) {
@@ -68,18 +76,18 @@ export class PSc {
     const res = await fetch(url)
     if (res.ok) {
       const data = await res.json()
-      // fetch で取得したデータは { psc: PSc } または PSc の形を想定する
-      const pscData: PSc = data.psc ? data.psc : data
+      // fetch で取得したデータは { psc: JSON } または JSON の形を想定する
+      const parsedObj = data.psc ? data.psc : data
       try {
         // lines の各要素を PScLine オブジェクトにする
-        const lines = pscData.lines.map((line) => {
+        const lines = parsedObj.lines.map((line: parsedLine) => {
           const type = PSC_LINE_TYPE[line.type]
           return new PScLine(type, line.name, line.text)
         })
 
         // インスタンス化して返す
         const psc = new PSc(
-          pscData.title, pscData.author, pscData.chars, lines
+          parsedObj.title, parsedObj.author, parsedObj.chars, lines
         )
         return psc
       } catch (error) {
@@ -101,13 +109,13 @@ export class PSc {
         line.type === PSC_LINE_TYPE.H2 ||
         line.type === PSC_LINE_TYPE.H3
       ) {
-        return { text: line.text, lineIndex: index }
+        return { text: line?.text ?? '', lineIndex: index }
       }
     })
     // undefined を削除して返す
     return headlines.filter((line) => {
       return !!line
-    })
+    }) as Headline[]
   }
 
   /** 行番号からその行が属している見出しの番号を返す */
