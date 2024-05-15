@@ -100,22 +100,24 @@
 
     {#if scIndex && scData}
       <table>
-        <tr>
-          <td>表示名</td><td>{scIndex.name}</td>
-          <td><img alt="編集" src="{editIcon}" /></td>
-        </tr>
-        <tr>
-          <td>台本</td>
-          <td colspan="2">{getScTitle(scData)}</td>
-        </tr>
-        <tr>
-          <td>ソース</td><td>{scData.srcType}</td>
-          <td><img alt="編集" src="{editIcon}" /></td>
-        </tr>
-        <tr>
-          <td>{#if scData.srcType != 'file'}URL{/if}</td>
-          <td colspan="2">{scData.url}</td>
-        </tr>
+        <tbody>
+          <tr>
+            <td>表示名</td><td>{scIndex.name}</td>
+            <td><img alt="編集" src="{editIcon}" /></td>
+          </tr>
+          <tr>
+            <td>台本</td>
+            <td colspan="2">{getScTitle(scData)}</td>
+          </tr>
+          <tr>
+            <td>ソース</td><td>{scData.srcType}</td>
+            <td><img alt="編集" src="{editIcon}" /></td>
+          </tr>
+          <tr>
+            <td>{#if scData.srcType != 'file'}URL{/if}</td>
+            <td colspan="2">{scData.url}</td>
+          </tr>
+        </tbody>
       </table>
     {/if}
 
