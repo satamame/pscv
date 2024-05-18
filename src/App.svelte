@@ -1,3 +1,4 @@
+<svelte:options runes={true} />
 <script lang="ts">
   import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
 
@@ -16,24 +17,24 @@
   import About from './components/About.svelte'
   import ReloadPrompt from './components/ReloadPrompt.svelte'
 
-  // コンポーネントのインスタンス
+  // 子コンポーネントのインスタンス
   let viewer: Viewer
-  let toc: Toc
-  let menu: MainMenu
-  let data: DataList
-  let about: About
+  let toc: Toc | undefined = $state(undefined)
+  let menu: MainMenu | undefined = $state(undefined)
+  let data: DataList | undefined = $state(undefined)
+  let about: About | undefined = $state(undefined)
 
   // パネル開閉状態
-  let tocIsOpen = false
-  let menuIsOpen = false
-  let dataIsOpen = false
-  let aboutIsOpen = false
-  let reloadIsOpen = true
+  let tocIsOpen = $state(false)
+  let menuIsOpen = $state(false)
+  let dataIsOpen = $state(false)
+  let aboutIsOpen = $state(false)
+  let reloadIsOpen = $state(true)
 
   const rootElement = document.documentElement
-  let viewerTop = HEADER_HEIGHT
-  let psc: PSc | undefined
-  let currentTocIndex = 0
+  let viewerTop = $state(HEADER_HEIGHT)
+  let psc: PSc | undefined = $state(undefined)
+  let currentTocIndex = $state(0)
 
   // スクロールロックを解除した直後に実行するコールバック
   let onUnlockScroll: (() => void) | null = null
@@ -51,17 +52,25 @@
     })
   }
 
-  $: title = psc?.title ?? '台本ビューア'
-  $: isModal = tocIsOpen || menuIsOpen || dataIsOpen || aboutIsOpen
+  // Notes: $derived で以下のように書くと TypeScript がエラーを出す
+  // let title = $derived(psc?.title ?? '台本ビューア')
+  let title = $state('台本ビューア')
+  $effect(() => {
+    title = psc?.title ?? '台本ビューア'
+  })
+
+  let isModal = $derived(tocIsOpen || menuIsOpen || dataIsOpen || aboutIsOpen)
 
   // モーダル状態が変わった時の処理
-  $: if (viewer) {
-    if (isModal) {
-      lockScroll()
-    } else {
-      unlockScroll()
+  $effect(() => {
+    if (viewer) {
+      if (isModal) {
+        lockScroll()
+      } else {
+        unlockScroll()
+      }
     }
-  }
+  })
 
   /** スクロールロックする */
   function lockScroll(): void {
@@ -74,17 +83,19 @@
   }
   // iOS 以外では body-scroll-lock を使う
   // body-scroll-lock の disableBodyScroll の引数に合わせて型アサーションする
-  $: if (!isIOS) {
-    if (toc) {
-      disableBodyScroll(toc as unknown as HTMLElement)
-    } else if (menu) {
-      disableBodyScroll(menu as unknown as HTMLElement)
-    } else if (data) {
-      disableBodyScroll(data as unknown as HTMLElement)
-    } else if (about) {
-      disableBodyScroll(about as unknown as HTMLElement)
+  $effect(() => {
+    if (!isIOS) {
+      if (toc) {
+        disableBodyScroll(toc as unknown as HTMLElement)
+      } else if (menu) {
+        disableBodyScroll(menu as unknown as HTMLElement)
+      } else if (data) {
+        disableBodyScroll(data as unknown as HTMLElement)
+      } else if (about) {
+        disableBodyScroll(about as unknown as HTMLElement)
+      }
     }
-  }
+  })
 
   /** スクロールロックを解除する */
   function unlockScroll(): void {
@@ -134,15 +145,15 @@
 
 <Viewer
   bind:this="{viewer}"
-  bind:psc
-  bind:top="{viewerTop}"
-  bind:inert="{isModal}"
+  psc="{psc}"
+  top="{viewerTop}"
+  inert="{isModal}"
 />
 
 <Header
-  bind:title
-  bind:psc
-  bind:inert="{isModal}"
+  title="{title}"
+  psc="{psc}"
+  inert="{isModal}"
   on:openToc="{openToc}"
   on:openMainMenu="{() => { menuIsOpen = true }}"
 />
@@ -150,8 +161,8 @@
 {#if psc && tocIsOpen}
   <Toc
     bind:this="{toc}"
-    bind:psc
-    bind:current="{currentTocIndex}"
+    psc="{psc}"
+    current="{currentTocIndex}"
     on:close="{() => { tocIsOpen = false }}"
     on:goToHeadline="{(e) => { goToHeadline(e.detail.index) }}"
   />

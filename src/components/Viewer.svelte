@@ -18,7 +18,7 @@
   // コンポーネントプロパティ
   export let psc: PSc | undefined = undefined
   export let top = HEADER_HEIGHT
-  export let inert: boolean
+  export let inert: boolean = false
 
   let container: HTMLDivElement
 
