@@ -54,10 +54,7 @@
 
   // Notes: $derived で以下のように書くと TypeScript がエラーを出す
   // let title = $derived(psc?.title ?? '台本ビューア')
-  let title = $state('台本ビューア')
-  $effect(() => {
-    title = psc?.title ?? '台本ビューア'
-  })
+  let title = $derived.by(() => psc?.title ?? '台本ビューア')
 
   let isModal = $derived(tocIsOpen || menuIsOpen || dataIsOpen || aboutIsOpen)
 
@@ -154,8 +151,8 @@
   title="{title}"
   psc="{psc}"
   inert="{isModal}"
-  on:openToc="{openToc}"
-  on:openMainMenu="{() => { menuIsOpen = true }}"
+  onOpenToc="{openToc}"
+  onOpenMainMenu="{() => menuIsOpen = true }"
 />
 
 {#if psc && tocIsOpen}

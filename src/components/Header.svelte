@@ -1,6 +1,5 @@
+<svelte:options runes={true} />
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
-
   import { HEADER_COLOR, HEADER_HEIGHT } from '../lib/const'
   import type { PSc } from '../lib/psc'
 
@@ -8,22 +7,27 @@
   import tocIcon from '/ui_icon/toc_black_24dp.svg'
   import menuIcon from '/ui_icon/menu_open_black_24dp.svg'
 
-  const dispatch = createEventDispatcher()
-
   // コンポーネントプロパティ
-  export let title: string
-  export let psc: PSc | undefined = undefined
-  export let inert: boolean
+  type Props = {
+    title: string;            // ヘッダに表示するタイトル
+    psc?: PSc;                // 台本データ
+    inert: boolean;           // 操作無効 (親がモーダル)
+    onOpenToc: Function;      // 目次を開くハンドラ
+    onOpenMainMenu: Function; // メニューを開くハンドラ
+  }
+  const {
+    title, psc, inert, onOpenToc: openToc, onOpenMainMenu: openMainMenu
+  }: Props = $props()
 </script>
 
 <header style="background-color: {HEADER_COLOR}; height: {HEADER_HEIGHT}px;" inert="{inert}">
-  <button class="icon-button left-button" on:click="{() => dispatch('openToc')}" disabled="{!psc}">
+  <button class="icon-button left-button" onclick="{() => openToc()}" disabled="{!psc}">
     <img alt="目次" src="{tocIcon}" />
   </button>
 
   <h1>{title}</h1>
 
-  <button class="icon-button right-button" on:click="{() => dispatch('openMainMenu')}">
+  <button class="icon-button right-button" onclick="{() => openMainMenu()}">
     <img alt="メニュー" src="{menuIcon}" />
   </button>
 </header>
