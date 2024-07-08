@@ -1,5 +1,6 @@
+<svelte:options runes={true} />
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
+  import { onMount } from 'svelte'
 
   import { isAndroid } from '../lib/env'
   import { keepBackable, back } from '../lib/back'
@@ -12,46 +13,55 @@
   import infoIcon from '/ui_icon/info_black_24dp.svg'
   import booksIcon from '/ui_icon/library_books_black_24dp.svg'
 
-  const dispatch = createEventDispatcher()
+  // コンポーネントプロパティ
+  type Props = {
+    onClose: Function;     // メニューを閉じるハンドラ
+    onOpenData: Function;  // 台本データを開くハンドラ
+    onOpenAbout: Function; // 「台本ビューアについて」を開くハンドラ
+  }
+  const {
+    onClose: close, onOpenData: openData, onOpenAbout: openAbout
+  }: Props = $props()
 
-  let gone = true
+  // 閉じている (閉じようとしている)
+  let gone = $state(true)
 
   onMount(async () => {
     if (isAndroid) { keepBackable() }
-    setTimeout(() => { gone = false }, 0)
+    setTimeout(() => gone = false, 0)
   })
 
-  export function close() {
+  function handleClose() {
     if (gone) { return }
     gone = true
     setTimeout(() => {
-      dispatch('close')
+      close()
       if (isAndroid) { back() }
     }, 200)
   }
 
-  function openData() {
+  function handleOpenData() {
     if (gone) { return }
     gone = true
-    setTimeout(() => { dispatch('close') }, 200)
-    dispatch('openData')
+    setTimeout(() => close(), 200)
+    openData()
   }
 
-  function openAbout() {
+  function handleOpenAbout() {
     if (gone) { return }
     gone = true
-    setTimeout(() => { dispatch('close') }, 200)
-    dispatch('openAbout')
+    setTimeout(() => close(), 200)
+    openAbout()
   }
 </script>
 
 <div class="overlay" class:gone>
-  <Overlay on:click="{close}" />
+  <Overlay on:click="{handleClose}" />
 </div>
 
 <div class="panel" class:gone>
   <h1>メニュー</h1>
-  <button class="icon-button close-button" on:click="{close}">
+  <button class="icon-button close-button" onclick="{handleClose}">
     <img alt="閉じる" src="{closeIcon}" />
   </button>
 
@@ -62,12 +72,12 @@
       </button>
     </li>
     <li>
-      <button on:click="{openData}">
+      <button onclick="{handleOpenData}">
         <img alt="データ" src="{booksIcon}" /><span>台本データ</span>
       </button>
     </li>
     <li>
-      <button on:click="{openAbout}">
+      <button onclick="{handleOpenAbout}">
         <img alt="情報" src="{infoIcon}" /><span>バージョン情報</span>
       </button>
     </li>

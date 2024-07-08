@@ -152,7 +152,7 @@
   psc="{psc}"
   inert="{isModal}"
   onOpenToc="{openToc}"
-  onOpenMainMenu="{() => menuIsOpen = true }"
+  onOpenMainMenu="{() => menuIsOpen = true}"
 />
 
 {#if psc && tocIsOpen}
@@ -160,37 +160,37 @@
     bind:this="{toc}"
     psc="{psc}"
     current="{currentTocIndex}"
-    on:close="{() => { tocIsOpen = false }}"
-    on:goToHeadline="{(e) => { goToHeadline(e.detail.index) }}"
+    on:close="{() => tocIsOpen = false}"
+    on:goToHeadline="{e => goToHeadline(e.detail.index)}"
   />
 {/if}
 
 {#if menuIsOpen}
   <MainMenu
     bind:this="{menu}"
-    on:close="{() => { menuIsOpen = false }}"
-    on:openData="{() => { dataIsOpen = true }}"
-    on:openAbout="{() => { aboutIsOpen = true }}"
+    onClose="{() => menuIsOpen = false}"
+    onOpenData="{() => dataIsOpen = true}"
+    onOpenAbout="{() => aboutIsOpen = true}"
   />
 {/if}
 
 {#if dataIsOpen}
   <DataList
     bind:this="{data}"
-    on:close="{() => { dataIsOpen = false }}"
-    on:showPSc="{(e) => { psc = e.detail.psc }}"
+    on:close="{() => dataIsOpen = false}"
+    on:showPSc="{e => psc = e.detail.psc}"
   />
 {/if}
 
 {#if aboutIsOpen}
   <About
     bind:this="{about}"
-    on:close="{() => { aboutIsOpen = false }}"
+    on:close="{() => aboutIsOpen = false}"
   />
 {/if}
 
 {#if reloadIsOpen}
   <ReloadPrompt
-    on:close="{() => { reloadIsOpen = false }}"
+    on:close="{() => reloadIsOpen = false}"
   />
 {/if}

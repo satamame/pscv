@@ -28,7 +28,7 @@
     - [ ] Viewer.svelte
     - [x] Header.svelte
     - [ ] Toc.svelte
-    - [ ] MainMenu.svelte
+    - [x] MainMenu.svelte
     - [ ] DataList.svelte
     - [ ] About.svelte
     - [ ] ReloadPrompt.svelte
