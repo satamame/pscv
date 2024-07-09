@@ -1,11 +1,13 @@
+<svelte:options runes={true} />
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
+  import { onMount } from 'svelte'
   import { liveQuery } from 'dexie'
 
   import { isAndroid } from '../lib/env'
   import { HEADER_HEIGHT } from '../lib/const'
   import { keepBackable, back } from '../lib/back'
   import { db } from '../lib/db'
+  import type { ScriptIndex } from '../lib/db'
   import { PSc } from '../lib/psc'
 
   // 画像ファイルを参照
@@ -18,34 +20,42 @@
   import DataInfo from './DataInfo.svelte'
   import DndList from './UI/DndList.svelte'
 
-  const dispatch = createEventDispatcher()
+  // コンポーネントプロパティ
+  type Props = {
+    onClose: Function;    // 親がメニューを閉じるハンドラ
+    onShowPSc: Function;  // 親が台本データを開くハンドラ
+  }
+  const { onClose, onShowPSc }: Props = $props()
 
-  // コンポーネントのインスタンス
-  let dataAdd: DataAdd
-  let dataInfo: DataInfo
+  // 子コンポーネントのインスタンス
+  let dataAdd: DataAdd | undefined = $state(undefined)
+  let dataInfo: DataInfo | undefined = $state(undefined)
 
   // パネル開閉状態
-  let addIsOpen = false
-  let infoIsOpen = false
+  let addIsOpen = $state(false)
+  let infoIsOpen = $state(false)
 
-  let gone = true
-  let infoScIndexId: number
+  // 閉じている (閉じようとしている)
+  let gone = $state(true)
+
+  let infoScIndexId: number = $state(0)
 
   // リストに DB の内容が自動的に反映されるようにする
   let scIndexes = liveQuery(
     () => db.scriptIndex.orderBy('sortKey').toArray()
   )
-  $: items = $scIndexes
+  let items: ScriptIndex[] = $state([])
+  $effect(() => {items = $scIndexes})
 
   // モーダル状態
-  $: isModal = addIsOpen || infoIsOpen
+  let isModal = $derived(addIsOpen || infoIsOpen)
 
   onMount(async () => {
     if (isAndroid) { keepBackable() }
-    setTimeout(() => { gone = false }, 0)
+    setTimeout(() => gone = false, 0)
   })
 
-  export function close() {
+  function close() {
     // back 処理から呼ばれた場合を考え、追加パネルがあれば閉じる
     if (dataAdd) {
       dataAdd.close()
@@ -66,7 +76,7 @@
     if (gone) { return }
     gone = true
     setTimeout(() => {
-      dispatch('close')
+      onClose()
       if (isAndroid) { back() }
     }, 200)
   }
@@ -80,7 +90,7 @@
       return
     }
     const psc = PSc.fromJson(scData.pscJson)
-    dispatch('showPSc', { psc })
+    onShowPSc(psc)
 
     // 自身を閉じる
     closeSelf()
@@ -99,11 +109,11 @@
 
 <div class="panel" class:gone inert="{isModal}">
   <div class="header">
-    <button class="icon-button add-button" on:click="{() => { addIsOpen = true }}">
+    <button class="icon-button add-button" onclick="{() => addIsOpen = true}">
       <img alt="追加" src="{addIcon}" />
     </button>
     <h1>台本データ</h1>
-    <button class="icon-button close-button" on:click="{close}">
+    <button class="icon-button close-button" onclick="{close}">
       <img alt="閉じる" src="{closeIcon}" />
     </button>
   </div>

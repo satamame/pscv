@@ -177,8 +177,8 @@
 {#if dataIsOpen}
   <DataList
     bind:this="{data}"
-    on:close="{() => dataIsOpen = false}"
-    on:showPSc="{e => psc = e.detail.psc}"
+    onClose="{() => dataIsOpen = false}"
+    onShowPSc="{(selected: PSc) => psc = selected}"
   />
 {/if}
 
