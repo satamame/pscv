@@ -29,7 +29,7 @@
     - [x] Header.svelte
     - [ ] Toc.svelte
     - [x] MainMenu.svelte
-    - [ ] DataList.svelte
+    - [x] DataList.svelte
     - [ ] About.svelte
     - [ ] ReloadPrompt.svelte
     - [ ] DataAdd.svelte

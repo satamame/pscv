@@ -9,25 +9,23 @@
 
   // コンポーネントプロパティ
   type Props = {
-    title: string;            // ヘッダに表示するタイトル
-    psc?: PSc;                // 台本データ
-    inert: boolean;           // 操作無効 (親がモーダル)
-    onOpenToc: Function;      // 目次を開くハンドラ
-    onOpenMainMenu: Function; // メニューを開くハンドラ
+    title: string;         // ヘッダに表示するタイトル
+    psc?: PSc;             // 台本データ
+    inert: boolean;        // 操作無効 (親がモーダル)
+    onOpenToc: Function;   // 親が目次を開くハンドラ
+    onOpenMenu: Function;  // 親がメニューを開くハンドラ
   }
-  const {
-    title, psc, inert, onOpenToc: openToc, onOpenMainMenu: openMainMenu
-  }: Props = $props()
+  const { title, psc, inert, onOpenToc, onOpenMenu }: Props = $props()
 </script>
 
 <header style="background-color: {HEADER_COLOR}; height: {HEADER_HEIGHT}px;" inert="{inert}">
-  <button class="icon-button left-button" onclick="{() => openToc()}" disabled="{!psc}">
+  <button class="icon-button left-button" onclick="{() => onOpenToc()}" disabled="{!psc}">
     <img alt="目次" src="{tocIcon}" />
   </button>
 
   <h1>{title}</h1>
 
-  <button class="icon-button right-button" onclick="{() => openMainMenu()}">
+  <button class="icon-button right-button" onclick="{() => onOpenMenu()}">
     <img alt="メニュー" src="{menuIcon}" />
   </button>
 </header>

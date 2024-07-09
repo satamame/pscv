@@ -15,13 +15,11 @@
 
   // コンポーネントプロパティ
   type Props = {
-    onClose: Function;     // メニューを閉じるハンドラ
-    onOpenData: Function;  // 台本データを開くハンドラ
-    onOpenAbout: Function; // 「台本ビューアについて」を開くハンドラ
+    onClose: Function;     // 親がメニューを閉じるハンドラ
+    onOpenData: Function;  // 親が台本データを開くハンドラ
+    onOpenAbout: Function; // 親が「台本ビューアについて」を開くハンドラ
   }
-  const {
-    onClose: close, onOpenData: openData, onOpenAbout: openAbout
-  }: Props = $props()
+  const { onClose, onOpenData, onOpenAbout }: Props = $props()
 
   // 閉じている (閉じようとしている)
   let gone = $state(true)
@@ -31,37 +29,37 @@
     setTimeout(() => gone = false, 0)
   })
 
-  function handleClose() {
+  function close() {
     if (gone) { return }
     gone = true
     setTimeout(() => {
-      close()
+      onClose()
       if (isAndroid) { back() }
     }, 200)
   }
 
-  function handleOpenData() {
+  function openData() {
     if (gone) { return }
     gone = true
-    setTimeout(() => close(), 200)
-    openData()
+    setTimeout(() => onClose(), 200)
+    onOpenData()
   }
 
-  function handleOpenAbout() {
+  function openAbout() {
     if (gone) { return }
     gone = true
-    setTimeout(() => close(), 200)
-    openAbout()
+    setTimeout(() => onClose(), 200)
+    onOpenAbout()
   }
 </script>
 
 <div class="overlay" class:gone>
-  <Overlay on:click="{handleClose}" />
+  <Overlay on:click="{close}" />
 </div>
 
 <div class="panel" class:gone>
   <h1>メニュー</h1>
-  <button class="icon-button close-button" onclick="{handleClose}">
+  <button class="icon-button close-button" onclick="{close}">
     <img alt="閉じる" src="{closeIcon}" />
   </button>
 
@@ -72,12 +70,12 @@
       </button>
     </li>
     <li>
-      <button onclick="{handleOpenData}">
+      <button onclick="{openData}">
         <img alt="データ" src="{booksIcon}" /><span>台本データ</span>
       </button>
     </li>
     <li>
-      <button onclick="{handleOpenAbout}">
+      <button onclick="{openAbout}">
         <img alt="情報" src="{infoIcon}" /><span>バージョン情報</span>
       </button>
     </li>

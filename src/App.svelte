@@ -152,7 +152,7 @@
   psc="{psc}"
   inert="{isModal}"
   onOpenToc="{openToc}"
-  onOpenMainMenu="{() => menuIsOpen = true}"
+  onOpenMenu="{() => menuIsOpen = true}"
 />
 
 {#if psc && tocIsOpen}
