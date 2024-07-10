@@ -160,8 +160,8 @@
     bind:this="{toc}"
     psc="{psc}"
     current="{currentTocIndex}"
-    on:close="{() => tocIsOpen = false}"
-    on:goToHeadline="{e => goToHeadline(e.detail.index)}"
+    onClose="{() => tocIsOpen = false}"
+    onGoTo="{(index: number) => goToHeadline(index)}"
   />
 {/if}
 

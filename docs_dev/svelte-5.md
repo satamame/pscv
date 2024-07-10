@@ -27,7 +27,7 @@
     - [x] App.svelte
     - [ ] Viewer.svelte
     - [x] Header.svelte
-    - [ ] Toc.svelte
+    - [x] Toc.svelte
     - [x] MainMenu.svelte
     - [x] DataList.svelte
     - [ ] About.svelte
