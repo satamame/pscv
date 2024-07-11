@@ -55,7 +55,7 @@
     setTimeout(() => gone = false, 0)
   })
 
-  function close() {
+  export function close() {
     // back 処理から呼ばれた場合を考え、追加パネルがあれば閉じる
     if (dataAdd) {
       dataAdd.close()

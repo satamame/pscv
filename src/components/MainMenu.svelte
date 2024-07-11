@@ -29,7 +29,7 @@
     setTimeout(() => gone = false, 0)
   })
 
-  function close() {
+  export function close() {
     if (gone) { return }
     gone = true
     setTimeout(() => {
