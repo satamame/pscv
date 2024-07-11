@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
-import { VitePWA } from 'vite-plugin-pwa'
+import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa'
 
-const pwaOptions = {
+const pwaOptions: Partial<VitePWAOptions> = {
   strategies: 'generateSW' as 'generateSW', // default (unnecessary)
   registerType: 'prompt' as 'prompt',       // default (unnecessary)
   manifest: {
