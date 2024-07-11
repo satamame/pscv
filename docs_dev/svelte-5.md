@@ -31,6 +31,7 @@
     - [x] MainMenu.svelte
     - [x] DataList.svelte
     - [ ] About.svelte
+        - [ ] 更新ボタンの動作確認
     - [ ] ReloadPrompt.svelte
     - [ ] DataAdd.svelte
     - [ ] DataCell.svelte

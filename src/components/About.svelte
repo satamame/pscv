@@ -1,5 +1,6 @@
+<svelte:options runes={true} />
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
+  import { onMount } from 'svelte'
 
   import { isPwa, isAndroid } from '../lib/env'
   import { APP_VERSION, COPY_RIGHT } from '../lib/const'
@@ -12,14 +13,20 @@
   // 子コンポーネント
   import Spinner from './UI/Spinner.svelte'
 
-  const dispatch = createEventDispatcher()
+  // コンポーネントプロパティ
+  type Props = {
+    onClose: Function;  // 親がメニューを閉じるハンドラ
+  }
+  const { onClose }: Props = $props()
 
-  let gone = true
-  let isLoading = false
+  // 閉じている (閉じようとしている)
+  let gone = $state(true)
+  // ローディング中
+  let isLoading = $state(false)
 
   onMount(async () => {
     if (isAndroid) { keepBackable() }
-    setTimeout(() => { gone = false }, 0)
+    setTimeout(() => gone = false, 0)
   })
 
   export function close() {
@@ -33,12 +40,13 @@
     if (gone) { return }
     gone = true
     setTimeout(() => {
-      dispatch('close')
+      onClose()
       if (isAndroid) { back() }
     }, 200)
   }
 
   function update() {
+    if (isLoading) { return }
     if ($appUpdateFunc != null) { // 型ガード
       isLoading = true
       $appUpdateFunc(true)
@@ -48,14 +56,14 @@
 
 <div class="panel" class:gone>
   <h1>台本ビューアについて</h1>
-  <button class="icon-button close-button" on:click="{close}">
+  <button class="icon-button close-button" onclick="{close}">
     <img alt="閉じる" src="{closeIcon}" />
   </button>
 
   <div class="container">
     <p>バージョン<br>{APP_VERSION}</p>
     {#if $appUpdateFunc}
-      <button on:click|once="{update}">
+      <button onclick="{update}">
         今すぐ台本ビューアを更新する
       </button>
       <div style="text-align: left;">

@@ -185,7 +185,7 @@
 {#if aboutIsOpen}
   <About
     bind:this="{about}"
-    on:close="{() => aboutIsOpen = false}"
+    onClose="{() => aboutIsOpen = false}"
   />
 {/if}
 
