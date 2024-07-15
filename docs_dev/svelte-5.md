@@ -30,7 +30,7 @@
     - [x] Toc.svelte
     - [x] MainMenu.svelte
     - [x] DataList.svelte
-    - [ ] About.svelte
+    - [x] About.svelte
         - [ ] 更新ボタンの動作確認
     - [ ] ReloadPrompt.svelte
     - [ ] DataAdd.svelte

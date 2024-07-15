@@ -22,8 +22,8 @@
 
   // コンポーネントプロパティ
   type Props = {
-    onClose: Function;    // 親がメニューを閉じるハンドラ
-    onShowPSc: Function;  // 親が台本データを開くハンドラ
+    onClose: Function;    // 親が台本データ画面を閉じるハンドラ
+    onShowPSc: Function;  // 親が台本を表示するハンドラ
   }
   const { onClose, onShowPSc }: Props = $props()
 

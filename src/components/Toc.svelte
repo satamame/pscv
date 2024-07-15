@@ -16,8 +16,8 @@
   type Props = {
     psc: PSc;           // 台本データ
     current: number;    // 現在地に対応する見出し
-    onClose: Function;  // 親がメニューを閉じるハンドラ
-    onGoTo: Function;   //
+    onClose: Function;  // 親が目次を閉じるハンドラ
+    onGoTo: Function;   // 親が見出し行にスクロールするハンドラ
   }
   const { psc, current, onClose, onGoTo }: Props = $props()
 
