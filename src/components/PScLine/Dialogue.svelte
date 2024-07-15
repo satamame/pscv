@@ -1,8 +1,12 @@
+<svelte:options runes={true} />
 <script lang="ts">
   import type { PScLine } from '../../lib/psc'
 
   // コンポーネントプロパティ
-  export let line: PScLine
+  type Props = {
+    line: PScLine;  // 表示する行
+  }
+  const { line }: Props = $props()
 </script>
 
 <div>

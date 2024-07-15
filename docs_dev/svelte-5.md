@@ -25,29 +25,29 @@
 
 - コンポーネントの Runes mode 対応, イベントハンドラ更新
     - [x] App.svelte
-    - [ ] Viewer.svelte
+    - [x] Viewer.svelte
     - [x] Header.svelte
     - [x] Toc.svelte
     - [x] MainMenu.svelte
     - [x] DataList.svelte
     - [x] About.svelte
-        - [ ] 更新ボタンの動作確認
+        - [x] 更新ボタンの動作確認
     - [x] ReloadPrompt.svelte
     - [ ] DataAdd.svelte
     - [ ] DataCell.svelte
     - [ ] DataInfo.svelte
     - PScLine
-        - [ ] Author
-        - [ ] Character
-        - [ ] CharsHeadline
-        - [ ] Comment
-        - [ ] Dialogue
-        - [ ] Direction
-        - [ ] Endmark
-        - [ ] Headline1
-        - [ ] Headline2
-        - [ ] Headline3
-        - [ ] Title
+        - [x] Author
+        - [x] Character
+        - [x] CharsHeadline
+        - [x] Comment
+        - [x] Dialogue
+        - [x] Direction
+        - [x] Endmark
+        - [x] Headline1
+        - [x] Headline2
+        - [x] Headline3
+        - [x] Title
     - UI
     - [ ] DndList.svelte
     - [ ] FileSelect.svelte
