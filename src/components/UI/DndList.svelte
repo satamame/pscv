@@ -1,3 +1,4 @@
+<svelte:options runes={true} />
 <script lang="ts" context="module">
   export interface DndCellItem {
     id: number
@@ -5,12 +6,20 @@
 </script>
 
 <script lang="ts">
-  import { createEventDispatcher, onMount, onDestroy } from 'svelte'
-
-  const dispatch = createEventDispatcher()
+  import { onMount, onDestroy } from 'svelte'
+  import type { Snippet } from 'svelte'
 
   // コンポーネントプロパティ
-  export let items: DndCellItem[]
+  type Props = {
+    items: DndCellItem[];
+    onDisableScroll?: Function;
+    onEnableScroll?: Function;
+    onSorted?: Function;
+    cell: Snippet<[DndCellItem]>;
+  }
+  const {
+    items, onDisableScroll, onEnableScroll, onSorted , cell
+  }: Props = $props()
 
   // DOM 参照
   let scrollBox: HTMLDivElement
@@ -27,10 +36,12 @@
 
   // items の要素数が変わったら、各セルにドラッグ機能のための設定をする
   let itemCount = items.length
-  $: if (items.length != itemCount) {
-    itemCount = items.length
-    setTimeout(() => updateCells(), 0)
-  }
+  $effect(() => {
+    if (items.length != itemCount) {
+      itemCount = items.length
+      setTimeout(() => updateCells(), 0)
+    }
+  })
 
   // スクロール関連
   const SCROLL_RATE = 20 // 自動スクロールは 1px/20ms とする
@@ -135,7 +146,9 @@
     isDragging = true
 
     event.preventDefault()
-    dispatch('disableScroll')
+    if (onDisableScroll !== undefined) {
+      onDisableScroll()
+    }
 
     // カーソル変更用エリアの作成
     const cursorArea = document.createElement('div')
@@ -321,8 +334,12 @@
     }
 
     // sorted イベントを送出する
-    dispatch('sorted')
-    dispatch('enableScroll')
+    if (onSorted !== undefined) {
+      onSorted()
+    }
+    if (onEnableScroll !== undefined) {
+      onEnableScroll()
+    }
 
     // カーソル変更用エリアを削除する
     const cursorArea = document.getElementById('cursor-area')
@@ -421,7 +438,7 @@
 <div class="scroll-box" bind:this="{scrollBox}">
   <div bind:this="{cellsRow}">
     {#each items as item (item.id)}
-      <slot item="{item}" cellId="cell{item.id}"></slot>
+      {@render cell(item)}
     {/each}
   </div>
 </div>

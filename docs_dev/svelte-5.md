@@ -9,6 +9,7 @@
 - [Runes • Docs • Svelte 5 preview](https://svelte-5-preview.vercel.app/docs/runes)
 - [Svelte v5 で導入された Runes によるリアクティビティシステム](https://azukiazusa.dev/blog/svelte-reactivity-system-with-runes/)
 - [Svelte v5 における イベントハンドラの変更点](https://azukiazusa.dev/blog/svelte-v5-event-handlers/)
+- [Svelte v5 で導入されるスニペット機能](https://azukiazusa.dev/blog/svelte-v5-snippet-feature/)
 
 # 対応
 
@@ -49,9 +50,9 @@
         - [x] Headline3
         - [x] Title
     - UI
-    - [ ] DndList.svelte
+    - [x] DndList.svelte
     - [ ] FileSelect.svelte
     - [ ] LoremIpsum.svelte
     - [ ] Overlay.svelte
-    - [ ] spinner.svelte
+    - [ ] Spinner.svelte
 - [ ] store.ts を rune を使って書き直す

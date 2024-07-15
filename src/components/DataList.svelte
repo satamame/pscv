@@ -9,6 +9,7 @@
   import { db } from '../lib/db'
   import type { ScriptIndex } from '../lib/db'
   import { PSc } from '../lib/psc'
+  import type { DndCellItem } from './UI/DndList.svelte'
 
   // 画像ファイルを参照
   import addIcon from '/ui_icon/add_black_24dp.svg'
@@ -124,17 +125,20 @@
   >
     {#if items}
       <DndList
-        bind:items="{items}"
-        let:item="{scIndexItem}"
-        let:cellId
-        on:sorted="{listSorted}"
+        items="{items}"
+        onSorted="{listSorted}"
       >
-        <DataCell
-          item="{scIndexItem}"
-          cellId="{cellId}"
-          on:showPSc="{e => showPSc(e.detail.scriptId)}"
-          on:showInfo="{e => showInfo(e.detail.id)}"
-        />
+        <!-- let:item="{scIndexItem}"
+        let:cellId
+      > -->
+        {#snippet cell(item: DndCellItem)}
+          <DataCell
+            item="{item}"
+            cellId="cell{item.id}"
+            on:showPSc="{e => showPSc(e.detail.scriptId)}"
+            on:showInfo="{e => showInfo(e.detail.id)}"
+          />
+        {/snippet}
       </DndList>
     {/if}
   </div>
