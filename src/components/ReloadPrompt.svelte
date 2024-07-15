@@ -1,5 +1,5 @@
+<svelte:options runes={true} />
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
   import { fade } from 'svelte/transition'
   import { useRegisterSW } from 'virtual:pwa-register/svelte'
 
@@ -9,15 +9,21 @@
   // 子コンポーネント
   import Spinner from './UI/Spinner.svelte'
 
-  const dispatch = createEventDispatcher()
+  // コンポーネントプロパティ
+  type Props = {
+    onClose: Function;  // 親が更新プロンプトを閉じるハンドラ
+  }
+  const { onClose }: Props = $props()
 
-  let gone = false
-  let isLoading = false
+  let gone = $state(false)
+  let isLoading = $state(false)
 
   const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW({
+    // SW が登録された時に呼ばれるメソッド
     onRegisteredSW(url, swr) {
       console.log(`SW registered: ${url}, ${swr}`)
     },
+    // SW の登録に失敗した時に呼ばれるメソッド
     onRegisterError(error) {
       console.log('SW registration error', error)
     }
@@ -27,16 +33,17 @@
     if (gone) { return }
     gone = true
     if ($needRefresh) { appUpdateFunc.set(updateServiceWorker) }
-    setTimeout(() => { dispatch('close') }, 100)
+    setTimeout(() => onClose(), 100)
   }
 
   function update() {
+    if (isLoading) { return }
     isLoading = true
     updateServiceWorker(true)
   }
 
   // ブラウザ実行時はトーストを表示しない
-  $: toast = isPwa && !gone && ($offlineReady || $needRefresh)
+  let toast = $derived(isPwa && !gone && ($offlineReady || $needRefresh))
 </script>
 
 {#if toast}
@@ -53,11 +60,11 @@
       {/if}
     </div>
     {#if $needRefresh}
-      <button on:click|once="{update}">
+      <button onclick="{update}">
         更新する
       </button>
     {/if}
-    <button on:click="{close}">
+    <button onclick="{close}">
       閉じる
     </button>
   </div>

@@ -191,6 +191,6 @@
 
 {#if reloadIsOpen}
   <ReloadPrompt
-    on:close="{() => reloadIsOpen = false}"
+    onClose="{() => reloadIsOpen = false}"
   />
 {/if}

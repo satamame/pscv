@@ -32,7 +32,7 @@
     - [x] DataList.svelte
     - [x] About.svelte
         - [ ] 更新ボタンの動作確認
-    - [ ] ReloadPrompt.svelte
+    - [x] ReloadPrompt.svelte
     - [ ] DataAdd.svelte
     - [ ] DataCell.svelte
     - [ ] DataInfo.svelte
