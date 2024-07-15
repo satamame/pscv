@@ -4070,7 +4070,7 @@ __metadata:
     "@types/body-scroll-lock": "npm:^3.1.2"
     body-scroll-lock: "npm:^4.0.0-beta.0"
     dexie: "npm:^4.0.7"
-    svelte: "npm:5.0.0-next.173"
+    svelte: "npm:5.0.0-next.184"
     svelte-check: "npm:^3.8.4"
     svelte-preprocess: "npm:^5.1.4"
     tslib: "npm:^2.6.2"
@@ -4815,9 +4815,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svelte@npm:5.0.0-next.173":
-  version: 5.0.0-next.173
-  resolution: "svelte@npm:5.0.0-next.173"
+"svelte@npm:5.0.0-next.184":
+  version: 5.0.0-next.184
+  resolution: "svelte@npm:5.0.0-next.184"
   dependencies:
     "@ampproject/remapping": "npm:^2.2.1"
     "@jridgewell/sourcemap-codec": "npm:^1.4.15"
@@ -4832,7 +4832,7 @@ __metadata:
     locate-character: "npm:^3.0.0"
     magic-string: "npm:^0.30.5"
     zimmerframe: "npm:^1.1.2"
-  checksum: 10c0/555a84e37bc1eea408a7b1e4d7895b32094d85969936a63071002659e7fc5156061f3230dd92882a80aabc134872495d717084bec84ec185c764eda1e73555bd
+  checksum: 10c0/7d053db06734195842a3da22d5a439879783886267dd4d0e6334ef513fdfc9163ef9dbe797f7b722bff6176a28345af65d05f524878a9c343bdec975875cb845
   languageName: node
   linkType: hard
 
