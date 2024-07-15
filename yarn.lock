@@ -2565,10 +2565,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dexie@npm:^4.0.7":
-  version: 4.0.7
-  resolution: "dexie@npm:4.0.7"
-  checksum: 10c0/37029bdfaaf5ca863680a4d2e2166b86ee78ca970cfd53ae26df0e34e028a98383934437806176ebe7862afa53aabe71c82b5c13b59387e9756736e085aa59fc
+"dexie@npm:^4.0.8":
+  version: 4.0.8
+  resolution: "dexie@npm:4.0.8"
+  checksum: 10c0/d35a817d986c334a2de5f1a0d5ef373b3d9464de7b520f9af50c00ea2f974386632a3f949add83ba1fce9e929908d96db19726377f641f4768c137a554969a2d
   languageName: node
   linkType: hard
 
@@ -4069,7 +4069,7 @@ __metadata:
     "@tsconfig/svelte": "npm:^5.0.4"
     "@types/body-scroll-lock": "npm:^3.1.2"
     body-scroll-lock: "npm:^4.0.0-beta.0"
-    dexie: "npm:^4.0.7"
+    dexie: "npm:^4.0.8"
     svelte: "npm:5.0.0-next.173"
     svelte-check: "npm:^3.8.4"
     svelte-preprocess: "npm:^5.1.4"
