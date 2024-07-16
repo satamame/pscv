@@ -30,12 +30,12 @@
     - [x] Header.svelte
     - [x] Toc.svelte
     - [x] MainMenu.svelte
-    - [x] DataList.svelte
     - [x] About.svelte
         - [x] 更新ボタンの動作確認
     - [x] ReloadPrompt.svelte
+    - [x] DataList.svelte
+    - [x] DataCell.svelte
     - [ ] DataAdd.svelte
-    - [ ] DataCell.svelte
     - [ ] DataInfo.svelte
     - PScLine
         - [x] Author

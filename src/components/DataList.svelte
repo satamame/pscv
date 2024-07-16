@@ -123,24 +123,19 @@
     class="container"
     style="top: {HEADER_HEIGHT + 1}px;"
   >
-    {#if items}
-      <DndList
-        items="{items}"
-        onSorted="{listSorted}"
-      >
-        <!-- let:item="{scIndexItem}"
-        let:cellId
-      > -->
-        {#snippet cell(item: DndCellItem)}
-          <DataCell
-            item="{item}"
-            cellId="cell{item.id}"
-            on:showPSc="{e => showPSc(e.detail.scriptId)}"
-            on:showInfo="{e => showInfo(e.detail.id)}"
-          />
-        {/snippet}
-      </DndList>
-    {/if}
+    <DndList
+      items="{items}"
+      onSorted="{listSorted}"
+    >
+      {#snippet cell(item: DndCellItem)}
+        <DataCell
+          item="{item}"
+          cellId="cell{item.id}"
+          onShowPSc="{(scriptId: number) => showPSc(scriptId)}"
+          onShowInfo="{(scIndexId: number) => showInfo(scIndexId)}"
+        />
+      {/snippet}
+    </DndList>
   </div>
 </div>
 
