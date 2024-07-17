@@ -22,7 +22,7 @@
     top: number;     // ビューアの上辺のオフセット
     inert: boolean;  // 操作無効 (親がモーダル)
   }
-  const { psc, top = HEADER_HEIGHT, inert  = false }: Props = $props()
+  const { psc, top = HEADER_HEIGHT, inert = false }: Props = $props()
 
   // コンポーネントのルート要素
   let container: HTMLDivElement

@@ -157,7 +157,7 @@
 </script>
 
 <div class="overlay" class:gone>
-  <Overlay on:click="{close}" />
+  <Overlay onClick="{close}" />
 </div>
 
 <div
