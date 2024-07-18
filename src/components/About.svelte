@@ -56,14 +56,14 @@
 
 <div class="panel" class:gone>
   <h1>台本ビューアについて</h1>
-  <button class="icon-button close-button" onclick="{close}">
-    <img alt="閉じる" src="{closeIcon}" />
+  <button class="icon-button close-button" onclick={close}>
+    <img alt="閉じる" src={closeIcon} />
   </button>
 
   <div class="container">
     <p>バージョン<br>{APP_VERSION}</p>
     {#if $appUpdateFunc}
-      <button onclick="{update}">
+      <button onclick={update}>
         今すぐ台本ビューアを更新する
       </button>
       <div style="text-align: left;">

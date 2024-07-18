@@ -435,8 +435,8 @@
   })
 </script>
 
-<div class="scroll-box" bind:this="{scrollBox}">
-  <div bind:this="{cellsRow}">
+<div class="scroll-box" bind:this={scrollBox}>
+  <div bind:this={cellsRow}>
     {#each items as item (item.id)}
       {@render cell(item)}
     {/each}

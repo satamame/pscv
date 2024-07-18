@@ -52,21 +52,21 @@
 </script>
 
 <div class="overlay" class:gone>
-  <Overlay onClick="{close}" />
+  <Overlay onClick={close} />
 </div>
 
 <div class="panel" class:gone>
   <h1>目次</h1>
-  <button class="icon-button close-button" onclick="{close}">
-    <img alt="閉じる" src="{closeIcon}" />
+  <button class="icon-button close-button" onclick={close}>
+    <img alt="閉じる" src={closeIcon} />
   </button>
 
   <ul>
     {#each psc.headlines as item, index}
       <li>
         <button
-          class:current="{ index == current }"
-          onclick="{() => goToHeadline(index)}"
+          class:current={ index == current }
+          onclick={() => goToHeadline(index)}
         >
           {item.text}
         </button>

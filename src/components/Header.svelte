@@ -18,15 +18,15 @@
   const { title, psc, inert, onOpenToc, onOpenMenu }: Props = $props()
 </script>
 
-<header style="background-color: {HEADER_COLOR}; height: {HEADER_HEIGHT}px;" inert="{inert}">
-  <button class="icon-button left-button" onclick="{() => onOpenToc()}" disabled="{!psc}">
-    <img alt="目次" src="{tocIcon}" />
+<header style="background-color: {HEADER_COLOR}; height: {HEADER_HEIGHT}px;" inert={inert}>
+  <button class="icon-button left-button" onclick={() => onOpenToc()} disabled={!psc}>
+    <img alt="目次" src={tocIcon} />
   </button>
 
   <h1>{title}</h1>
 
-  <button class="icon-button right-button" onclick="{() => onOpenMenu()}">
-    <img alt="メニュー" src="{menuIcon}" />
+  <button class="icon-button right-button" onclick={() => onOpenMenu()}>
+    <img alt="メニュー" src={menuIcon} />
   </button>
 </header>
 

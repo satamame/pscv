@@ -16,7 +16,7 @@
 
 <div>
   <label>
-    <input type="file" bind:files accept="{accept}" />{filename}
+    <input type="file" bind:files accept={accept} />{filename}
   </label>
 </div>
 

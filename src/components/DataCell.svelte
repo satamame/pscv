@@ -33,26 +33,26 @@
 </script>
 
 <div
-  id="{cellId}"
+  id={cellId}
   class="cell bottom-line"
-  onclick="{showPSc}"
-  onkeydown="{e => e.key == 'Enter' && showPSc()}"
+  onclick={showPSc}
+  onkeydown={e => e.key == 'Enter' && showPSc()}
   role="button"
   tabindex="0"
 >
   <div class="icon">
-    <img alt="本" src="{bookIcon}" />
+    <img alt="本" src={bookIcon} />
   </div>
   <div class="label">{scIndex.name}</div>
   <button
     class="icon-button info-button"
-    onclick="{showInfo}"
-    onkeydown="{e => e.key == 'Enter' && showInfo(e)}"
+    onclick={showInfo}
+    onkeydown={e => e.key == 'Enter' && showInfo(e)}
   >
-    <img alt="情報" src="{infoIcon}" />
+    <img alt="情報" src={infoIcon} />
   </button>
   <div id="dragHandle" class="icon drag-handle">
-    <img src="{dragHandle}" alt="drag" />
+    <img src={dragHandle} alt="drag" />
   </div>
 </div>
 

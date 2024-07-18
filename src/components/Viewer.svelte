@@ -91,31 +91,31 @@
   }
 </script>
 
-<div bind:this="{container}" inert="{inert}" class="container">
+<div bind:this={container} inert={inert} class="container">
   {#if psc}
     {#each psc.lines as line }
       {#if line.type == PSC_LINE_TYPE.TITLE}
-        <Title line="{line}" />
+        <Title line={line} />
       {:else if line.type == PSC_LINE_TYPE.AUTHOR}
-        <Author line="{line}" />
+        <Author line={line} />
       {:else if line.type == PSC_LINE_TYPE.CHARSHEADLINE}
-        <CharsHeadline line="{line}" />
+        <CharsHeadline line={line} />
       {:else if line.type == PSC_LINE_TYPE.CHARACTER}
-        <Character line="{line}" />
+        <Character line={line} />
       {:else if line.type == PSC_LINE_TYPE.H1}
-        <Headline1 line="{line}" />
+        <Headline1 line={line} />
       {:else if line.type == PSC_LINE_TYPE.H2}
-        <Headline2 line="{line}" />
+        <Headline2 line={line} />
       {:else if line.type == PSC_LINE_TYPE.H3}
-        <Headline3 line="{line}" />
+        <Headline3 line={line} />
       {:else if line.type == PSC_LINE_TYPE.DIRECTION}
-        <Direction line="{line}" />
+        <Direction line={line} />
       {:else if line.type == PSC_LINE_TYPE.DIALOGUE}
-        <Dialogue line="{line}" />
+        <Dialogue line={line} />
       {:else if line.type == PSC_LINE_TYPE.ENDMARK}
-        <Endmark line="{line}" />
+        <Endmark line={line} />
       {:else if line.type == PSC_LINE_TYPE.COMMENT}
-        <Comment line="{line}" />
+        <Comment line={line} />
       {/if}
     {/each}
   {/if}

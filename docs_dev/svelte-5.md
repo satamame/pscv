@@ -54,5 +54,5 @@
     - [ ] FileSelect.svelte
     - [x] LoremIpsum.svelte
     - [x] Overlay.svelte
-    - [ ] ~~Spinner.svelte~~
+    - [x] ~~Spinner.svelte~~
 - [ ] store.ts を rune を使って書き直す

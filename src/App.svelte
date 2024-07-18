@@ -141,56 +141,56 @@
 </script>
 
 <Viewer
-  bind:this="{viewer}"
-  psc="{psc}"
-  top="{viewerTop}"
-  inert="{isModal}"
+  bind:this={viewer}
+  psc={psc}
+  top={viewerTop}
+  inert={isModal}
 />
 
 <Header
-  title="{title}"
-  psc="{psc}"
-  inert="{isModal}"
-  onOpenToc="{openToc}"
-  onOpenMenu="{() => menuIsOpen = true}"
+  title={title}
+  psc={psc}
+  inert={isModal}
+  onOpenToc={openToc}
+  onOpenMenu={() => menuIsOpen = true}
 />
 
 {#if psc && tocIsOpen}
   <Toc
-    bind:this="{toc}"
-    psc="{psc}"
-    current="{currentTocIndex}"
-    onClose="{() => tocIsOpen = false}"
-    onGoTo="{(index: number) => goToHeadline(index)}"
+    bind:this={toc}
+    psc={psc}
+    current={currentTocIndex}
+    onClose={() => tocIsOpen = false}
+    onGoTo={(index: number) => goToHeadline(index)}
   />
 {/if}
 
 {#if menuIsOpen}
   <MainMenu
-    bind:this="{menu}"
-    onClose="{() => menuIsOpen = false}"
-    onOpenData="{() => dataIsOpen = true}"
-    onOpenAbout="{() => aboutIsOpen = true}"
+    bind:this={menu}
+    onClose={() => menuIsOpen = false}
+    onOpenData={() => dataIsOpen = true}
+    onOpenAbout={() => aboutIsOpen = true}
   />
 {/if}
 
 {#if dataIsOpen}
   <DataList
-    bind:this="{data}"
-    onClose="{() => dataIsOpen = false}"
-    onShowPSc="{(selected: PSc) => psc = selected}"
+    bind:this={data}
+    onClose={() => dataIsOpen = false}
+    onShowPSc={(selected: PSc) => psc = selected}
   />
 {/if}
 
 {#if aboutIsOpen}
   <About
-    bind:this="{about}"
-    onClose="{() => aboutIsOpen = false}"
+    bind:this={about}
+    onClose={() => aboutIsOpen = false}
   />
 {/if}
 
 {#if reloadIsOpen}
   <ReloadPrompt
-    onClose="{() => reloadIsOpen = false}"
+    onClose={() => reloadIsOpen = false}
   />
 {/if}

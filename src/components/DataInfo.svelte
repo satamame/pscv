@@ -78,11 +78,11 @@
 </script>
 
 <div class="overlay" class:gone>
-  <Overlay onClick="{close}" />
+  <Overlay onClick={close} />
 </div>
 
 <div
-  bind:this="{panel}"
+  bind:this={panel}
   class="panel"
   class:gone
   style:top="{HEADER_HEIGHT}px"
@@ -92,10 +92,10 @@
     <h2>台本の情報</h2>
     <button
       class="icon-button close-button"
-      disabled="{isLoading}"
-      on:click="{close}"
+      disabled={isLoading}
+      on:click={close}
     >
-      <img alt="閉じる" src="{closeIcon}" />
+      <img alt="閉じる" src={closeIcon} />
     </button>
 
     {#if scIndex && scData}
@@ -103,7 +103,7 @@
         <tbody>
           <tr>
             <td>表示名</td><td>{scIndex.name}</td>
-            <td><img alt="編集" src="{editIcon}" /></td>
+            <td><img alt="編集" src={editIcon} /></td>
           </tr>
           <tr>
             <td>台本</td>
@@ -111,7 +111,7 @@
           </tr>
           <tr>
             <td>ソース</td><td>{scData.srcType}</td>
-            <td><img alt="編集" src="{editIcon}" /></td>
+            <td><img alt="編集" src={editIcon} /></td>
           </tr>
           <tr>
             <td>{#if scData.srcType != 'file'}URL{/if}</td>
@@ -126,7 +126,7 @@
         <button>再読込み (上書き)</button>
       </p>
       <p>
-        <button class="delete-button" on:click="{deleteScript}">削除</button>
+        <button class="delete-button" on:click={deleteScript}>削除</button>
       </p>
     </div>
   </div>

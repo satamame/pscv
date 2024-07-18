@@ -54,13 +54,13 @@
 </script>
 
 <div class="overlay" class:gone>
-  <Overlay onClick="{close}" />
+  <Overlay onClick={close} />
 </div>
 
 <div class="panel" class:gone>
   <h1>メニュー</h1>
-  <button class="icon-button close-button" onclick="{close}">
-    <img alt="閉じる" src="{closeIcon}" />
+  <button class="icon-button close-button" onclick={close}>
+    <img alt="閉じる" src={closeIcon} />
   </button>
 
   <ul>
@@ -70,13 +70,13 @@
       </button>
     </li>
     <li>
-      <button onclick="{openData}">
-        <img alt="データ" src="{booksIcon}" /><span>台本データ</span>
+      <button onclick={openData}>
+        <img alt="データ" src={booksIcon} /><span>台本データ</span>
       </button>
     </li>
     <li>
-      <button onclick="{openAbout}">
-        <img alt="情報" src="{infoIcon}" /><span>バージョン情報</span>
+      <button onclick={openAbout}>
+        <img alt="情報" src={infoIcon} /><span>バージョン情報</span>
       </button>
     </li>
   </ul>

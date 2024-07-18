@@ -47,7 +47,7 @@
 </script>
 
 {#if toast}
-  <div class="pwa-toast" role="alert" transition:fade="{{ duration: 100 }}">
+  <div class="pwa-toast" role="alert" transition:fade={{ duration: 100 }}>
     <div class="message">
       {#if $needRefresh}
         <span>
@@ -60,11 +60,11 @@
       {/if}
     </div>
     {#if $needRefresh}
-      <button onclick="{update}">
+      <button onclick={update}>
         更新する
       </button>
     {/if}
-    <button onclick="{close}">
+    <button onclick={close}>
       閉じる
     </button>
   </div>

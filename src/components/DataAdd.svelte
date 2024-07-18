@@ -157,11 +157,11 @@
 </script>
 
 <div class="overlay" class:gone>
-  <Overlay onClick="{close}" />
+  <Overlay onClick={close} />
 </div>
 
 <div
-  bind:this="{panel}"
+  bind:this={panel}
   class="panel"
   class:gone
   style:top="{HEADER_HEIGHT}px"
@@ -171,7 +171,7 @@
     <h2>台本の追加</h2>
     <div>
       <label>どこから読込みますか？<br>
-        <select bind:value="{srcType}">
+        <select bind:value={srcType}>
           <option value="sample">サンプルから</option>
           <option value="net">ネットから</option>
           <option value="file">ファイルから</option>
@@ -182,15 +182,15 @@
     <div>
       {#if srcType == "sample"}
         <label>サンプルを選んでください。<br>
-          <select bind:value="{sampleSelected}">
+          <select bind:value={sampleSelected}>
             {#each SAMPLES as sample }
-              <option value="{sample}">{sample.title}</option>
+              <option value={sample}>{sample.title}</option>
             {/each}
           </select>
         </label>
       {:else if srcType == "net"}
         <label>URL を入力してください。<br>
-          <input type="text" bind:value="{url}" />
+          <input type="text" bind:value={url} />
         </label>
       {:else}
         <FileSelect bind:files accept=".json" />
@@ -200,10 +200,10 @@
     <div class="buttonArea">
       <button
         class="cancel-button"
-        disabled="{isLoading}"
-        on:click="{close}"
+        disabled={isLoading}
+        on:click={close}
       >キャンセル</button>
-      <button disabled="{disabled}" on:click="{add}">読込む</button>
+      <button disabled={disabled} on:click={add}>読込む</button>
     </div>
   </div>
 </div>

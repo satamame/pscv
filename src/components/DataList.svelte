@@ -108,14 +108,14 @@
   }
 </script>
 
-<div class="panel" class:gone inert="{isModal}">
+<div class="panel" class:gone inert={isModal}>
   <div class="header">
-    <button class="icon-button add-button" onclick="{() => addIsOpen = true}">
-      <img alt="追加" src="{addIcon}" />
+    <button class="icon-button add-button" onclick={() => addIsOpen = true}>
+      <img alt="追加" src={addIcon} />
     </button>
     <h1>台本データ</h1>
-    <button class="icon-button close-button" onclick="{close}">
-      <img alt="閉じる" src="{closeIcon}" />
+    <button class="icon-button close-button" onclick={close}>
+      <img alt="閉じる" src={closeIcon} />
     </button>
   </div>
 
@@ -124,15 +124,15 @@
     style="top: {HEADER_HEIGHT + 1}px;"
   >
     <DndList
-      items="{items}"
-      onSorted="{listSorted}"
+      items={items}
+      onSorted={listSorted}
     >
       {#snippet cell(item: DndCellItem)}
         <DataCell
-          item="{item}"
+          item={item}
           cellId="cell{item.id}"
-          onShowPSc="{(scriptId: number) => showPSc(scriptId)}"
-          onShowInfo="{(scIndexId: number) => showInfo(scIndexId)}"
+          onShowPSc={(scriptId: number) => showPSc(scriptId)}
+          onShowInfo={(scIndexId: number) => showInfo(scIndexId)}
         />
       {/snippet}
     </DndList>
@@ -141,17 +141,17 @@
 
 {#if addIsOpen}
   <DataAdd
-    bind:this="{dataAdd}"
-    on:close="{() => { addIsOpen = false }}"
-    on:showPSc="{e => showPSc(e.detail.psc)}"
+    bind:this={dataAdd}
+    on:close={() => { addIsOpen = false }}
+    on:showPSc={e => showPSc(e.detail.psc)}
   />
 {/if}
 
 {#if infoIsOpen}
   <DataInfo
-    bind:this="{dataInfo}"
-    bind:scIndexId="{infoScIndexId}"
-    on:close="{() => { infoIsOpen = false }}"
+    bind:this={dataInfo}
+    bind:scIndexId={infoScIndexId}
+    on:close={() => { infoIsOpen = false }}
   />
 {/if}
 
