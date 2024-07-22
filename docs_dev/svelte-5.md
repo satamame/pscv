@@ -35,7 +35,7 @@
     - [x] ReloadPrompt.svelte
     - [x] DataList.svelte
     - [x] DataCell.svelte
-    - [ ] DataAdd.svelte
+    - [x] DataAdd.svelte
     - [ ] DataInfo.svelte
     - PScLine
         - [x] Author
@@ -51,7 +51,7 @@
         - [x] Title
     - UI
     - [x] DndList.svelte
-    - [ ] FileSelect.svelte
+    - [x] FileSelect.svelte
     - [x] LoremIpsum.svelte
     - [x] Overlay.svelte
     - [x] ~~Spinner.svelte~~

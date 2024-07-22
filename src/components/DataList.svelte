@@ -142,8 +142,7 @@
 {#if addIsOpen}
   <DataAdd
     bind:this={dataAdd}
-    on:close={() => { addIsOpen = false }}
-    on:showPSc={e => showPSc(e.detail.psc)}
+    onClose={() => { addIsOpen = false }}
   />
 {/if}
 

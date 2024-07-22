@@ -1,17 +1,15 @@
+<svelte:options runes={true} />
 <script lang="ts">
   // コンポーネントプロパティ
-  export let files: FileList | null
-  export let accept=''
-
-  let filename = 'ファイルを選択'
-
-  $: if (files) {
-    if (files.length) {
-      filename = files[0].name
-    } else {
-      filename = 'ファイルを選択'
-    }
+  type Props = {
+    files: FileList | null;  // input タグで選択されたファイルの配列
+    accept: string;          // input タグの accept 属性 ('.json' など)
   }
+  let { files = $bindable(), accept }: Props = $props()
+
+  let filename = $derived(
+    files && files.length ? files[0].name : 'ファイルを選択')
+
 </script>
 
 <div>
