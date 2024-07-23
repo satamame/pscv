@@ -19,10 +19,10 @@
 
   // 子コンポーネントのインスタンス
   let viewer: Viewer
-  let toc: Toc | undefined = $state(undefined)
-  let menu: MainMenu | undefined = $state(undefined)
-  let data: DataList | undefined = $state(undefined)
-  let about: About | undefined = $state(undefined)
+  let toc: Toc | undefined = $state()
+  let menu: MainMenu | undefined = $state()
+  let data: DataList | undefined = $state()
+  let about: About | undefined = $state()
 
   // パネル開閉状態
   let tocIsOpen = $state(false)
@@ -33,7 +33,7 @@
 
   const rootElement = document.documentElement
   let viewerTop = $state(HEADER_HEIGHT)
-  let psc: PSc | undefined = $state(undefined)
+  let psc: PSc | undefined = $state()
   let currentTocIndex = $state(0)
 
   // スクロールロックを解除した直後に実行するコールバック

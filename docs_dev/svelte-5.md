@@ -36,7 +36,7 @@
     - [x] DataList.svelte
     - [x] DataCell.svelte
     - [x] DataAdd.svelte
-    - [ ] DataInfo.svelte
+    - [x] DataInfo.svelte
     - PScLine
         - [x] Author
         - [x] Character

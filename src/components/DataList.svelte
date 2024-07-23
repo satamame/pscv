@@ -29,8 +29,8 @@
   const { onClose, onShowPSc }: Props = $props()
 
   // 子コンポーネントのインスタンス
-  let dataAdd: DataAdd | undefined = $state(undefined)
-  let dataInfo: DataInfo | undefined = $state(undefined)
+  let dataAdd: DataAdd | undefined = $state()
+  let dataInfo: DataInfo | undefined = $state()
 
   // パネル開閉状態
   let addIsOpen = $state(false)
@@ -149,8 +149,8 @@
 {#if infoIsOpen}
   <DataInfo
     bind:this={dataInfo}
-    bind:scIndexId={infoScIndexId}
-    on:close={() => { infoIsOpen = false }}
+    scIndexId={infoScIndexId}
+    onClose={() => infoIsOpen = false}
   />
 {/if}
 

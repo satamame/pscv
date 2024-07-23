@@ -1,11 +1,10 @@
+<svelte:options runes={true} />
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
+  import { onMount } from 'svelte'
 
   import { db, getScTitle } from '../lib/db'
   import type { ScriptIndex, ScriptData } from '../lib/db'
-  // TODO: 不要なインポートの削除
-  import { HEADER_HEIGHT, SAMPLES } from '../lib/const'
-  import { PSc } from '../lib/psc'
+  import { HEADER_HEIGHT } from '../lib/const'
 
   // 子コンポーネント
   import Overlay from './UI/Overlay.svelte'
@@ -15,19 +14,21 @@
   import closeIcon from '/ui_icon/close_black_24dp.svg'
   import editIcon from '/ui_icon/edit_black_24dp.svg'
 
-  const dispatch = createEventDispatcher()
-
   // コンポーネントプロパティ
-  export let scIndexId: number
+  type Props = {
+    scIndexId: number;    // 台本インデックスの ID
+    onClose: Function;    // 親が台本情報パネルを閉じるハンドラ
+  }
+  const { scIndexId, onClose }: Props = $props()
 
   // 要素のインスタンス
   let panel: HTMLDivElement
 
-  let gone = true
-  let maxHeight = window.innerHeight - HEADER_HEIGHT - 10
-  let isLoading = false
-  let scIndex: ScriptIndex | undefined
-  let scData: ScriptData | undefined
+  let gone = $state(true)
+  let maxHeight = $state(window.innerHeight - HEADER_HEIGHT - 10)
+  let isLoading = $state(false)
+  let scIndex: ScriptIndex | undefined = $state()
+  let scData: ScriptData | undefined = $state()
 
   /** ウィンドウサイズに合わせてパネルの高さを調整する */
   function adjustHeight() {
@@ -46,7 +47,7 @@
     }
 
     /// Back ボタンに反応するようにする
-    setTimeout(() => { gone = false }, 0)
+    setTimeout(() => gone = false, 0)
   })
 
   export function close() {
@@ -56,7 +57,7 @@
 
     // close イベントを発行して親に処理してもらう
     setTimeout(() => {
-      dispatch('close')
+      onClose()
     }, 200)
   }
 
@@ -93,7 +94,7 @@
     <button
       class="icon-button close-button"
       disabled={isLoading}
-      on:click={close}
+      onclick={close}
     >
       <img alt="閉じる" src={closeIcon} />
     </button>
@@ -126,7 +127,7 @@
         <button>再読込み (上書き)</button>
       </p>
       <p>
-        <button class="delete-button" on:click={deleteScript}>削除</button>
+        <button class="delete-button" onclick={deleteScript}>削除</button>
       </p>
     </div>
   </div>

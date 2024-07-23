@@ -50,7 +50,7 @@
 
   onMount(async () => {
     window.addEventListener('resize', adjustHeight)
-    setTimeout(() => { gone = false }, 0)
+    setTimeout(() => gone = false, 0)
   })
 
   export function close() {
