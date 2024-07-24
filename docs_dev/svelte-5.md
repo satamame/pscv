@@ -55,4 +55,4 @@
     - [x] LoremIpsum.svelte
     - [x] Overlay.svelte
     - [x] ~~Spinner.svelte~~
-- [ ] store.ts を rune を使って書き直す
+- [x] store.ts を rune を使って書き直す

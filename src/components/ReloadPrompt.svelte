@@ -4,7 +4,7 @@
   import { useRegisterSW } from 'virtual:pwa-register/svelte'
 
   import { isPwa } from '../lib/env'
-  import { appUpdateFunc } from '../lib/store'
+  import { g } from '../lib/g.svelte'
 
   // 子コンポーネント
   import Spinner from './UI/Spinner.svelte'
@@ -32,7 +32,12 @@
   function close() {
     if (gone) { return }
     gone = true
-    if ($needRefresh) { appUpdateFunc.set(updateServiceWorker) }
+
+    if ($needRefresh) {
+      // SW をアップデートせずに閉じるなら、「台本ビューアについて」で
+      // アップデートできるように、更新用の関数を保持しておく
+      g.appUpdateFunc = updateServiceWorker
+    }
     setTimeout(() => onClose(), 100)
   }
 

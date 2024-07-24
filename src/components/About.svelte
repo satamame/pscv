@@ -5,7 +5,7 @@
   import { isPwa, isAndroid } from '../lib/env'
   import { APP_VERSION, COPY_RIGHT } from '../lib/const'
   import { keepBackable, back } from '../lib/back'
-  import { appUpdateFunc } from '../lib/store'
+  import { g } from '../lib/g.svelte'
 
   // 画像ファイルを参照
   import closeIcon from '/ui_icon/close_black_24dp.svg'
@@ -47,9 +47,9 @@
 
   function update() {
     if (isLoading) { return }
-    if ($appUpdateFunc != null) { // 型ガード
+    if (g.appUpdateFunc != undefined) { // 型ガード
       isLoading = true
-      $appUpdateFunc(true)
+      g.appUpdateFunc(true)
     }
   }
 </script>
@@ -62,7 +62,7 @@
 
   <div class="container">
     <p>バージョン<br>{APP_VERSION}</p>
-    {#if $appUpdateFunc}
+    {#if g.appUpdateFunc}
       <button onclick={update}>
         今すぐ台本ビューアを更新する
       </button>
