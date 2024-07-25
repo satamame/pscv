@@ -17,9 +17,6 @@
   }
   const { onClose }: Props = $props()
 
-  // 要素のインスタンス
-  let panel: HTMLDivElement
-
   let gone = $state(true)
   let srcType = $state('sample')
   let sampleSelected = $state(SAMPLES[0])
@@ -168,7 +165,6 @@
 </div>
 
 <div
-  bind:this={panel}
   class="panel"
   class:gone
   style:top="{HEADER_HEIGHT}px"

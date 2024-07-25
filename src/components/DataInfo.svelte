@@ -21,9 +21,6 @@
   }
   const { scIndexId, onClose }: Props = $props()
 
-  // 要素のインスタンス
-  let panel: HTMLDivElement
-
   let gone = $state(true)
   let maxHeight = $state(window.innerHeight - HEADER_HEIGHT - 10)
   let isLoading = $state(false)
@@ -83,7 +80,6 @@
 </div>
 
 <div
-  bind:this={panel}
   class="panel"
   class:gone
   style:top="{HEADER_HEIGHT}px"
