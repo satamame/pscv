@@ -4072,7 +4072,7 @@ __metadata:
     dexie: "npm:^4.0.8"
     svelte: "npm:5.0.0-next.208"
     svelte-check: "npm:^3.8.4"
-    svelte-preprocess: "npm:^5.1.4"
+    svelte-preprocess: "npm:^6.0.2"
     tslib: "npm:^2.6.3"
     typescript: "npm:^5.5.4"
     vite: "npm:^5.2.11"
@@ -4769,27 +4769,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svelte-preprocess@npm:^5.1.4":
-  version: 5.1.4
-  resolution: "svelte-preprocess@npm:5.1.4"
-  dependencies:
-    "@types/pug": "npm:^2.0.6"
-    detect-indent: "npm:^6.1.0"
-    magic-string: "npm:^0.30.5"
-    sorcery: "npm:^0.11.0"
-    strip-indent: "npm:^3.0.0"
+"svelte-preprocess@npm:^6.0.2":
+  version: 6.0.2
+  resolution: "svelte-preprocess@npm:6.0.2"
   peerDependencies:
     "@babel/core": ^7.10.2
     coffeescript: ^2.5.1
     less: ^3.11.3 || ^4.0.0
     postcss: ^7 || ^8
-    postcss-load-config: ^2.1.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
+    postcss-load-config: ">=3"
     pug: ^3.0.0
     sass: ^1.26.8
-    stylus: ^0.55.0
+    stylus: ">=0.55"
     sugarss: ^2.0.0 || ^3.0.0 || ^4.0.0
-    svelte: ^3.23.0 || ^4.0.0-next.0 || ^4.0.0 || ^5.0.0-next.0
-    typescript: ">=3.9.5 || ^4.0.0 || ^5.0.0"
+    svelte: ^4.0.0 || ^5.0.0-next.100 || ^5.0.0
+    typescript: ^5.0.0
   peerDependenciesMeta:
     "@babel/core":
       optional: true
@@ -4811,7 +4805,7 @@ __metadata:
       optional: true
     typescript:
       optional: true
-  checksum: 10c0/fe968ee1d599a2c59c5a695e23cd3c2d15c5c316ce76ae644908521476f2e81b69dcf0cd3492deeb0a06140af497f994e4baf524d3d2c93986fad1c9267524ae
+  checksum: 10c0/31569a0f773f61ef9d51f221aee83ea30b7e73e71d61a5e0364fb15041cbd2b9c61ef94b9bf4ae94aa8dcdc2bd35a5d4a56393acdd35d278f7f1216a5d04b0c9
   languageName: node
   linkType: hard
 
