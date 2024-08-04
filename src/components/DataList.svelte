@@ -45,8 +45,7 @@
   let scIndexes = liveQuery(
     () => db.scriptIndex.orderBy('sortKey').toArray()
   )
-  let items: ScriptIndex[] = $state([])
-  $effect(() => {items = $scIndexes})
+  let items = $derived($scIndexes ?? [])
 
   // モーダル状態
   let isModal = $derived(addIsOpen || infoIsOpen)

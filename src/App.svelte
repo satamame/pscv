@@ -52,10 +52,7 @@
     })
   }
 
-  // Notes: $derived で以下のように書くと TypeScript がエラーを出す
-  // let title = $derived(psc?.title ?? '台本ビューア')
-  let title = $derived.by(() => psc?.title ?? '台本ビューア')
-
+  let title = $derived(psc?.title ?? '台本ビューア')
   let isModal = $derived(tocIsOpen || menuIsOpen || dataIsOpen || aboutIsOpen)
 
   // モーダル状態が変わった時の処理
