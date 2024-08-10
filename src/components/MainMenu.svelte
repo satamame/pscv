@@ -41,14 +41,14 @@
   function openData() {
     if (gone) { return }
     gone = true
-    setTimeout(() => onClose(), 200)
+    setTimeout(onClose, 200)
     onOpenData()
   }
 
   function openAbout() {
     if (gone) { return }
     gone = true
-    setTimeout(() => onClose(), 200)
+    setTimeout(onClose, 200)
     onOpenAbout()
   }
 </script>

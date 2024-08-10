@@ -158,7 +158,7 @@
     psc={psc}
     current={currentTocIndex}
     onClose={() => tocIsOpen = false}
-    onGoTo={(index: number) => goToHeadline(index)}
+    onGoTo={goToHeadline}
   />
 {/if}
 

@@ -55,9 +55,7 @@
     if (gone || isLoading) { return }
     gone = true
     window.removeEventListener('resize', adjustHeight)
-    setTimeout(() => {
-      onClose()
-    }, 200)
+    setTimeout(onClose, 200)
   }
 
   /** URL から JSON 文字列を取得する */

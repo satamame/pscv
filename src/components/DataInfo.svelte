@@ -52,10 +52,8 @@
     gone = true
     window.removeEventListener('resize', adjustHeight)
 
-    // close イベントを発行して親に処理してもらう
-    setTimeout(() => {
-      onClose()
-    }, 200)
+    // 閉じた後に親で onClose ハンドラを実行する
+    setTimeout(onClose, 200)
   }
 
   /** 表示中の台本を削除してパネルを閉じる */

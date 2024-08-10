@@ -130,8 +130,8 @@
         <DataCell
           item={item}
           cellId="cell{item.id}"
-          onShowPSc={(scriptId: number) => showPSc(scriptId)}
-          onShowInfo={(scIndexId: number) => showInfo(scIndexId)}
+          onShowPSc={showPSc}
+          onShowInfo={showInfo}
         />
       {/snippet}
     </DndList>
@@ -141,7 +141,7 @@
 {#if addIsOpen}
   <DataAdd
     bind:this={dataAdd}
-    onClose={() => { addIsOpen = false }}
+    onClose={() => addIsOpen = false}
   />
 {/if}
 

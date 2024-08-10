@@ -18,7 +18,7 @@
     cell: Snippet<[DndCellItem]>;
   }
   const {
-    items, onDisableScroll, onEnableScroll, onSorted , cell
+    items, onDisableScroll, onEnableScroll, onSorted, cell
   }: Props = $props()
 
   // DOM 参照
@@ -39,7 +39,7 @@
   $effect(() => {
     if (items.length != itemCount) {
       itemCount = items.length
-      setTimeout(() => updateCells(), 0)
+      setTimeout(updateCells, 0)
     }
   })
 
@@ -56,7 +56,7 @@
       return 0
     }
     const scrollBoxTop = scrollBox.getBoundingClientRect().top
-    return scrollBoxTop + window.pageYOffset
+    return scrollBoxTop + window.scrollY
   }
 
   /**

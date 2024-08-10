@@ -38,7 +38,7 @@
       // アップデートできるように、更新用の関数を保持しておく
       g.appUpdateFunc = updateServiceWorker
     }
-    setTimeout(() => onClose(), 100)
+    setTimeout(onClose, 100)
   }
 
   function update() {
