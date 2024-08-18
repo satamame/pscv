@@ -17,9 +17,10 @@
     onSorted?: Function;
     cell: Snippet<[DndCellItem]>;
   }
+  let { items = $bindable(), ...rest }: Props = $props()
   const {
-    items, onDisableScroll, onEnableScroll, onSorted, cell
-  }: Props = $props()
+    onDisableScroll, onEnableScroll, onSorted, cell
+  } = rest
 
   // DOM 参照
   let scrollBox: HTMLDivElement
@@ -326,17 +327,20 @@
       const targetItem = items.filter(item => item.id == targetId)[0]
       const orgPos = items.indexOf(targetItem)
       const destPos = Array(...cellsRow.children).indexOf(shadowEl)
+
+      const ids = items.map(item => item.id)
       if (orgPos != destPos) {
-        // 移動前の位置からセルを削除し、移動後の位置に挿入する
-        items.splice(orgPos, 1)
-        items.splice(destPos, 0, targetItem)
+        // 並べ替えた ID の配列を作る
+        ids.splice(orgPos, 1)
+        ids.splice(destPos, 0, targetItem.id)
+
+        // 親の onSorted ハンドラで items をソートする
+        if (onSorted !== undefined) {
+          onSorted(ids)
+        }
       }
     }
 
-    // sorted イベントを送出する
-    if (onSorted !== undefined) {
-      onSorted()
-    }
     if (onEnableScroll !== undefined) {
       onEnableScroll()
     }
@@ -456,16 +460,15 @@
   - すべての要素が box-sizing: border-box; となっていること。
 
   このコンポーネントのルール
-  - cellsRow に slot 以外の子要素を追加しないこと。
-  - ドラッグ終了時に items が並べ替えられ、bind に反映される。
+  - cellsRow に cell 以外の子要素を追加しないこと。
   - scrollBox の表示領域に収まらない cell はサポート外。
-  - 親が disableScroll イベントを受け取ったら、scrollBox 以外のスクロールをロックすること。
-  - 親が enableScroll イベントを受け取ったら、scrollBox 以外のスクロールロックを解除すること。
-  - 親が sorted イベントを受け取ったら、items の並び順に合わせて必要な更新処理をすること。
+  - 親が onDisableScroll イベントを受け取ったら、scrollBox 以外のスクロールをロックすること。
+  - 親が onEnableScroll イベントを受け取ったら、scrollBox 以外のスクロールロックを解除すること。
+  - 親が onSorted イベントを受け取ったら、ids に合わせて items をソートすること。
 
-  slot の前提条件
+  cell の前提条件
   - item の型は DndCellItem を継承していること。
-  - cellId を受け取って要素の id の値とすること。
+  - 'cell' + item.id を要素の id の値とすること。
   - last-child 以外は border-bottom が 1px であること。
   - ただし bottom-line クラスなら last-child であっても 1px であること。
   - id="dragHandle" であるドラッグハンドル用の要素があること。

@@ -41,11 +41,22 @@
 
   let infoScIndexId: number = $state(0)
 
-  // リストに DB の内容が自動的に反映されるようにする
+  // リストに DB の内容が反映されるようにする
   let scIndexes = liveQuery(
     () => db.scriptIndex.orderBy('sortKey').toArray()
   )
-  let items = $derived($scIndexes ?? [])
+  let items: ScriptIndex[] = $state([])
+  $effect(() => {
+    // items が空なら $scIndexes (空でない) を反映する
+    if (!items.length && $scIndexes?.length) {
+      items = $scIndexes
+    }
+    // $scIndexes の要素数が変わったなら items をリセットする
+    else if ($scIndexes && items.length != $scIndexes.length) {
+      items = []
+      setTimeout(() => items = $scIndexes, 0)
+    }
+  })
 
   // モーダル状態
   let isModal = $derived(addIsOpen || infoIsOpen)
@@ -96,14 +107,17 @@
     closeSelf()
   }
 
+  /** 台本の情報を表示する */
   function showInfo(scIndexId: number) {
     infoScIndexId = scIndexId
     infoIsOpen = true
   }
 
-  function listSorted() {
-    const ids = items.map(item => item.id)
-    db.sortByIds(ids)
+  /** DndList で並べ替えが起きた時に呼ばれるハンドラ */
+  function listSorted(ids: number[]) {
+    db.sortByIds(ids).then(() => {
+      items = $scIndexes
+    })
   }
 </script>
 
@@ -122,19 +136,21 @@
     class="container"
     style="top: {HEADER_HEIGHT + 1}px;"
   >
-    <DndList
-      items={items}
-      onSorted={listSorted}
-    >
-      {#snippet cell(item: DndCellItem)}
-        <DataCell
-          item={item}
-          cellId="cell{item.id}"
-          onShowPSc={showPSc}
-          onShowInfo={showInfo}
-        />
-      {/snippet}
-    </DndList>
+    {#if items.length}
+      <DndList
+        items={items}
+        onSorted={listSorted}
+      >
+        {#snippet cell(item: DndCellItem)}
+          <DataCell
+            item={item}
+            cellId="cell{item.id}"
+            onShowPSc={showPSc}
+            onShowInfo={showInfo}
+          />
+        {/snippet}
+      </DndList>
+    {/if}
   </div>
 </div>
 
