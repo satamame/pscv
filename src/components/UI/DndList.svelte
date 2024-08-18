@@ -333,7 +333,7 @@
       }
     }
 
-    // sorted イベントを送出する
+    // 親で onSorted ハンドラを実行する
     if (onSorted !== undefined) {
       onSorted()
     }
