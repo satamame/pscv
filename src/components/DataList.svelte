@@ -51,7 +51,11 @@
     if (!items.length && $scIndexes?.length) {
       items = $scIndexes
     }
-    // $scIndexes の要素数が変わったなら items をリセットする
+    // $scIndexes の要素数が変わったなら items をリセットする。
+    // この処理が必要な理由:
+    // items は DndList にリアクティブに反映されるはずだが、
+    // Svelte5 だとドラッグで並べ替えた後の削除時だけ変になる。
+    // ※Svelte5 のバグかもしれないのでウォッチすること。
     else if ($scIndexes && items.length != $scIndexes.length) {
       items = []
       setTimeout(() => items = $scIndexes, 0)
