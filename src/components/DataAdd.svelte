@@ -1,5 +1,6 @@
+<svelte:options runes={true} />
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
+  import { onMount } from 'svelte'
 
   import { db } from '../lib/db'
   import { HEADER_HEIGHT, SAMPLES } from '../lib/const'
@@ -10,31 +11,34 @@
   import Spinner from './UI/Spinner.svelte'
   import FileSelect from './UI/FileSelect.svelte'
 
-  // 要素のインスタンス
-  let panel: HTMLDivElement
+  // コンポーネントプロパティ
+  type Props = {
+    onClose: Function;    // 親が台本追加パネルを閉じるハンドラ
+  }
+  const { onClose }: Props = $props()
 
-  const dispatch = createEventDispatcher()
-
-  let gone = true
-  let srcType = 'sample'
-  let sampleSelected = SAMPLES[0]
-  let url = ''
-  let files: FileList | null = null
-  let disabled = false
-  let maxHeight = window.innerHeight - HEADER_HEIGHT - 10
-  let isLoading = false
+  let gone = $state(true)
+  let srcType = $state('sample')
+  let sampleSelected = $state(SAMPLES[0])
+  let url = $state('')
+  let files: FileList | null = $state(null)
+  let disabled = $state(false)
+  let maxHeight = $state(window.innerHeight - HEADER_HEIGHT - 10)
+  let isLoading = $state(false)
 
   // srcType を切り替えた時のリアクティブ処理
-  $: if (srcType == 'sample') {
-    disabled = !sampleSelected || isLoading
-    files = null
-  } else if (srcType == 'net') {
-    const urlRe = /^https?:\/\/(.+\.)+.+\/.+/
-    disabled = !urlRe.test(url) || isLoading
-    files = null
-  } else {
-    disabled = !(files?.length) || isLoading
-  }
+  $effect(() => {
+    if (srcType == 'sample') {
+      disabled = !sampleSelected || isLoading
+      files = null
+    } else if (srcType == 'net') {
+      const urlRe = /^https?:\/\/(.+\.)+.+\/.+/
+      disabled = !urlRe.test(url) || isLoading
+      files = null
+    } else {
+      disabled = !(files?.length) || isLoading
+    }
+  })
 
   /** ウィンドウサイズに合わせてパネルの高さを調整する */
   function adjustHeight() {
@@ -43,7 +47,7 @@
 
   onMount(async () => {
     window.addEventListener('resize', adjustHeight)
-    setTimeout(() => { gone = false }, 0)
+    setTimeout(() => gone = false, 0)
   })
 
   export function close() {
@@ -51,9 +55,7 @@
     if (gone || isLoading) { return }
     gone = true
     window.removeEventListener('resize', adjustHeight)
-    setTimeout(() => {
-      dispatch('close')
-    }, 200)
+    setTimeout(onClose, 200)
   }
 
   /** URL から JSON 文字列を取得する */
@@ -115,7 +117,7 @@
     });
 
     // 読込みを開始する
-    if (files && files.length > 0) {
+    if (files && files.length) {
       fr.readAsText(files[0])
     } else {
       isLoading = false
@@ -157,11 +159,10 @@
 </script>
 
 <div class="overlay" class:gone>
-  <Overlay on:click="{close}" />
+  <Overlay onClick={close} />
 </div>
 
 <div
-  bind:this="{panel}"
   class="panel"
   class:gone
   style:top="{HEADER_HEIGHT}px"
@@ -171,7 +172,7 @@
     <h2>台本の追加</h2>
     <div>
       <label>どこから読込みますか？<br>
-        <select bind:value="{srcType}">
+        <select bind:value={srcType}>
           <option value="sample">サンプルから</option>
           <option value="net">ネットから</option>
           <option value="file">ファイルから</option>
@@ -182,15 +183,15 @@
     <div>
       {#if srcType == "sample"}
         <label>サンプルを選んでください。<br>
-          <select bind:value="{sampleSelected}">
+          <select bind:value={sampleSelected}>
             {#each SAMPLES as sample }
-              <option value="{sample}">{sample.title}</option>
+              <option value={sample}>{sample.title}</option>
             {/each}
           </select>
         </label>
       {:else if srcType == "net"}
         <label>URL を入力してください。<br>
-          <input type="text" bind:value="{url}" />
+          <input type="text" bind:value={url} />
         </label>
       {:else}
         <FileSelect bind:files accept=".json" />
@@ -200,10 +201,10 @@
     <div class="buttonArea">
       <button
         class="cancel-button"
-        disabled="{isLoading}"
-        on:click="{close}"
+        disabled={isLoading}
+        onclick={close}
       >キャンセル</button>
-      <button disabled="{disabled}" on:click="{add}">読込む</button>
+      <button disabled={disabled} onclick={add}>読込む</button>
     </div>
   </div>
 </div>

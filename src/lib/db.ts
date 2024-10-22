@@ -26,6 +26,7 @@ class PscvDB extends Dexie {
   scriptData!: EntityTable<ScriptData, 'id'>
 
   constructor() {
+    // ローカルに pscvDB という名前の IndexedDB を作る
     super('pscvDB')
 
     this.version(1).stores({

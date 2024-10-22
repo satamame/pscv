@@ -23,7 +23,7 @@ Svelte 用の virtual module を使うために workbox-window をインスト�
 dist フォルダにビルドされる
 
 > yarn preview
-dist フォルダの内容をローカルにデプロイする
+dist フォルダの内容を開発サーバで公開する
 
 バージョンを上げたら以下の2か所を更新する
 - package.json の version

@@ -1,3 +1,4 @@
+<svelte:options runes={true} />
 <script lang="ts">
   import { HEADER_HEIGHT } from '../lib/const'
   import type { PSc } from '../lib/psc'
@@ -16,16 +17,18 @@
   import Comment from './PScLine/Comment.svelte'
 
   // コンポーネントプロパティ
-  export let psc: PSc | undefined = undefined
-  export let top = HEADER_HEIGHT
-  export let inert: boolean
+  type Props = {
+    psc?: PSc;       // 台本データ
+    top: number;     // ビューアの上辺のオフセット
+    inert: boolean;  // 操作無効 (親がモーダル)
+  }
+  const { psc, top = HEADER_HEIGHT, inert = false }: Props = $props()
 
+  // コンポーネントのルート要素
   let container: HTMLDivElement
 
   // コンポーネントの外から Y 座標を操作できるようにする
-  $: if (container) {
-    container.style.top = `${top}px`
-  }
+  $effect(() => {container.style.top = `${top}px`})
 
   /** 行の Y 座標を返す */
   export function getLineY(index: number): number {
@@ -88,31 +91,31 @@
   }
 </script>
 
-<div bind:this="{container}" inert="{inert}" class="container">
+<div bind:this={container} inert={inert} class="container">
   {#if psc}
     {#each psc.lines as line }
       {#if line.type == PSC_LINE_TYPE.TITLE}
-        <Title bind:line />
+        <Title line={line} />
       {:else if line.type == PSC_LINE_TYPE.AUTHOR}
-        <Author bind:line />
+        <Author line={line} />
       {:else if line.type == PSC_LINE_TYPE.CHARSHEADLINE}
-        <CharsHeadline bind:line />
+        <CharsHeadline line={line} />
       {:else if line.type == PSC_LINE_TYPE.CHARACTER}
-        <Character bind:line />
+        <Character line={line} />
       {:else if line.type == PSC_LINE_TYPE.H1}
-        <Headline1 bind:line />
+        <Headline1 line={line} />
       {:else if line.type == PSC_LINE_TYPE.H2}
-        <Headline2 bind:line />
+        <Headline2 line={line} />
       {:else if line.type == PSC_LINE_TYPE.H3}
-        <Headline3 bind:line />
+        <Headline3 line={line} />
       {:else if line.type == PSC_LINE_TYPE.DIRECTION}
-        <Direction bind:line />
+        <Direction line={line} />
       {:else if line.type == PSC_LINE_TYPE.DIALOGUE}
-        <Dialogue bind:line />
+        <Dialogue line={line} />
       {:else if line.type == PSC_LINE_TYPE.ENDMARK}
-        <Endmark bind:line />
+        <Endmark line={line} />
       {:else if line.type == PSC_LINE_TYPE.COMMENT}
-        <Comment bind:line />
+        <Comment line={line} />
       {/if}
     {/each}
   {/if}

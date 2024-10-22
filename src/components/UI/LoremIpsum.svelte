@@ -1,9 +1,15 @@
+<svelte:options runes={true} />
 <script lang="ts">
   // コンポーネントプロパティ
-  export let lineLength = 40  // Characters per line
-  export let lineCount = 20   // Count of lines per div
-  export let blockCount = 1   // Count of div
-  export let blockGap = 1     // margin-bottom of div (em)
+  type Props = {
+    lineLength?: number;  // 1行あたりの文字数
+    lineCount?: number;   // ブロックあたりの行数
+    blockCount?: number;  // ブロック数
+    blockGap?: number;    // 各ブロックの margin-bottom (em)
+  }
+  const {
+    lineLength = 40, lineCount = 20, blockCount = 1, blockGap = 1
+  }: Props = $props()
 
   const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, '
     + 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
@@ -13,8 +19,16 @@
     + 'nulla pariatur. Excepteur sint occaecat cupidatat non proident, '
     + 'sunt in culpa qui officia deserunt mollit anim id est laborum. '
 
+  /**
+   * 指定した長さの Lorem ipsum 文字列を作る関数
+   *
+   * @param {number} pos - Lorem ipsum 文字列の何文字目から使うか
+   * @param {number} len - 何文字必要か
+  */
   function makeLine(pos: number, len: number): string {
     let line
+
+    // 文字数が足りない場合は再帰呼び出ししたものをつなげる
     if (pos + len > loremIpsum.length) {
       line = loremIpsum.substring(pos, loremIpsum.length)
         + makeLine(0, len - (loremIpsum.length - pos))
@@ -52,4 +66,3 @@
 </script>
 
 <div>{@html innerHtml}</div>
-
