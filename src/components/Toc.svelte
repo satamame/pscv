@@ -1,5 +1,6 @@
+<svelte:options runes={true} />
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
+  import { onMount } from 'svelte'
 
   import { isAndroid } from '../lib/env'
   import { keepBackable, back } from '../lib/back'
@@ -11,31 +12,35 @@
   // 画像ファイルを参照
   import closeIcon from '/ui_icon/close_black_24dp.svg'
 
-  const dispatch = createEventDispatcher()
-
   // コンポーネントプロパティ
-  export let psc: PSc
-  export let current: number
+  type Props = {
+    psc: PSc;           // 台本データ
+    current: number;    // 現在地に対応する見出し
+    onClose: Function;  // 親が目次を閉じるハンドラ
+    onGoTo: Function;   // 親が見出し行にスクロールするハンドラ
+  }
+  const { psc, current, onClose, onGoTo }: Props = $props()
 
-  let gone = true
+  // 閉じている (閉じようとしている)
+  let gone = $state(true)
 
   onMount(async () => {
     if (isAndroid) { keepBackable() }
-    setTimeout(() => { gone = false }, 0)
+    setTimeout(() => gone = false, 0)
   })
 
   export function close() {
     if (gone) { return }
     gone = true
     setTimeout(() => {
-      dispatch('close')
+      onClose()
       if (isAndroid) { back() }
     }, 200)
   }
 
   /** index 番目の見出し行にスクロールする */
   function goToHeadline(index: number) {
-    dispatch('goToHeadline', { index })
+    onGoTo(index)
     // Android の場合は履歴を遡りながらスクロールする必要がある
     // close() 後に履歴を遡るとスクロールがリセットされてしまう
     if (isAndroid) {
@@ -47,21 +52,21 @@
 </script>
 
 <div class="overlay" class:gone>
-  <Overlay on:click="{close}" />
+  <Overlay onClick={close} />
 </div>
 
 <div class="panel" class:gone>
   <h1>目次</h1>
-  <button class="icon-button close-button" on:click="{close}">
-    <img alt="閉じる" src="{closeIcon}" />
+  <button class="icon-button close-button" onclick={close}>
+    <img alt="閉じる" src={closeIcon} />
   </button>
 
   <ul>
     {#each psc.headlines as item, index}
       <li>
         <button
-          class:current="{ index == current }"
-          on:click="{() => { goToHeadline(index) }}"
+          class:current={ index == current }
+          onclick={() => goToHeadline(index)}
         >
           {item.text}
         </button>

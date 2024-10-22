@@ -1,6 +1,5 @@
+<svelte:options runes={true} />
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
-
   import type { ScriptIndex } from '../lib/db'
   import type { DndCellItem } from './UI/DndList.svelte'
 
@@ -9,44 +8,51 @@
   import infoIcon from '/ui_icon/info_outline_black_24dp.svg'
   import dragHandle from '/ui_icon/drag_indicator_black_24dp.svg'
 
-  const dispatch = createEventDispatcher()
-
   // コンポーネントプロパティ
-  export let item: DndCellItem
-  export let cellId: string
+  type Props = {
+    item: DndCellItem;     // 表示するデータ (実際は ScriptIndex 型)
+    cellId: string;        // div 要素の id として使う文字列
+    onShowPSc: Function;   // 親が台本を表示するハンドラ
+    onShowInfo: Function;  // 親が台本情報を表示するハンドラ
+  }
+  const { item, cellId, onShowPSc, onShowInfo }: Props = $props()
 
+  // item は、DndList の定義の都合で DndCellItem 型だったので
+  // ScriptIndex 型にして scIndex 変数に詰め替える
   let scIndex = item as ScriptIndex
 
   function showPSc() {
-    dispatch('showPSc', { scriptId: scIndex.scriptId })
+    onShowPSc(scIndex.scriptId)
   }
 
-  function showInfo() {
-    dispatch('showInfo', { id: scIndex.id })
+  function showInfo(event: Event) {
+    // セル自体の onclick が発火しないようにする
+    event.stopPropagation();
+    onShowInfo(scIndex.id)
   }
 </script>
 
 <div
-  id="{cellId}"
+  id={cellId}
   class="cell bottom-line"
-  on:click="{showPSc}"
-  on:keydown="{e => e.key == 'Enter' && showPSc()}"
+  onclick={showPSc}
+  onkeydown={e => e.key == 'Enter' && showPSc()}
   role="button"
   tabindex="0"
 >
   <div class="icon">
-    <img alt="本" src="{bookIcon}" />
+    <img alt="本" src={bookIcon} />
   </div>
   <div class="label">{scIndex.name}</div>
   <button
     class="icon-button info-button"
-    on:click|stopPropagation="{showInfo}"
-    on:keydown|stopPropagation="{e => e.key == 'Enter' && showInfo()}"
+    onclick={showInfo}
+    onkeydown={e => e.key == 'Enter' && showInfo(e)}
   >
-    <img alt="情報" src="{infoIcon}" />
+    <img alt="情報" src={infoIcon} />
   </button>
   <div id="dragHandle" class="icon drag-handle">
-    <img src="{dragHandle}" alt="drag" />
+    <img src={dragHandle} alt="drag" />
   </div>
 </div>
 

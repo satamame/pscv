@@ -1,10 +1,11 @@
+<svelte:options runes={true} />
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
+  import { onMount } from 'svelte'
 
   import { isPwa, isAndroid } from '../lib/env'
   import { APP_VERSION, COPY_RIGHT } from '../lib/const'
   import { keepBackable, back } from '../lib/back'
-  import { appUpdateFunc } from '../lib/store'
+  import { g } from '../lib/g.svelte'
 
   // 画像ファイルを参照
   import closeIcon from '/ui_icon/close_black_24dp.svg'
@@ -12,14 +13,20 @@
   // 子コンポーネント
   import Spinner from './UI/Spinner.svelte'
 
-  const dispatch = createEventDispatcher()
+  // コンポーネントプロパティ
+  type Props = {
+    onClose: Function;  // 親が「台本ビューアについて」を閉じるハンドラ
+  }
+  const { onClose }: Props = $props()
 
-  let gone = true
-  let isLoading = false
+  // 閉じている (閉じようとしている)
+  let gone = $state(true)
+  // ローディング中
+  let isLoading = $state(false)
 
   onMount(async () => {
     if (isAndroid) { keepBackable() }
-    setTimeout(() => { gone = false }, 0)
+    setTimeout(() => gone = false, 0)
   })
 
   export function close() {
@@ -33,29 +40,30 @@
     if (gone) { return }
     gone = true
     setTimeout(() => {
-      dispatch('close')
+      onClose()
       if (isAndroid) { back() }
     }, 200)
   }
 
   function update() {
-    if ($appUpdateFunc != null) { // 型ガード
+    if (isLoading) { return }
+    if (g.appUpdateFunc != undefined) { // 型ガード
       isLoading = true
-      $appUpdateFunc(true)
+      g.appUpdateFunc(true)
     }
   }
 </script>
 
 <div class="panel" class:gone>
   <h1>台本ビューアについて</h1>
-  <button class="icon-button close-button" on:click="{close}">
-    <img alt="閉じる" src="{closeIcon}" />
+  <button class="icon-button close-button" onclick={close}>
+    <img alt="閉じる" src={closeIcon} />
   </button>
 
   <div class="container">
     <p>バージョン<br>{APP_VERSION}</p>
-    {#if $appUpdateFunc}
-      <button on:click|once="{update}">
+    {#if g.appUpdateFunc}
+      <button onclick={update}>
         今すぐ台本ビューアを更新する
       </button>
       <div style="text-align: left;">

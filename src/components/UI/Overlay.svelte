@@ -1,18 +1,23 @@
+<svelte:options runes={true} />
 <script lang="ts">
   /**
    * Overlay component for modal interface
    */
   // コンポーネントプロパティ
-  export let color = 'black'
-  export let opacity = 0.25
+  type Props = {
+    color?: string;     // オーバーレイの色
+    opacity?: number;   // オーバーレイの不透明度
+    onClick: Function;  // クリックされた時の親の振る舞い
+  }
+  const { color = 'black', opacity = 0.25, onClick }: Props = $props()
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <div
-  style:background-color="{color}"
+  style:background-color={color}
   style:opacity
-  on:click
+  onclick={() => onClick()}
   role="dialog"
 ></div>
 
