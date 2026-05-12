@@ -6,6 +6,7 @@
   import { isAndroid } from '../lib/env'
   import { HEADER_HEIGHT } from '../lib/const'
   import { keepBackable, back } from '../lib/back'
+  import { g } from '../lib/g.svelte'
   import { db } from '../lib/db'
   import type { ScriptIndex } from '../lib/db'
   import { PSc } from '../lib/psc'
@@ -98,15 +99,8 @@
 
   /** 選択した台本を表示する */
   async function showPSc(scriptId: number) {
-    // DB から JSON を取って PSc のインスタンスにして親に渡す
-    const scData = await db.scriptData.get(scriptId)
-    if (!scData) {
-      alert('データが無効です。')
-      return
-    }
-    const psc = PSc.fromJson(scData.pscJson)
-    onShowPSc(psc)
-
+    // 親のハンドラを実行する
+    onShowPSc(scriptId)
     // 自身を閉じる
     closeSelf()
   }

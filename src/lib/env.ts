@@ -7,6 +7,3 @@ export const isIOS = /iP(hone|(o|a)d)/.test(navigator.userAgent)
 
 // PWA として実行しているかの判定
 export const isPwa = window.matchMedia('(display-mode: standalone)').matches
-
-// デバッグモードの判定
-export const isDebug = process.env.NODE_ENV !== 'production'

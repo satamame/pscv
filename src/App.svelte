@@ -6,7 +6,9 @@
   import { HEADER_HEIGHT } from './lib/const'
   import type { BackFunc } from './lib/back'
   import { initBackHandler } from './lib/back'
-  import type { PSc } from './lib/psc'
+  import { g } from './lib/g.svelte'
+  import { db } from './lib/db'
+  import { PSc } from './lib/psc'
 
   // 子コンポーネント
   import Viewer from './components/Viewer.svelte'
@@ -120,6 +122,23 @@
     }
   }
 
+  /** 選択した台本を表示する */
+  async function openPScById(scriptId: number, showAlert: boolean = false) {
+    const scData = await db.scriptData.get(scriptId)
+    if (!scData) {
+      showAlert && alert('台本データがありません。')
+      return
+    }
+    try {
+      psc = PSc.fromJson(scData.pscJson)
+    } catch (error) {
+      showAlert && alert((error as Error).message)
+      return
+    }
+    // 最後に開いた台本として記憶する
+    g.state.activeScriptId = scriptId
+  }
+
   /** スクロール位置の見出しを判定してから目次を開く */
   function openToc(): void {
     if (!psc) { // 型ガード
@@ -135,6 +154,9 @@
   //   console.log('**** scrolling...')
   //   viewer.getLineIndexAtY(rootElement.scrollTop)
   // })
+
+  // 最後に開いていた台本を開く
+  openPScById(g.state.activeScriptId)
 </script>
 
 <Viewer
@@ -175,7 +197,7 @@
   <DataList
     bind:this={data}
     onClose={() => dataIsOpen = false}
-    onShowPSc={(selected: PSc) => psc = selected}
+    onShowPSc={(scriptId: number) => openPScById(scriptId, true)}
   />
 {/if}
 
