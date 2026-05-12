@@ -1,5 +1,5 @@
 <svelte:options runes={true} />
-<script lang="ts" context="module">
+<script lang="ts" module>
   export interface DndCellItem {
     id: number
   }

@@ -1,3 +1,7 @@
+/**
+ * Android でバックボタンを押された時の処理のためのモジュール
+ */
+
 export type BackFunc = {
   toc: (() => void) | undefined,
   menu: (() => void) | undefined,
